@@ -1,0 +1,22 @@
+name: Windows build
+on:
+  push:
+  pull_request:
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  build:
+    runs-on: windows-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Build launcher executables
+        shell: pwsh
+        run: ./Build.ps1
+      - name: Upload unsigned build artifacts
+        uses: actions/upload-artifact@v4
+        with:
+          name: project-battle-launcher-unsigned
+          path: dist/*.exe
+          if-no-files-found: error
+          retention-days: 14
