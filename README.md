@@ -20,5 +20,4 @@ The project is preparing an application for a code-signing review. Do not descri
 
 ## License
 
-A public license has not yet been selected. Until a license is added, no permission to redistribute or modify these sources is granted by this repository.
-
+All original source code, build scripts, configuration, and assets in this repository are licensed under the MIT License; see [LICENSE](LICENSE). Minecraft, Java, and third-party mods are not included in this license and remain subject to their respective terms.
