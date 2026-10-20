@@ -16,7 +16,7 @@ The update channel uses the public key in `public-key.xml`. The corresponding pr
 
 ## Code signing
 
-The project is preparing an application for a code-signing review. Do not describe a release as SignPath-signed until the Foundation approves the project and the signing workflow is enabled.
+The application for SignPath Foundation code signing has not yet been approved, and no release is currently signed with its certificate. Do not describe a release as SignPath-signed until the Foundation approves the project and the signing workflow is enabled. See the [Code signing policy](https://project-battle-portal.vokisu9.workers.dev/code-signing-policy.html) for current status, source, build, and release approval details.
 
 ## License
 
