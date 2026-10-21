@@ -20,7 +20,7 @@ class Host {
   foreach(string raw in File.ReadAllLines(file,Encoding.UTF8)) {
    string line=raw.TrimStart();if(line.Length==0||line[0]=='#'||line[0]=='!')continue;
    int split=line.IndexOf('=');if(split<0)split=line.IndexOf(':');if(split<0)continue;
-   if(line.Substring(0,split).Trim().Equals(key,StringComparison.Ordinal))return line.Substring(split+1).Trim().Replace("\\\\","\\");
+   if(line.Substring(0,split).Trim().Equals(key,StringComparison.Ordinal))return line.Substring(split+1).Trim().Replace("\\\\","\\").Replace("\\:",":").Replace("\\=","=");
   }
   return fallback;
  }
@@ -84,7 +84,7 @@ class Host {
     catch(ArgumentException){return false;}
  }
  static void EnsureForge(string profile,string tempDir,string bundledJava) {
-  string config=Path.Combine(profile,"ProjectBattleLauncher","launcher.properties");
+  string config=Path.Combine(profile,"ProjectBattleAlpha","launcher.properties");
   string minecraftDir=ReadProperty(config,"minecraftDir",Path.Combine(profile,".minecraft"));
   if(!Path.IsPathRooted(minecraftDir))minecraftDir=Path.GetFullPath(Path.Combine(profile,minecraftDir));
   Directory.CreateDirectory(minecraftDir);Directory.CreateDirectory(tempDir);
