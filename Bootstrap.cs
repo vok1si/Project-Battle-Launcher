@@ -239,7 +239,7 @@ public sealed class Window:Form {
 }
 public static class Program {
  [STAThread] public static void Main(string[] args) {
-  Engine.PublicKey=Encoding.UTF8.GetString(ReadResource("public-key.xml"));
+  Engine.PublicKey=Encoding.UTF8.GetString(ReadResource("public-key.xml")).TrimStart('\uFEFF');
   bool first;using(var mutex=new Mutex(true,"Local\\ProjectBattleAuto.Bootstrap",out first)) {
    if(!first){MessageBox.Show("Project Battle Auto уже запущен.","Project Battle");return;}
    Application.EnableVisualStyles();Application.SetCompatibleTextRenderingDefault(false);
