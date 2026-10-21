@@ -12,7 +12,9 @@ For a local build, run `./Build.ps1`. Output is written to `dist/`.
 
 The full player distribution includes a legacy Java launcher, Java runtime, Minecraft files, and third-party mods. Those payload components are not built from this repository and are distributed separately. This repository makes the updater and host launcher source reproducible; it does not claim that third-party game payloads are open source.
 
-The update channel uses the public key in `public-key.xml`. The corresponding private release key must remain outside this repository and must never be added to a commit, issue, or Actions artifact.
+The update channel uses the public key in `public-key.xml`. The matching RSA private key is protected with Windows DPAPI for the current Windows user at `%LOCALAPPDATA%\ProjectBattleRelease\launcher-channel-key.dpapi`. `Sign-Channel.ps1` uses it to sign a channel manifest locally. Keep a recovery copy in a secure password manager or encrypted backup before reinstalling Windows; never add the key or its decrypted XML to this repository, an issue, or a build artifact.
+
+Replacing `public-key.xml` rotates trust. Users with an older bootstrap must replace `Project Battle.exe` once before channel updates can work again.
 
 ## Code signing
 
