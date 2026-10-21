@@ -131,7 +131,7 @@ public sealed class Window:Form {
  public Window(bool preview) {
   Text="Project Battle — обновление лаунчера"; ClientSize=new Size(720,460);
   SetStyle(ControlStyles.UserPaint|ControlStyles.AllPaintingInWmPaint|ControlStyles.OptimizedDoubleBuffer|ControlStyles.ResizeRedraw,true);
-  using(var stream=typeof(Program).Assembly.GetManifestResourceStream("planet.png"))using(var img=Image.FromStream(stream))planet=new Bitmap(img);
+   planet=CreatePlanet();
   using(var stream=typeof(Program).Assembly.GetManifestResourceStream("pb.ico"))Icon=new Icon(stream);
   StartPosition=FormStartPosition.CenterScreen; FormBorderStyle=FormBorderStyle.None;
   MaximizeBox=false; BackColor=Color.FromArgb(13,19,18); ForeColor=Color.FromArgb(229,218,174);
@@ -154,6 +154,21 @@ public sealed class Window:Form {
   if(!preview) Shown+=async(s,e)=>await Check();
   else {status.Text="Выпущено обновление лаунчера 0.1.78.1";detail.Text="Оформление, ресурсы и улучшенная загрузка.";update.Visible=true;}
  }
+  static Image CreatePlanet() {
+   var bitmap=new Bitmap(68,68);
+   using(var graphics=Graphics.FromImage(bitmap)) {
+    graphics.SmoothingMode=SmoothingMode.AntiAlias;
+    using(var pen=new Pen(Color.FromArgb(189,169,112),1f)) {
+     graphics.DrawEllipse(pen,7,7,54,54);
+     graphics.DrawEllipse(pen,19,7,30,54);
+     graphics.DrawEllipse(pen,28,7,12,54);
+     graphics.DrawArc(pen,7,18,54,30,0,180);
+     graphics.DrawArc(pen,7,18,54,30,180,180);
+     graphics.DrawLine(pen,7,34,61,34);
+    }
+   }
+   return bitmap;
+  }
  protected override void WndProc(ref Message m) {base.WndProc(ref m);if(m.Msg==0x84&&(int)m.Result==1){var p=PointToClient(Cursor.Position);if(p.Y<35&&p.X<640)m.Result=(IntPtr)2;}}
  protected override void OnPaint(PaintEventArgs e) {
   base.OnPaint(e);e.Graphics.SmoothingMode=SmoothingMode.AntiAlias;
