@@ -86,11 +86,16 @@ final class PackMaintenance {
         return total;
     }
 
-    static Storage storage(Path instance, Path minecraft) throws IOException {
+    static Storage storage(Path instance, Path minecraft, Path gameJava) throws IOException {
+        Path javaHome = gameJava != null && Files.isRegularFile(gameJava) && gameJava.getParent() != null
+                ? gameJava.getParent().getParent() : null;
+        long javaBytes = size(minecraft.resolve("runtime"));
+        if (javaHome != null && !javaHome.toAbsolutePath().normalize().startsWith(minecraft.toAbsolutePath().normalize()))
+            javaBytes += size(javaHome);
         return new Storage(
                 size(instance.resolve("mods")),
                 size(minecraft.resolve("libraries")),
-                size(minecraft.resolve("runtime")),
+                javaBytes,
                 size(instance.resolve("cache")) + size(minecraft.resolve("assets")),
                 size(instance.resolve("logs")));
     }

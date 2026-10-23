@@ -7040,6 +7040,12 @@ public final class ProjectBattleAlpha extends JFrame {
 
          String var2 = System.getProperty("java.home");
          if (var2 != null && !var2.isBlank()) {
+            Path appRuntime = Paths.get(var2).toAbsolutePath().normalize();
+            Path appFolder = appRuntime.getParent();
+            if (appFolder != null && appFolder.getParent() != null) {
+               Path bundledJava17 = appFolder.getParent().resolve("java17").resolve("bin").resolve("java.exe");
+               if (Files.isRegularFile(bundledJava17)) return bundledJava17;
+            }
             Path var3 = Paths.get(var2).resolve("bin").resolve("java.exe");
             if (Files.exists(var3)) {
                return var3;
@@ -7750,7 +7756,9 @@ public final class ProjectBattleAlpha extends JFrame {
          this.storageState.setText(ProjectBattleAlpha.this.tr("Подсчитываем...", "Calculating..."));
          this.runMaintenance(() -> {
             try {
-               PackMaintenance.Storage size = PackMaintenance.storage(ProjectBattleAlpha.this.config.instanceDir, ProjectBattleAlpha.this.config.minecraftDir);
+               PackMaintenance.Storage size = PackMaintenance.storage(ProjectBattleAlpha.this.config.instanceDir,
+                     ProjectBattleAlpha.this.config.minecraftDir,
+                     ProjectBattleAlpha.Runner.findJava(ProjectBattleAlpha.this.config.minecraftDir));
                String result = ProjectBattleAlpha.this.tr("Моды: ", "Mods: ") + mb(size.mods()) + "\n"
                      + ProjectBattleAlpha.this.tr("Библиотеки: ", "Libraries: ") + mb(size.libraries()) + "\n"
                      + "Java: " + mb(size.java()) + "\n"
