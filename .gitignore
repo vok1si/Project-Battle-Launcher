@@ -12,3 +12,5 @@ dist/
 *private-key*
 .env
 .env.*
+/legacy-java/.build/
+*.jar
