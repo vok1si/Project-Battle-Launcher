@@ -24,6 +24,7 @@ import java.awt.GridLayout;
 import java.awt.IllegalComponentStateException;
 import java.awt.Insets;
 import java.awt.LayoutManager;
+import java.awt.MouseInfo;
 import java.awt.Point;
 import java.awt.Rectangle;
 import java.awt.RenderingHints;
@@ -135,7 +136,7 @@ import javax.swing.plaf.basic.BasicComboBoxUI;
 
 public final class ProjectBattleAlpha extends JFrame {
    private static final String APP_NAME = "Project Battle Alpha";
-   private static final String APP_VERSION = "0.1.78.17";
+   private static final String APP_VERSION = "0.1.78.18";
    private static final Cursor LAUNCHER_CURSOR = null;
    private static volatile ProjectBattleAlpha activeLauncher;
    private static final String PROJECT_NAME = "PROJECT BATTLE";
@@ -184,6 +185,8 @@ public final class ProjectBattleAlpha extends JFrame {
    private final BufferedImage startNewsBackground = loadImage("/assets/start-news-background.png");
    private final BufferedImage bannerImage = loadImage("/assets/project-battle-banner.png");
    private final BufferedImage backgroundImage = loadImage("/assets/project-battle-background.png");
+   private final BufferedImage parallaxBackgroundImage = loadImage("/assets/project-battle-parallax-background.png");
+   private final BufferedImage parallaxForegroundImage = loadImage("/assets/project-battle-parallax-foreground.png");
    private final BufferedImage arenaBackgroundImage = loadImage("/assets/arena-background.png");
    private final BufferedImage arenaTransitionImage = loadImage("/assets/arena-transition.png");
    private final BufferedImage standardTransitionImage = loadImage("/assets/standard-transition.png");
@@ -737,7 +740,7 @@ public final class ProjectBattleAlpha extends JFrame {
             .setText(
                infoHtml(
                   this.tr("Версия лаунчера:", "Launcher version:"),
-                  this.arenaMode ? this.tr("Альфа 0.1", "Alpha 0.1") : this.tr("0.1.78.17", "0.1.78.17"),
+                  this.arenaMode ? this.tr("Альфа 0.1", "Alpha 0.1") : this.tr("0.1.78.18", "0.1.78.18"),
                   ProjectBattleAlpha.Colors.MUTED
                )
             );
@@ -877,7 +880,7 @@ public final class ProjectBattleAlpha extends JFrame {
       JLabel var3 = new JLabel(this.tr("версия лаунчера", "launcher version"));
       var3.setForeground(ProjectBattleAlpha.Colors.MUTED);
       var3.setFont(new Font("SansSerif", 0, 11));
-      JLabel var4 = new JLabel("0.1.78.17");
+      JLabel var4 = new JLabel("0.1.78.18");
       var4.setForeground(ProjectBattleAlpha.Colors.MUTED);
       var4.setFont(new Font("SansSerif", 0, 11));
       var2.add(var3, "West");
@@ -1449,7 +1452,7 @@ public final class ProjectBattleAlpha extends JFrame {
       var5.setConnectTimeout(30000);
       var5.setReadTimeout(120000);
       var5.setDoOutput(true);
-      var5.setRequestProperty("User-Agent", "Project Battle Alpha/0.1.78.17");
+      var5.setRequestProperty("User-Agent", "Project Battle Alpha/0.1.78.18");
       var5.setRequestProperty("Accept", "application/json");
       var5.setRequestProperty("Content-Type", "application/json; charset=utf-8");
       if (var3 != null && !var3.isBlank()) {
@@ -1500,7 +1503,7 @@ public final class ProjectBattleAlpha extends JFrame {
       var4.setRequestMethod("GET");
       var4.setConnectTimeout(30000);
       var4.setReadTimeout(120000);
-      var4.setRequestProperty("User-Agent", "Project Battle Alpha/0.1.78.17");
+      var4.setRequestProperty("User-Agent", "Project Battle Alpha/0.1.78.18");
       var4.setRequestProperty("Accept", "application/json");
       if (var2 != null && !var2.isBlank()) {
          var4.setRequestProperty("Authorization", "Bearer " + var2);
@@ -2134,7 +2137,7 @@ public final class ProjectBattleAlpha extends JFrame {
 
       if (this.versionLabel != null) {
          this.versionLabel
-            .setText(infoHtml(this.tr("Версия лаунчера:", "Launcher version:"), this.tr("0.1.78.17", "0.1.78.17"), ProjectBattleAlpha.Colors.MUTED));
+            .setText(infoHtml(this.tr("Версия лаунчера:", "Launcher version:"), this.tr("0.1.78.18", "0.1.78.18"), ProjectBattleAlpha.Colors.MUTED));
       }
 
       if (this.editionLabel != null) {
@@ -2147,7 +2150,10 @@ public final class ProjectBattleAlpha extends JFrame {
    }
 
    private JPanel buildStage() {
-      JPanel var1 = this.arenaMode ? new ProjectBattleAlpha.BackgroundPanel(null, this.activeStageBackground()) : new ProjectBattleAlpha.HeroPanel(null, null);
+      JPanel var1 = this.arenaMode ? new ProjectBattleAlpha.BackgroundPanel(null, this.activeStageBackground())
+            : this.parallaxBackgroundImage != null && this.parallaxForegroundImage != null
+                  ? new ProjectBattleAlpha.ParallaxHeroPanel(this.parallaxBackgroundImage, this.parallaxForegroundImage)
+                  : new ProjectBattleAlpha.HeroPanel(null, null);
       JPanel var2 = this.buildConfigStrip();
       var2.setBounds(482, 516, 668, 104);
       var1.add(var2);
@@ -3005,7 +3011,7 @@ public final class ProjectBattleAlpha extends JFrame {
       var3.setOpaque(false);
       var3.setPreferredSize(new Dimension(320, 90));
       var3.setLayout(new BoxLayout(var3, 1));
-      this.versionLabel = this.infoLine(this.tr("Версия лаунчера:", "Launcher version:"), this.tr("0.1.78.17", "0.1.78.17"), ProjectBattleAlpha.Colors.MUTED);
+      this.versionLabel = this.infoLine(this.tr("Версия лаунчера:", "Launcher version:"), this.tr("0.1.78.18", "0.1.78.18"), ProjectBattleAlpha.Colors.MUTED);
       var3.add(this.versionLabel);
       var3.add(Box.createVerticalStrut(5));
       this.editionLabel = this.infoLine(this.tr("Издание:", "Edition:"), "Standard", ProjectBattleAlpha.Colors.MUTED);
@@ -4061,7 +4067,7 @@ public final class ProjectBattleAlpha extends JFrame {
    }
 
    private String diagnosticText() {
-      StringBuilder result = new StringBuilder("Project Battle Alpha 0.1.78.17\n");
+      StringBuilder result = new StringBuilder("Project Battle Alpha 0.1.78.18\n");
       try {
          Path javaPath = ProjectBattleAlpha.Runner.findJava(this.config.minecraftDir);
          Process process = new ProcessBuilder(javaPath.toString(), "-version").redirectErrorStream(true).start();
@@ -4623,7 +4629,7 @@ public final class ProjectBattleAlpha extends JFrame {
             this.log("Minecraft language preference preserved.");
          }
 
-         Files.writeString(var1, "0.1.78.17" + System.lineSeparator(), StandardCharsets.UTF_8, StandardOpenOption.CREATE_NEW);
+         Files.writeString(var1, "0.1.78.18" + System.lineSeparator(), StandardCharsets.UTF_8, StandardOpenOption.CREATE_NEW);
       }
    }
 
@@ -4962,7 +4968,7 @@ public final class ProjectBattleAlpha extends JFrame {
             label149: {
                var3 = (HttpURLConnection)var0.openConnection();
                var3.setInstanceFollowRedirects(true);
-               var3.setRequestProperty("User-Agent", "Project Battle Alpha/0.1.78.17");
+               var3.setRequestProperty("User-Agent", "Project Battle Alpha/0.1.78.18");
                var3.setConnectTimeout(45000);
                var3.setReadTimeout(180000);
                int var5 = var3.getResponseCode();
@@ -5009,7 +5015,7 @@ public final class ProjectBattleAlpha extends JFrame {
                Files.deleteIfExists(var2);
                var5 = (HttpURLConnection)var0.openConnection();
                var5.setInstanceFollowRedirects(true);
-               var5.setRequestProperty("User-Agent", "Project Battle Alpha/0.1.78.17");
+               var5.setRequestProperty("User-Agent", "Project Battle Alpha/0.1.78.18");
                var5.setConnectTimeout(45000);
                var5.setReadTimeout(180000);
                int var6 = var5.getResponseCode();
@@ -5888,6 +5894,97 @@ public final class ProjectBattleAlpha extends JFrame {
          var2.setColor(var3 ? new Color(31, 41, 40) : new Color(23, 30, 30));
          var2.fillOval(-2, -2, 4, 4);
          var2.dispose();
+      }
+   }
+
+   private static final class ParallaxHeroPanel extends JPanel {
+      private final BufferedImage background;
+      private final BufferedImage foreground;
+      private final javax.swing.Timer animation;
+      private double shiftX;
+      private double shiftY;
+
+      ParallaxHeroPanel(BufferedImage background, BufferedImage foreground) {
+         this.background = background;
+         this.foreground = foreground;
+         this.setOpaque(false);
+         this.animation = new javax.swing.Timer(16, event -> this.advanceAnimation());
+         this.animation.setCoalesce(true);
+         this.addHierarchyListener(event -> {
+            if ((event.getChangeFlags() & java.awt.event.HierarchyEvent.SHOWING_CHANGED) != 0L) {
+               if (this.isShowing()) {
+                  this.animation.start();
+               } else {
+                  this.animation.stop();
+                  this.shiftX = 0.0;
+                  this.shiftY = 0.0;
+               }
+            }
+         });
+      }
+
+      private void advanceAnimation() {
+         double targetX = 0.0;
+         double targetY = 0.0;
+         try {
+            Window window = SwingUtilities.getWindowAncestor(this);
+            if (window != null && window.isActive() && MouseInfo.getPointerInfo() != null) {
+               Point pointer = MouseInfo.getPointerInfo().getLocation();
+               SwingUtilities.convertPointFromScreen(pointer, this);
+               if (this.contains(pointer)) {
+                  targetX = ((pointer.x / (double)Math.max(1, this.getWidth())) - 0.5) * 24.0;
+                  targetY = ((pointer.y / (double)Math.max(1, this.getHeight())) - 0.5) * 14.0;
+               }
+            }
+         } catch (java.awt.HeadlessException | SecurityException | IllegalComponentStateException ignored) {
+            // Keep the layer centered when pointer information is unavailable.
+         }
+         double nextX = this.shiftX + (targetX - this.shiftX) * 0.16;
+         double nextY = this.shiftY + (targetY - this.shiftY) * 0.16;
+         if (Math.abs(nextX - targetX) < 0.05) nextX = targetX;
+         if (Math.abs(nextY - targetY) < 0.05) nextY = targetY;
+         if (Math.abs(nextX - this.shiftX) + Math.abs(nextY - this.shiftY) > 0.01) {
+            this.shiftX = nextX;
+            this.shiftY = nextY;
+            this.repaint();
+         }
+      }
+
+      @Override
+      protected void paintComponent(Graphics graphics) {
+         super.paintComponent(graphics);
+         Graphics2D g = (Graphics2D)graphics.create();
+         g.setRenderingHint(RenderingHints.KEY_INTERPOLATION, RenderingHints.VALUE_INTERPOLATION_BILINEAR);
+         BackgroundPanel root = (BackgroundPanel)SwingUtilities.getAncestorOfClass(BackgroundPanel.class, this);
+         int fullWidth = root != null ? root.getWidth() : this.getWidth();
+         int fullHeight = root != null ? root.getHeight() : this.getHeight();
+         Point origin = root != null ? SwingUtilities.convertPoint(this, 0, 0, root) : new Point();
+         double scale = Math.max(fullWidth / (double)this.background.getWidth(), fullHeight / (double)this.background.getHeight());
+         int imageWidth = (int)Math.round(this.background.getWidth() * scale);
+         int imageHeight = (int)Math.round(this.background.getHeight() * scale);
+         int imageX = (fullWidth - imageWidth) / 2 - origin.x;
+         int imageY = (fullHeight - imageHeight) / 2 - origin.y;
+         g.drawImage(this.background, imageX, imageY, imageWidth, imageHeight, null);
+         g.setPaint(new GradientPaint(-origin.x, -origin.y, new Color(0, 0, 0, 205), fullWidth - origin.x, fullHeight - origin.y, new Color(0, 0, 0, 120)));
+         g.fillRect(0, 0, this.getWidth(), this.getHeight());
+         g.setColor(new Color(225, 210, 180, 18));
+         g.fillRect(0, 0, this.getWidth(), this.getHeight());
+         g.setColor(new Color(0, 0, 0, 110));
+         g.fillRect(0, 0, this.getWidth(), this.getHeight());
+
+         int soldierHeight = (int)Math.round(690 * scale);
+         int soldierWidth = (int)Math.round(soldierHeight * this.foreground.getWidth() / (double)this.foreground.getHeight());
+         int soldierX = imageX + (int)Math.round(125 * scale) + (int)Math.round(this.shiftX);
+         int soldierY = imageY + (int)Math.round(260 * scale) + (int)Math.round(this.shiftY);
+         g.setComposite(AlphaComposite.SrcOver.derive(0.58F));
+         g.drawImage(this.foreground, soldierX, soldierY, soldierWidth, soldierHeight, null);
+         g.setComposite(AlphaComposite.SrcOver);
+
+         g.setColor(new Color(210, 210, 190, 18));
+         for (int y = 0; y < this.getHeight(); y += 3) g.drawLine(0, y, this.getWidth(), y);
+         g.setColor(new Color(210, 210, 190, 10));
+         for (int x = 0; x < this.getWidth(); x += 37) g.drawLine(x, 0, x, this.getHeight());
+         g.dispose();
       }
    }
 
@@ -6923,7 +7020,7 @@ public final class ProjectBattleAlpha extends JFrame {
          var11.put("version_type", "PROJECT BATTLE");
          var11.put("natives_directory", var3.toString());
          var11.put("launcher_name", "ProjectBattleAlpha");
-         var11.put("launcher_version", "0.1.78.17");
+         var11.put("launcher_version", "0.1.78.18");
          var11.put("classpath", var9);
          var11.put("library_directory", this.config.minecraftDir.resolve("libraries").toString());
          var11.put("classpath_separator", File.pathSeparator);
@@ -7302,7 +7399,7 @@ public final class ProjectBattleAlpha extends JFrame {
          var1.add(Box.createVerticalStrut(7));
          var1.add(this.sectionButton("integrations", "◇", ProjectBattleAlpha.this.tr("Интеграции", "Integrations")));
          var1.add(Box.createVerticalGlue());
-         JLabel var3 = new JLabel("Project Battle Alpha 0.1.78.17");
+         JLabel var3 = new JLabel("Project Battle Alpha 0.1.78.18");
          var3.setForeground(ProjectBattleAlpha.Colors.MUTED);
          var3.setFont(new Font("SansSerif", 0, 11));
          var3.setAlignmentX(0.0F);
