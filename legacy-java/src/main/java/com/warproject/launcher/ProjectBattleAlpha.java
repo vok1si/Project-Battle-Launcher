@@ -136,7 +136,7 @@ import javax.swing.plaf.basic.BasicComboBoxUI;
 
 public final class ProjectBattleAlpha extends JFrame {
    private static final String APP_NAME = "Project Battle Alpha";
-   private static final String APP_VERSION = "0.1.78.19";
+   private static final String APP_VERSION = "0.1.78.20";
    private static final Cursor LAUNCHER_CURSOR = null;
    private static volatile ProjectBattleAlpha activeLauncher;
    private static final String PROJECT_NAME = "PROJECT BATTLE";
@@ -740,7 +740,7 @@ public final class ProjectBattleAlpha extends JFrame {
             .setText(
                infoHtml(
                   this.tr("Версия лаунчера:", "Launcher version:"),
-                  this.arenaMode ? this.tr("Альфа 0.1", "Alpha 0.1") : this.tr("0.1.78.19", "0.1.78.19"),
+                  this.arenaMode ? this.tr("Альфа 0.1", "Alpha 0.1") : this.tr("0.1.78.20", "0.1.78.20"),
                   ProjectBattleAlpha.Colors.MUTED
                )
             );
@@ -880,7 +880,7 @@ public final class ProjectBattleAlpha extends JFrame {
       JLabel var3 = new JLabel(this.tr("версия лаунчера", "launcher version"));
       var3.setForeground(ProjectBattleAlpha.Colors.MUTED);
       var3.setFont(new Font("SansSerif", 0, 11));
-      JLabel var4 = new JLabel("0.1.78.19");
+      JLabel var4 = new JLabel("0.1.78.20");
       var4.setForeground(ProjectBattleAlpha.Colors.MUTED);
       var4.setFont(new Font("SansSerif", 0, 11));
       var2.add(var3, "West");
@@ -1452,7 +1452,7 @@ public final class ProjectBattleAlpha extends JFrame {
       var5.setConnectTimeout(30000);
       var5.setReadTimeout(120000);
       var5.setDoOutput(true);
-      var5.setRequestProperty("User-Agent", "Project Battle Alpha/0.1.78.19");
+      var5.setRequestProperty("User-Agent", "Project Battle Alpha/0.1.78.20");
       var5.setRequestProperty("Accept", "application/json");
       var5.setRequestProperty("Content-Type", "application/json; charset=utf-8");
       if (var3 != null && !var3.isBlank()) {
@@ -1503,7 +1503,7 @@ public final class ProjectBattleAlpha extends JFrame {
       var4.setRequestMethod("GET");
       var4.setConnectTimeout(30000);
       var4.setReadTimeout(120000);
-      var4.setRequestProperty("User-Agent", "Project Battle Alpha/0.1.78.19");
+      var4.setRequestProperty("User-Agent", "Project Battle Alpha/0.1.78.20");
       var4.setRequestProperty("Accept", "application/json");
       if (var2 != null && !var2.isBlank()) {
          var4.setRequestProperty("Authorization", "Bearer " + var2);
@@ -2137,7 +2137,7 @@ public final class ProjectBattleAlpha extends JFrame {
 
       if (this.versionLabel != null) {
          this.versionLabel
-            .setText(infoHtml(this.tr("Версия лаунчера:", "Launcher version:"), this.tr("0.1.78.19", "0.1.78.19"), ProjectBattleAlpha.Colors.MUTED));
+            .setText(infoHtml(this.tr("Версия лаунчера:", "Launcher version:"), this.tr("0.1.78.20", "0.1.78.20"), ProjectBattleAlpha.Colors.MUTED));
       }
 
       if (this.editionLabel != null) {
@@ -3011,7 +3011,7 @@ public final class ProjectBattleAlpha extends JFrame {
       var3.setOpaque(false);
       var3.setPreferredSize(new Dimension(320, 90));
       var3.setLayout(new BoxLayout(var3, 1));
-      this.versionLabel = this.infoLine(this.tr("Версия лаунчера:", "Launcher version:"), this.tr("0.1.78.19", "0.1.78.19"), ProjectBattleAlpha.Colors.MUTED);
+      this.versionLabel = this.infoLine(this.tr("Версия лаунчера:", "Launcher version:"), this.tr("0.1.78.20", "0.1.78.20"), ProjectBattleAlpha.Colors.MUTED);
       var3.add(this.versionLabel);
       var3.add(Box.createVerticalStrut(5));
       this.editionLabel = this.infoLine(this.tr("Издание:", "Edition:"), "Standard", ProjectBattleAlpha.Colors.MUTED);
@@ -4067,7 +4067,7 @@ public final class ProjectBattleAlpha extends JFrame {
    }
 
    private String diagnosticText() {
-      StringBuilder result = new StringBuilder("Project Battle Alpha 0.1.78.19\n");
+      StringBuilder result = new StringBuilder("Project Battle Alpha 0.1.78.20\n");
       try {
          Path javaPath = ProjectBattleAlpha.Runner.findJava(this.config.minecraftDir);
          Process process = new ProcessBuilder(javaPath.toString(), "-version").redirectErrorStream(true).start();
@@ -4629,7 +4629,7 @@ public final class ProjectBattleAlpha extends JFrame {
             this.log("Minecraft language preference preserved.");
          }
 
-         Files.writeString(var1, "0.1.78.19" + System.lineSeparator(), StandardCharsets.UTF_8, StandardOpenOption.CREATE_NEW);
+         Files.writeString(var1, "0.1.78.20" + System.lineSeparator(), StandardCharsets.UTF_8, StandardOpenOption.CREATE_NEW);
       }
    }
 
@@ -4968,7 +4968,7 @@ public final class ProjectBattleAlpha extends JFrame {
             label149: {
                var3 = (HttpURLConnection)var0.openConnection();
                var3.setInstanceFollowRedirects(true);
-               var3.setRequestProperty("User-Agent", "Project Battle Alpha/0.1.78.19");
+               var3.setRequestProperty("User-Agent", "Project Battle Alpha/0.1.78.20");
                var3.setConnectTimeout(45000);
                var3.setReadTimeout(180000);
                int var5 = var3.getResponseCode();
@@ -5015,7 +5015,7 @@ public final class ProjectBattleAlpha extends JFrame {
                Files.deleteIfExists(var2);
                var5 = (HttpURLConnection)var0.openConnection();
                var5.setInstanceFollowRedirects(true);
-               var5.setRequestProperty("User-Agent", "Project Battle Alpha/0.1.78.19");
+               var5.setRequestProperty("User-Agent", "Project Battle Alpha/0.1.78.20");
                var5.setConnectTimeout(45000);
                var5.setReadTimeout(180000);
                int var6 = var5.getResponseCode();
@@ -5901,6 +5901,13 @@ public final class ProjectBattleAlpha extends JFrame {
       private final BufferedImage background;
       private final BufferedImage foreground;
       private final javax.swing.Timer animation;
+      private BufferedImage cachedBackdrop;
+      private BufferedImage cachedSoldier;
+      private int cachedRootWidth;
+      private int cachedRootHeight;
+      private Point cachedOrigin;
+      private int soldierBaseX;
+      private int soldierBaseY;
       private double shiftX;
       private double shiftY;
 
@@ -5908,7 +5915,7 @@ public final class ProjectBattleAlpha extends JFrame {
          super(null);
          this.background = background;
          this.foreground = foreground;
-         this.setOpaque(false);
+         this.setOpaque(true);
          this.animation = new javax.swing.Timer(16, event -> this.advanceAnimation());
          this.animation.setCoalesce(true);
          this.addHierarchyListener(event -> {
@@ -5945,45 +5952,82 @@ public final class ProjectBattleAlpha extends JFrame {
          if (Math.abs(nextX - targetX) < 0.05) nextX = targetX;
          if (Math.abs(nextY - targetY) < 0.05) nextY = targetY;
          if (Math.abs(nextX - this.shiftX) + Math.abs(nextY - this.shiftY) > 0.01) {
+            int oldPixelX = (int)Math.round(this.shiftX);
+            int oldPixelY = (int)Math.round(this.shiftY);
+            Rectangle dirty = this.soldierBounds();
             this.shiftX = nextX;
             this.shiftY = nextY;
-            this.repaint();
+            if (oldPixelX != (int)Math.round(nextX) || oldPixelY != (int)Math.round(nextY)) {
+               dirty.add(this.soldierBounds());
+               dirty.grow(2, 2);
+               this.repaint(dirty.x, dirty.y, dirty.width, dirty.height);
+            }
          }
       }
 
-      @Override
-      protected void paintComponent(Graphics graphics) {
-         super.paintComponent(graphics);
-         Graphics2D g = (Graphics2D)graphics.create();
-         g.setRenderingHint(RenderingHints.KEY_INTERPOLATION, RenderingHints.VALUE_INTERPOLATION_BILINEAR);
+      private Rectangle soldierBounds() {
+         if (this.cachedSoldier == null) return new Rectangle(0, 0, this.getWidth(), this.getHeight());
+         return new Rectangle(this.soldierBaseX + (int)Math.round(this.shiftX), this.soldierBaseY + (int)Math.round(this.shiftY),
+               this.cachedSoldier.getWidth(), this.cachedSoldier.getHeight());
+      }
+
+      private void updateImageCache() {
          BackgroundPanel root = (BackgroundPanel)SwingUtilities.getAncestorOfClass(BackgroundPanel.class, this);
          int fullWidth = root != null ? root.getWidth() : this.getWidth();
          int fullHeight = root != null ? root.getHeight() : this.getHeight();
          Point origin = root != null ? SwingUtilities.convertPoint(this, 0, 0, root) : new Point();
+         if (this.cachedBackdrop != null && this.cachedBackdrop.getWidth() == this.getWidth()
+               && this.cachedBackdrop.getHeight() == this.getHeight() && this.cachedRootWidth == fullWidth
+               && this.cachedRootHeight == fullHeight && origin.equals(this.cachedOrigin)) return;
+         if (this.getWidth() <= 0 || this.getHeight() <= 0 || fullWidth <= 0 || fullHeight <= 0) return;
+
+         this.cachedRootWidth = fullWidth;
+         this.cachedRootHeight = fullHeight;
+         this.cachedOrigin = origin;
          double scale = Math.max(fullWidth / (double)this.background.getWidth(), fullHeight / (double)this.background.getHeight());
          int imageWidth = (int)Math.round(this.background.getWidth() * scale);
          int imageHeight = (int)Math.round(this.background.getHeight() * scale);
          int imageX = (fullWidth - imageWidth) / 2 - origin.x;
          int imageY = (fullHeight - imageHeight) / 2 - origin.y;
-         g.drawImage(this.background, imageX, imageY, imageWidth, imageHeight, null);
-         g.setPaint(new GradientPaint(-origin.x, -origin.y, new Color(0, 0, 0, 205), fullWidth - origin.x, fullHeight - origin.y, new Color(0, 0, 0, 120)));
-         g.fillRect(0, 0, this.getWidth(), this.getHeight());
-         g.setColor(new Color(225, 210, 180, 18));
-         g.fillRect(0, 0, this.getWidth(), this.getHeight());
-         g.setColor(new Color(0, 0, 0, 110));
-         g.fillRect(0, 0, this.getWidth(), this.getHeight());
+         BufferedImage backdrop = new BufferedImage(this.getWidth(), this.getHeight(), BufferedImage.TYPE_INT_RGB);
+         Graphics2D base = backdrop.createGraphics();
+         base.setRenderingHint(RenderingHints.KEY_INTERPOLATION, RenderingHints.VALUE_INTERPOLATION_BILINEAR);
+         base.drawImage(this.background, imageX, imageY, imageWidth, imageHeight, null);
+         base.setPaint(new GradientPaint(-origin.x, -origin.y, new Color(0, 0, 0, 205), fullWidth - origin.x, fullHeight - origin.y, new Color(0, 0, 0, 120)));
+         base.fillRect(0, 0, this.getWidth(), this.getHeight());
+         base.setColor(new Color(225, 210, 180, 18));
+         base.fillRect(0, 0, this.getWidth(), this.getHeight());
+         base.setColor(new Color(0, 0, 0, 110));
+         base.fillRect(0, 0, this.getWidth(), this.getHeight());
+         base.setColor(new Color(210, 210, 190, 18));
+         for (int y = 0; y < this.getHeight(); y += 3) base.drawLine(0, y, this.getWidth(), y);
+         base.setColor(new Color(210, 210, 190, 10));
+         for (int x = 0; x < this.getWidth(); x += 37) base.drawLine(x, 0, x, this.getHeight());
+         base.dispose();
 
-         int soldierHeight = (int)Math.round(690 * scale);
-         int soldierWidth = (int)Math.round(soldierHeight * this.foreground.getWidth() / (double)this.foreground.getHeight());
-         int soldierX = imageX + (int)Math.round(125 * scale) + (int)Math.round(this.shiftX);
-         int soldierY = imageY + (int)Math.round(260 * scale) + (int)Math.round(this.shiftY);
-         g.setColor(new Color(210, 210, 190, 18));
-         for (int y = 0; y < this.getHeight(); y += 3) g.drawLine(0, y, this.getWidth(), y);
-         g.setColor(new Color(210, 210, 190, 10));
-         for (int x = 0; x < this.getWidth(); x += 37) g.drawLine(x, 0, x, this.getHeight());
-         g.setComposite(AlphaComposite.SrcOver.derive(0.84F));
-         g.drawImage(this.foreground, soldierX, soldierY, soldierWidth, soldierHeight, null);
-         g.setComposite(AlphaComposite.SrcOver);
+         int soldierHeight = Math.max(1, (int)Math.round(690 * scale));
+         int soldierWidth = Math.max(1, (int)Math.round(soldierHeight * this.foreground.getWidth() / (double)this.foreground.getHeight()));
+         BufferedImage soldier = new BufferedImage(soldierWidth, soldierHeight, BufferedImage.TYPE_INT_ARGB);
+         Graphics2D sprite = soldier.createGraphics();
+         sprite.setRenderingHint(RenderingHints.KEY_INTERPOLATION, RenderingHints.VALUE_INTERPOLATION_BILINEAR);
+         sprite.drawImage(this.foreground, 0, 0, soldierWidth, soldierHeight, null);
+         sprite.dispose();
+         this.soldierBaseX = imageX + (int)Math.round(125 * scale);
+         this.soldierBaseY = imageY + (int)Math.round(260 * scale);
+         this.cachedSoldier = soldier;
+         this.cachedBackdrop = backdrop;
+      }
+
+      @Override
+      protected void paintComponent(Graphics graphics) {
+         this.updateImageCache();
+         Graphics2D g = (Graphics2D)graphics.create();
+         if (this.cachedBackdrop != null) g.drawImage(this.cachedBackdrop, 0, 0, null);
+         if (this.cachedSoldier != null) {
+            g.setComposite(AlphaComposite.SrcOver.derive(0.84F));
+            g.drawImage(this.cachedSoldier, this.soldierBaseX + (int)Math.round(this.shiftX),
+                  this.soldierBaseY + (int)Math.round(this.shiftY), null);
+         }
          g.dispose();
       }
    }
@@ -7020,7 +7064,7 @@ public final class ProjectBattleAlpha extends JFrame {
          var11.put("version_type", "PROJECT BATTLE");
          var11.put("natives_directory", var3.toString());
          var11.put("launcher_name", "ProjectBattleAlpha");
-         var11.put("launcher_version", "0.1.78.19");
+         var11.put("launcher_version", "0.1.78.20");
          var11.put("classpath", var9);
          var11.put("library_directory", this.config.minecraftDir.resolve("libraries").toString());
          var11.put("classpath_separator", File.pathSeparator);
@@ -7399,7 +7443,7 @@ public final class ProjectBattleAlpha extends JFrame {
          var1.add(Box.createVerticalStrut(7));
          var1.add(this.sectionButton("integrations", "◇", ProjectBattleAlpha.this.tr("Интеграции", "Integrations")));
          var1.add(Box.createVerticalGlue());
-         JLabel var3 = new JLabel("Project Battle Alpha 0.1.78.19");
+         JLabel var3 = new JLabel("Project Battle Alpha 0.1.78.20");
          var3.setForeground(ProjectBattleAlpha.Colors.MUTED);
          var3.setFont(new Font("SansSerif", 0, 11));
          var3.setAlignmentX(0.0F);
