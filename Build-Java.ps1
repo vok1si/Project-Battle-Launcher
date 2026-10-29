@@ -34,6 +34,10 @@ Copy-Item -LiteralPath $base -Destination $output -Force
 & $jar uf $output -C $resolvedBuild com/warproject/launcher
 if ($LASTEXITCODE -ne 0) { throw 'JAR update failed.' }
 $resources = Join-Path $repo 'legacy-java\src\main\resources'
-& $jar uf $output -C $resources assets/project-battle-parallax-background.png -C $resources assets/project-battle-parallax-foreground.png
+& $jar uf $output -C $resources assets/project-battle-parallax-background.png `
+  -C $resources assets/project-battle-parallax-foreground.png `
+  -C $resources assets/zero-point-games-logo.png `
+  -C $resources assets/project-battle-menu-logo.png `
+  -C $resources assets/profile-pixel-avatar.png
 if ($LASTEXITCODE -ne 0) { throw 'JAR asset update failed.' }
 Write-Output $output
