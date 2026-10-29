@@ -137,7 +137,7 @@ import javax.swing.plaf.basic.BasicComboBoxUI;
 
 public final class ProjectBattleAlpha extends JFrame {
    private static final String APP_NAME = "Project Battle Alpha";
-   private static final String APP_VERSION = "0.1.78.25";
+   private static final String APP_VERSION = "0.1.78.26";
    private static final Cursor LAUNCHER_CURSOR = null;
    private static volatile ProjectBattleAlpha activeLauncher;
    private static final String PROJECT_NAME = "PROJECT BATTLE";
@@ -767,7 +767,7 @@ public final class ProjectBattleAlpha extends JFrame {
             .setText(
                infoHtml(
                   this.tr("Версия лаунчера:", "Launcher version:"),
-                  this.arenaMode ? this.tr("Альфа 0.1", "Alpha 0.1") : this.tr("0.1.78.25", "0.1.78.25"),
+                  this.arenaMode ? this.tr("Альфа 0.1", "Alpha 0.1") : this.tr("0.1.78.26", "0.1.78.26"),
                   ProjectBattleAlpha.Colors.MUTED
                )
             );
@@ -918,7 +918,7 @@ public final class ProjectBattleAlpha extends JFrame {
       JLabel var3 = new JLabel(this.tr("версия лаунчера", "launcher version"));
       var3.setForeground(ProjectBattleAlpha.Colors.MUTED);
       var3.setFont(new Font("SansSerif", 0, 11));
-      JLabel var4 = new JLabel("0.1.78.25");
+      JLabel var4 = new JLabel("0.1.78.26");
       var4.setForeground(ProjectBattleAlpha.Colors.MUTED);
       var4.setFont(new Font("SansSerif", 0, 11));
       var2.add(var3, "West");
@@ -1490,7 +1490,7 @@ public final class ProjectBattleAlpha extends JFrame {
       var5.setConnectTimeout(30000);
       var5.setReadTimeout(120000);
       var5.setDoOutput(true);
-      var5.setRequestProperty("User-Agent", "Project Battle Alpha/0.1.78.25");
+      var5.setRequestProperty("User-Agent", "Project Battle Alpha/0.1.78.26");
       var5.setRequestProperty("Accept", "application/json");
       var5.setRequestProperty("Content-Type", "application/json; charset=utf-8");
       if (var3 != null && !var3.isBlank()) {
@@ -1541,7 +1541,7 @@ public final class ProjectBattleAlpha extends JFrame {
       var4.setRequestMethod("GET");
       var4.setConnectTimeout(30000);
       var4.setReadTimeout(120000);
-      var4.setRequestProperty("User-Agent", "Project Battle Alpha/0.1.78.25");
+      var4.setRequestProperty("User-Agent", "Project Battle Alpha/0.1.78.26");
       var4.setRequestProperty("Accept", "application/json");
       if (var2 != null && !var2.isBlank()) {
          var4.setRequestProperty("Authorization", "Bearer " + var2);
@@ -2175,7 +2175,7 @@ public final class ProjectBattleAlpha extends JFrame {
 
       if (this.versionLabel != null) {
          this.versionLabel
-            .setText(infoHtml(this.tr("Версия лаунчера:", "Launcher version:"), this.tr("0.1.78.25", "0.1.78.25"), ProjectBattleAlpha.Colors.MUTED));
+            .setText(infoHtml(this.tr("Версия лаунчера:", "Launcher version:"), this.tr("0.1.78.26", "0.1.78.26"), ProjectBattleAlpha.Colors.MUTED));
       }
 
       if (this.editionLabel != null) {
@@ -3074,7 +3074,7 @@ public final class ProjectBattleAlpha extends JFrame {
       var3.setOpaque(false);
       var3.setPreferredSize(new Dimension(320, 90));
       var3.setLayout(new BoxLayout(var3, 1));
-      this.versionLabel = this.infoLine(this.tr("Версия лаунчера:", "Launcher version:"), this.tr("0.1.78.25", "0.1.78.25"), ProjectBattleAlpha.Colors.MUTED);
+      this.versionLabel = this.infoLine(this.tr("Версия лаунчера:", "Launcher version:"), this.tr("0.1.78.26", "0.1.78.26"), ProjectBattleAlpha.Colors.MUTED);
       var3.add(this.versionLabel);
       var3.add(Box.createVerticalStrut(5));
       this.editionLabel = this.infoLine(this.tr("Издание:", "Edition:"), "Standard", ProjectBattleAlpha.Colors.MUTED);
@@ -4130,7 +4130,7 @@ public final class ProjectBattleAlpha extends JFrame {
    }
 
    private String diagnosticText() {
-      StringBuilder result = new StringBuilder("Project Battle Alpha 0.1.78.25\n");
+      StringBuilder result = new StringBuilder("Project Battle Alpha 0.1.78.26\n");
       try {
          Path javaPath = ProjectBattleAlpha.Runner.findJava(this.config.minecraftDir);
          Process process = new ProcessBuilder(javaPath.toString(), "-version").redirectErrorStream(true).start();
@@ -4692,7 +4692,7 @@ public final class ProjectBattleAlpha extends JFrame {
             this.log("Minecraft language preference preserved.");
          }
 
-         Files.writeString(var1, "0.1.78.25" + System.lineSeparator(), StandardCharsets.UTF_8, StandardOpenOption.CREATE_NEW);
+         Files.writeString(var1, "0.1.78.26" + System.lineSeparator(), StandardCharsets.UTF_8, StandardOpenOption.CREATE_NEW);
       }
    }
 
@@ -5031,7 +5031,7 @@ public final class ProjectBattleAlpha extends JFrame {
             label149: {
                var3 = (HttpURLConnection)var0.openConnection();
                var3.setInstanceFollowRedirects(true);
-               var3.setRequestProperty("User-Agent", "Project Battle Alpha/0.1.78.25");
+               var3.setRequestProperty("User-Agent", "Project Battle Alpha/0.1.78.26");
                var3.setConnectTimeout(45000);
                var3.setReadTimeout(180000);
                int var5 = var3.getResponseCode();
@@ -5078,7 +5078,7 @@ public final class ProjectBattleAlpha extends JFrame {
                Files.deleteIfExists(var2);
                var5 = (HttpURLConnection)var0.openConnection();
                var5.setInstanceFollowRedirects(true);
-               var5.setRequestProperty("User-Agent", "Project Battle Alpha/0.1.78.25");
+               var5.setRequestProperty("User-Agent", "Project Battle Alpha/0.1.78.26");
                var5.setConnectTimeout(45000);
                var5.setReadTimeout(180000);
                int var6 = var5.getResponseCode();
@@ -6121,11 +6121,6 @@ public final class ProjectBattleAlpha extends JFrame {
             this.paintedShiftX = this.shiftX;
             this.paintedShiftY = this.shiftY;
          }
-         // The stationary screen grid belongs in front of both layers.
-         g.setColor(new Color(0, 0, 0, 82));
-         for (int y = 0; y < this.getHeight(); y += 3) g.drawLine(0, y, this.getWidth(), y);
-         g.setColor(new Color(210, 210, 190, 10));
-         for (int x = 0; x < this.getWidth(); x += 37) g.drawLine(x, 0, x, this.getHeight());
          g.dispose();
       }
    }
@@ -7162,7 +7157,7 @@ public final class ProjectBattleAlpha extends JFrame {
          var11.put("version_type", "PROJECT BATTLE");
          var11.put("natives_directory", var3.toString());
          var11.put("launcher_name", "ProjectBattleAlpha");
-         var11.put("launcher_version", "0.1.78.25");
+         var11.put("launcher_version", "0.1.78.26");
          var11.put("classpath", var9);
          var11.put("library_directory", this.config.minecraftDir.resolve("libraries").toString());
          var11.put("classpath_separator", File.pathSeparator);
@@ -7541,7 +7536,7 @@ public final class ProjectBattleAlpha extends JFrame {
          var1.add(Box.createVerticalStrut(7));
          var1.add(this.sectionButton("integrations", "◇", ProjectBattleAlpha.this.tr("Интеграции", "Integrations")));
          var1.add(Box.createVerticalGlue());
-         JLabel var3 = new JLabel("Project Battle Alpha 0.1.78.25");
+         JLabel var3 = new JLabel("Project Battle Alpha 0.1.78.26");
          var3.setForeground(ProjectBattleAlpha.Colors.MUTED);
          var3.setFont(new Font("SansSerif", 0, 11));
          var3.setAlignmentX(0.0F);
