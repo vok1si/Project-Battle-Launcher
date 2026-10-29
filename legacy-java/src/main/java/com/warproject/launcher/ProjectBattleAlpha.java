@@ -141,7 +141,7 @@ import javax.swing.plaf.basic.BasicScrollBarUI;
 
 public final class ProjectBattleAlpha extends JFrame {
    private static final String APP_NAME = "Project Battle Alpha";
-   private static final String APP_VERSION = "0.1.78.29";
+   private static final String APP_VERSION = "0.1.78.30";
    private static final String PROJECT_PATCH_VERSION = "0.1";
    private static final Cursor LAUNCHER_CURSOR = null;
    private static volatile ProjectBattleAlpha activeLauncher;
@@ -774,7 +774,7 @@ public final class ProjectBattleAlpha extends JFrame {
             .setText(
                infoHtml(
                   this.tr("Версия лаунчера:", "Launcher version:"),
-                  this.arenaMode ? this.tr("Альфа 0.1", "Alpha 0.1") : this.tr("0.1.78.29", "0.1.78.29"),
+                  this.arenaMode ? this.tr("Альфа 0.1", "Alpha 0.1") : this.tr("0.1.78.30", "0.1.78.30"),
                   ProjectBattleAlpha.Colors.MUTED
                )
             );
@@ -925,7 +925,7 @@ public final class ProjectBattleAlpha extends JFrame {
       JLabel var3 = new JLabel(this.tr("версия лаунчера", "launcher version"));
       var3.setForeground(ProjectBattleAlpha.Colors.MUTED);
       var3.setFont(new Font("SansSerif", 0, 11));
-      JLabel var4 = new JLabel("0.1.78.29");
+      JLabel var4 = new JLabel("0.1.78.30");
       var4.setForeground(ProjectBattleAlpha.Colors.MUTED);
       var4.setFont(new Font("SansSerif", 0, 11));
       var2.add(var3, "West");
@@ -1497,7 +1497,7 @@ public final class ProjectBattleAlpha extends JFrame {
       var5.setConnectTimeout(30000);
       var5.setReadTimeout(120000);
       var5.setDoOutput(true);
-      var5.setRequestProperty("User-Agent", "Project Battle Alpha/0.1.78.29");
+      var5.setRequestProperty("User-Agent", "Project Battle Alpha/0.1.78.30");
       var5.setRequestProperty("Accept", "application/json");
       var5.setRequestProperty("Content-Type", "application/json; charset=utf-8");
       if (var3 != null && !var3.isBlank()) {
@@ -1548,7 +1548,7 @@ public final class ProjectBattleAlpha extends JFrame {
       var4.setRequestMethod("GET");
       var4.setConnectTimeout(30000);
       var4.setReadTimeout(120000);
-      var4.setRequestProperty("User-Agent", "Project Battle Alpha/0.1.78.29");
+      var4.setRequestProperty("User-Agent", "Project Battle Alpha/0.1.78.30");
       var4.setRequestProperty("Accept", "application/json");
       if (var2 != null && !var2.isBlank()) {
          var4.setRequestProperty("Authorization", "Bearer " + var2);
@@ -2182,7 +2182,7 @@ public final class ProjectBattleAlpha extends JFrame {
 
       if (this.versionLabel != null) {
          this.versionLabel
-            .setText(infoHtml(this.tr("Версия лаунчера:", "Launcher version:"), this.tr("0.1.78.29", "0.1.78.29"), ProjectBattleAlpha.Colors.MUTED));
+            .setText(infoHtml(this.tr("Версия лаунчера:", "Launcher version:"), this.tr("0.1.78.30", "0.1.78.30"), ProjectBattleAlpha.Colors.MUTED));
       }
 
       if (this.editionLabel != null) {
@@ -3115,7 +3115,7 @@ public final class ProjectBattleAlpha extends JFrame {
       var3.setOpaque(false);
       var3.setPreferredSize(new Dimension(320, 90));
       var3.setLayout(new BoxLayout(var3, 1));
-      this.versionLabel = this.infoLine(this.tr("Версия лаунчера:", "Launcher version:"), this.tr("0.1.78.29", "0.1.78.29"), ProjectBattleAlpha.Colors.MUTED);
+      this.versionLabel = this.infoLine(this.tr("Версия лаунчера:", "Launcher version:"), this.tr("0.1.78.30", "0.1.78.30"), ProjectBattleAlpha.Colors.MUTED);
       var3.add(this.versionLabel);
       var3.add(Box.createVerticalStrut(5));
       this.editionLabel = this.infoLine(this.tr("Издание:", "Edition:"), "Standard", ProjectBattleAlpha.Colors.MUTED);
@@ -4171,7 +4171,7 @@ public final class ProjectBattleAlpha extends JFrame {
    }
 
    private String diagnosticText() {
-      StringBuilder result = new StringBuilder("Project Battle Alpha 0.1.78.29\n");
+      StringBuilder result = new StringBuilder("Project Battle Alpha 0.1.78.30\n");
       try {
          Path javaPath = ProjectBattleAlpha.Runner.findJava(this.config.minecraftDir);
          Process process = new ProcessBuilder(javaPath.toString(), "-version").redirectErrorStream(true).start();
@@ -4733,7 +4733,7 @@ public final class ProjectBattleAlpha extends JFrame {
             this.log("Minecraft language preference preserved.");
          }
 
-         Files.writeString(var1, "0.1.78.29" + System.lineSeparator(), StandardCharsets.UTF_8, StandardOpenOption.CREATE_NEW);
+         Files.writeString(var1, "0.1.78.30" + System.lineSeparator(), StandardCharsets.UTF_8, StandardOpenOption.CREATE_NEW);
       }
    }
 
@@ -5072,7 +5072,7 @@ public final class ProjectBattleAlpha extends JFrame {
             label149: {
                var3 = (HttpURLConnection)var0.openConnection();
                var3.setInstanceFollowRedirects(true);
-               var3.setRequestProperty("User-Agent", "Project Battle Alpha/0.1.78.29");
+               var3.setRequestProperty("User-Agent", "Project Battle Alpha/0.1.78.30");
                var3.setConnectTimeout(45000);
                var3.setReadTimeout(180000);
                int var5 = var3.getResponseCode();
@@ -5119,7 +5119,7 @@ public final class ProjectBattleAlpha extends JFrame {
                Files.deleteIfExists(var2);
                var5 = (HttpURLConnection)var0.openConnection();
                var5.setInstanceFollowRedirects(true);
-               var5.setRequestProperty("User-Agent", "Project Battle Alpha/0.1.78.29");
+               var5.setRequestProperty("User-Agent", "Project Battle Alpha/0.1.78.30");
                var5.setConnectTimeout(45000);
                var5.setReadTimeout(180000);
                int var6 = var5.getResponseCode();
@@ -7145,35 +7145,38 @@ public final class ProjectBattleAlpha extends JFrame {
       private final JLabel valueLabel = new JLabel();
       private final JPopupMenu popup = new JPopupMenu();
       private final JList<String> choices = new JList<>();
+      private final JScrollPane choiceScroll = new JScrollPane(this.choices);
+      private static final Color RAM_GOLD = new Color(226, 169, 65);
+      private static final Color RAM_SURFACE = new Color(19, 23, 21);
 
       RamSelector() {
          super(new BorderLayout(8, 0));
          this.setOpaque(false);
          this.setPreferredSize(new Dimension(170, 34));
          this.setCursor(ProjectBattleAlpha.launcherCursor(12));
-         this.setBorder(BorderFactory.createCompoundBorder(BorderFactory.createLineBorder(ProjectBattleAlpha.Colors.BORDER), new EmptyBorder(0, 9, 0, 8)));
+         this.setBorder(new EmptyBorder(1, 13, 1, 12));
          this.valueLabel.setForeground(ProjectBattleAlpha.Colors.TEXT);
-         this.valueLabel.setFont(new Font("SansSerif", 1, 12));
-         JLabel var1 = new JLabel("▾");
-         var1.setForeground(ProjectBattleAlpha.Colors.MUTED);
-         var1.setFont(new Font("SansSerif", 1, 13));
+         this.valueLabel.setFont(new Font("SansSerif", 1, 14));
+         JLabel var1 = new JLabel("⌄");
+         var1.setForeground(RAM_GOLD);
+         var1.setFont(new Font("SansSerif", 1, 22));
          this.add(this.valueLabel, "Center");
          this.add(var1, "East");
          this.choices.setListData(Arrays.stream(ramChoices()).mapToObj(var0 -> var0 + " MB").toArray(String[]::new));
          this.choices.setForeground(ProjectBattleAlpha.Colors.TEXT);
-         this.choices.setBackground(ProjectBattleAlpha.Colors.PANEL_LIGHT);
-         this.choices.setFont(new Font("SansSerif", 1, 12));
+         this.choices.setBackground(RAM_SURFACE);
+         this.choices.setFont(new Font("SansSerif", 0, 13));
          this.choices.setSelectionMode(0);
-         this.choices.setFixedCellHeight(29);
-         this.choices.setBorder(new EmptyBorder(3, 3, 3, 3));
+         this.choices.setFixedCellHeight(34);
+         this.choices.setBorder(new EmptyBorder(3, 0, 3, 0));
          this.choices.setCellRenderer(new DefaultListCellRenderer() {
             @Override
             public Component getListCellRendererComponent(JList<?> var1, Object var2, int var3, boolean var4, boolean var5) {
                JLabel var6 = (JLabel)super.getListCellRendererComponent(var1, var2, var3, var4, var5);
-               var6.setFont(new Font("SansSerif", 1, 12));
-               var6.setBorder(new EmptyBorder(0, 9, 0, 8));
-               var6.setForeground(ProjectBattleAlpha.Colors.TEXT);
-               var6.setBackground(var4 ? new Color(95, 91, 76) : ProjectBattleAlpha.Colors.PANEL_LIGHT);
+               var6.setFont(new Font("SansSerif", var4 ? Font.BOLD : Font.PLAIN, 13));
+               var6.setBorder(new EmptyBorder(0, 15, 0, 8));
+               var6.setForeground(var4 ? RAM_GOLD : ProjectBattleAlpha.Colors.TEXT);
+               var6.setBackground(var4 ? new Color(56, 45, 26) : RAM_SURFACE);
                return var6;
             }
          });
@@ -7190,32 +7193,58 @@ public final class ProjectBattleAlpha extends JFrame {
                }
             }
          });
-         ProjectBattleAlpha.SoftPanel var2 = new ProjectBattleAlpha.SoftPanel();
-         var2.setLayout(new BorderLayout(0, 10));
-         var2.setBorder(new EmptyBorder(14, 16, 14, 16));
-         JLabel var3 = new JLabel("Память (RAM):");
-         var3.setForeground(ProjectBattleAlpha.Colors.TEXT);
-         var3.setFont(new Font("SansSerif", 1, 12));
-         JLabel var4 = scaleLabel("Выберите объём памяти для Minecraft");
-         JScrollPane var5 = new JScrollPane(this.choices);
-         var5.setOpaque(true);
-         var5.getViewport().setOpaque(true);
-         var5.getViewport().setBackground(ProjectBattleAlpha.Colors.PANEL_LIGHT);
-         var5.setBackground(ProjectBattleAlpha.Colors.PANEL_LIGHT);
-         var5.setBorder(BorderFactory.createLineBorder(ProjectBattleAlpha.Colors.BORDER));
-         var5.getVerticalScrollBar().setUnitIncrement(18);
-         JPanel var6 = new JPanel();
-         var6.setOpaque(false);
-         var6.setLayout(new BoxLayout(var6, 1));
-         var3.setAlignmentX(0.0F);
-         var4.setAlignmentX(0.0F);
-         var6.add(var3);
-         var6.add(Box.createVerticalStrut(4));
-         var6.add(var4);
-         var2.add(var6, "North");
-         var2.add(var5, "Center");
-         this.popup.setBorder(BorderFactory.createLineBorder(ProjectBattleAlpha.Colors.BORDER));
-         this.popup.add(var2);
+         JScrollPane var5 = this.choiceScroll;
+         var5.setBorder(BorderFactory.createEmptyBorder());
+         var5.setBackground(RAM_SURFACE);
+         var5.getViewport().setBackground(RAM_SURFACE);
+         var5.setHorizontalScrollBarPolicy(JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
+         var5.getVerticalScrollBar().setUnitIncrement(34);
+         var5.getVerticalScrollBar().setBackground(RAM_SURFACE);
+         var5.getVerticalScrollBar().setUI(new BasicScrollBarUI() {
+            @Override
+            protected void configureScrollBarColors() {
+               this.trackColor = RAM_SURFACE;
+               this.thumbColor = new Color(104, 82, 45);
+            }
+
+            @Override
+            protected void paintTrack(Graphics graphics, JComponent component, Rectangle bounds) {
+               graphics.setColor(RAM_SURFACE);
+               graphics.fillRect(bounds.x, bounds.y, bounds.width, bounds.height);
+            }
+
+            @Override
+            protected void paintThumb(Graphics graphics, JComponent component, Rectangle bounds) {
+               if (bounds.isEmpty()) return;
+               graphics.setColor(new Color(104, 82, 45));
+               graphics.fillRoundRect(bounds.x + 1, bounds.y + 1,
+                     Math.max(1, bounds.width - 2), Math.max(1, bounds.height - 2), 5, 5);
+            }
+
+            @Override
+            protected JButton createDecreaseButton(int orientation) {
+               return invisibleScrollButton();
+            }
+
+            @Override
+            protected JButton createIncreaseButton(int orientation) {
+               return invisibleScrollButton();
+            }
+
+            private JButton invisibleScrollButton() {
+               JButton button = new JButton();
+               button.setPreferredSize(new Dimension(0, 0));
+               button.setMinimumSize(new Dimension(0, 0));
+               button.setMaximumSize(new Dimension(0, 0));
+               return button;
+            }
+         });
+         var5.getVerticalScrollBar().setPreferredSize(new Dimension(8, 0));
+         this.popup.setLayout(new BorderLayout());
+         this.popup.setOpaque(true);
+         this.popup.setBackground(RAM_SURFACE);
+         this.popup.setBorder(BorderFactory.createLineBorder(new Color(117, 95, 57)));
+         this.popup.add(var5, BorderLayout.CENTER);
          MouseAdapter var7 = new MouseAdapter() {
             @Override
             public void mouseClicked(MouseEvent var1) {
@@ -7248,8 +7277,10 @@ public final class ProjectBattleAlpha extends JFrame {
       }
 
       private void showPopup() {
-         this.popup.setPreferredSize(new Dimension(260, Math.min(320, 94 + this.choices.getModel().getSize() * 29)));
-         this.popup.show(this, 0, this.getHeight() + 4);
+         int rows = Math.min(8, this.choices.getModel().getSize());
+         this.popup.setPreferredSize(new Dimension(this.getWidth(), rows * 34 + 8));
+         this.popup.show(this, 0, this.getHeight() + 3);
+         this.choiceScroll.getVerticalScrollBar().setValue(Math.max(0, this.choices.getSelectedIndex() - rows + 1) * 34);
       }
 
       private void updateValue() {
@@ -7271,32 +7302,14 @@ public final class ProjectBattleAlpha extends JFrame {
          return var0.stream().mapToInt(var1x -> (Integer)var1x).toArray();
       }
 
-      private static JLabel scaleLabel(String var0) {
-         JLabel var1 = new JLabel(var0, 0);
-         var1.setForeground(ProjectBattleAlpha.Colors.MUTED);
-         var1.setFont(new Font("SansSerif", 0, 11));
-         return var1;
-      }
-
-      private static JTextField inputDisplay() {
-         JTextField var0 = new JTextField();
-         var0.setBackground(ProjectBattleAlpha.Colors.PANEL_LIGHT);
-         var0.setForeground(ProjectBattleAlpha.Colors.TEXT);
-         var0.setCaretColor(ProjectBattleAlpha.Colors.TEXT);
-         var0.setBorder(BorderFactory.createCompoundBorder(BorderFactory.createLineBorder(ProjectBattleAlpha.Colors.BORDER), new EmptyBorder(5, 7, 5, 7)));
-         var0.setFont(new Font("SansSerif", 1, 12));
-         return var0;
-      }
-
       @Override
       protected void paintComponent(Graphics var1) {
          Graphics2D var2 = (Graphics2D)var1.create();
-         var2.setPaint(new GradientPaint(0.0F, 0.0F, ProjectBattleAlpha.Colors.PANEL_LIGHT, this.getWidth(), this.getHeight(), new Color(18, 24, 23)));
-         var2.fillRect(0, 0, this.getWidth(), this.getHeight());
-         if (this.popup.isVisible()) {
-            var2.setColor(new Color(215, 205, 170, 42));
-            var2.fillRect(1, 1, this.getWidth() - 2, this.getHeight() - 2);
-         }
+         var2.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
+         var2.setPaint(new GradientPaint(0.0F, 0.0F, new Color(44, 40, 31), this.getWidth(), this.getHeight(), RAM_SURFACE));
+         var2.fillRoundRect(0, 0, this.getWidth(), this.getHeight(), 8, 8);
+         var2.setColor(this.popup.isVisible() ? RAM_GOLD : new Color(137, 108, 65));
+         var2.drawRoundRect(0, 0, this.getWidth() - 1, this.getHeight() - 1, 8, 8);
 
          var2.dispose();
          super.paintComponent(var1);
@@ -7425,7 +7438,7 @@ public final class ProjectBattleAlpha extends JFrame {
          var11.put("version_type", "PROJECT BATTLE");
          var11.put("natives_directory", var3.toString());
          var11.put("launcher_name", "ProjectBattleAlpha");
-         var11.put("launcher_version", "0.1.78.29");
+         var11.put("launcher_version", "0.1.78.30");
          var11.put("classpath", var9);
          var11.put("library_directory", this.config.minecraftDir.resolve("libraries").toString());
          var11.put("classpath_separator", File.pathSeparator);
@@ -7804,7 +7817,7 @@ public final class ProjectBattleAlpha extends JFrame {
          var1.add(Box.createVerticalStrut(7));
          var1.add(this.sectionButton("integrations", "◇", ProjectBattleAlpha.this.tr("Интеграции", "Integrations")));
          var1.add(Box.createVerticalGlue());
-         JLabel var3 = new JLabel("Project Battle Alpha 0.1.78.29");
+         JLabel var3 = new JLabel("Project Battle Alpha 0.1.78.30");
          var3.setForeground(ProjectBattleAlpha.Colors.MUTED);
          var3.setFont(new Font("SansSerif", 0, 11));
          var3.setAlignmentX(0.0F);
