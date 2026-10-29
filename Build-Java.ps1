@@ -38,6 +38,8 @@ $resources = Join-Path $repo 'legacy-java\src\main\resources'
   -C $resources assets/project-battle-parallax-foreground.png `
   -C $resources assets/zero-point-games-logo.png `
   -C $resources assets/project-battle-menu-logo.png `
-  -C $resources assets/profile-pixel-avatar.png
+  -C $resources assets/profile-pixel-avatar.png `
+  -C $resources assets/project-battle-development-0.1.png `
+  -C $resources assets/project-battle-development-0.1.html
 if ($LASTEXITCODE -ne 0) { throw 'JAR asset update failed.' }
 Write-Output $output

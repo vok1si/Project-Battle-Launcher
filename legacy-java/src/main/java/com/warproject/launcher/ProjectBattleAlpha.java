@@ -114,9 +114,11 @@ import javax.swing.JCheckBox;
 import javax.swing.JComboBox;
 import javax.swing.JComponent;
 import javax.swing.JDialog;
+import javax.swing.JEditorPane;
 import javax.swing.JFileChooser;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
+import javax.swing.JLayeredPane;
 import javax.swing.JList;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
@@ -124,6 +126,7 @@ import javax.swing.JPasswordField;
 import javax.swing.JPopupMenu;
 import javax.swing.JProgressBar;
 import javax.swing.JScrollPane;
+import javax.swing.KeyStroke;
 import javax.swing.JTextArea;
 import javax.swing.JTextField;
 import javax.swing.JWindow;
@@ -134,10 +137,12 @@ import javax.swing.border.EmptyBorder;
 import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
 import javax.swing.plaf.basic.BasicComboBoxUI;
+import javax.swing.plaf.basic.BasicScrollBarUI;
 
 public final class ProjectBattleAlpha extends JFrame {
    private static final String APP_NAME = "Project Battle Alpha";
-   private static final String APP_VERSION = "0.1.78.26";
+   private static final String APP_VERSION = "0.1.78.27";
+   private static final String PROJECT_PATCH_VERSION = "0.1";
    private static final Cursor LAUNCHER_CURSOR = null;
    private static volatile ProjectBattleAlpha activeLauncher;
    private static final String PROJECT_NAME = "PROJECT BATTLE";
@@ -190,6 +195,7 @@ public final class ProjectBattleAlpha extends JFrame {
    private final BufferedImage parallaxForegroundImage = loadImage("/assets/project-battle-parallax-foreground.png");
    private final BufferedImage zeroPointLogo = loadImage("/assets/zero-point-games-logo.png");
    private final BufferedImage menuBattleLogo = loadImage("/assets/project-battle-menu-logo.png");
+   private final BufferedImage developmentNewsImage = loadImage("/assets/project-battle-development-0.1.png");
    private final BufferedImage arenaBackgroundImage = loadImage("/assets/arena-background.png");
    private final BufferedImage arenaTransitionImage = loadImage("/assets/arena-transition.png");
    private final BufferedImage standardTransitionImage = loadImage("/assets/standard-transition.png");
@@ -231,6 +237,7 @@ public final class ProjectBattleAlpha extends JFrame {
    private JPanel accountOnlinePanel;
    private CardLayout viewLayout;
    private ProjectBattleAlpha.FadingViewPanel viewPanel;
+   private ProjectBattleAlpha.DevelopmentArticleOverlay developmentOverlay;
    private JLabel gameNav;
    private JLabel newsNav;
    private JLabel rulesNav;
@@ -767,7 +774,7 @@ public final class ProjectBattleAlpha extends JFrame {
             .setText(
                infoHtml(
                   this.tr("Версия лаунчера:", "Launcher version:"),
-                  this.arenaMode ? this.tr("Альфа 0.1", "Alpha 0.1") : this.tr("0.1.78.26", "0.1.78.26"),
+                  this.arenaMode ? this.tr("Альфа 0.1", "Alpha 0.1") : this.tr("0.1.78.27", "0.1.78.27"),
                   ProjectBattleAlpha.Colors.MUTED
                )
             );
@@ -918,7 +925,7 @@ public final class ProjectBattleAlpha extends JFrame {
       JLabel var3 = new JLabel(this.tr("версия лаунчера", "launcher version"));
       var3.setForeground(ProjectBattleAlpha.Colors.MUTED);
       var3.setFont(new Font("SansSerif", 0, 11));
-      JLabel var4 = new JLabel("0.1.78.26");
+      JLabel var4 = new JLabel("0.1.78.27");
       var4.setForeground(ProjectBattleAlpha.Colors.MUTED);
       var4.setFont(new Font("SansSerif", 0, 11));
       var2.add(var3, "West");
@@ -1490,7 +1497,7 @@ public final class ProjectBattleAlpha extends JFrame {
       var5.setConnectTimeout(30000);
       var5.setReadTimeout(120000);
       var5.setDoOutput(true);
-      var5.setRequestProperty("User-Agent", "Project Battle Alpha/0.1.78.26");
+      var5.setRequestProperty("User-Agent", "Project Battle Alpha/0.1.78.27");
       var5.setRequestProperty("Accept", "application/json");
       var5.setRequestProperty("Content-Type", "application/json; charset=utf-8");
       if (var3 != null && !var3.isBlank()) {
@@ -1541,7 +1548,7 @@ public final class ProjectBattleAlpha extends JFrame {
       var4.setRequestMethod("GET");
       var4.setConnectTimeout(30000);
       var4.setReadTimeout(120000);
-      var4.setRequestProperty("User-Agent", "Project Battle Alpha/0.1.78.26");
+      var4.setRequestProperty("User-Agent", "Project Battle Alpha/0.1.78.27");
       var4.setRequestProperty("Accept", "application/json");
       if (var2 != null && !var2.isBlank()) {
          var4.setRequestProperty("Authorization", "Bearer " + var2);
@@ -2175,7 +2182,7 @@ public final class ProjectBattleAlpha extends JFrame {
 
       if (this.versionLabel != null) {
          this.versionLabel
-            .setText(infoHtml(this.tr("Версия лаунчера:", "Launcher version:"), this.tr("0.1.78.26", "0.1.78.26"), ProjectBattleAlpha.Colors.MUTED));
+            .setText(infoHtml(this.tr("Версия лаунчера:", "Launcher version:"), this.tr("0.1.78.27", "0.1.78.27"), ProjectBattleAlpha.Colors.MUTED));
       }
 
       if (this.editionLabel != null) {
@@ -2196,9 +2203,16 @@ public final class ProjectBattleAlpha extends JFrame {
       var1.add(var2);
       final JComponent battleLogo = !this.arenaMode && this.menuBattleLogo != null
             ? new ProjectBattleAlpha.BrandLogoPanel(this.menuBattleLogo,
-                  new Rectangle(0, 0, this.menuBattleLogo.getWidth(), this.menuBattleLogo.getHeight()), 0.78F)
+                  new Rectangle(0, 0, this.menuBattleLogo.getWidth(), this.menuBattleLogo.getHeight()), 0.68F)
             : null;
       if (battleLogo != null) var1.add(battleLogo);
+      final JButton developmentCard = !this.arenaMode && this.developmentNewsImage != null
+            ? new ProjectBattleAlpha.DevelopmentNewsCard(this.developmentNewsImage)
+            : null;
+      if (developmentCard != null) {
+         developmentCard.addActionListener(event -> this.openDevelopmentArticle());
+         var1.add(developmentCard);
+      }
       this.updateNoticeLabel = new JLabel("");
       this.updateNoticeLabel.setForeground(ProjectBattleAlpha.Colors.ERROR);
       this.updateNoticeLabel.setFont(new Font("SansSerif", 1, 11));
@@ -2208,14 +2222,14 @@ public final class ProjectBattleAlpha extends JFrame {
       var1.addComponentListener(new java.awt.event.ComponentAdapter() {
          @Override
          public void componentResized(java.awt.event.ComponentEvent event) {
-            ProjectBattleAlpha.this.positionGameStage(var1, var2, notice, battleLogo);
+            ProjectBattleAlpha.this.positionGameStage(var1, var2, notice, battleLogo, developmentCard);
          }
       });
-      this.positionGameStage(var1, var2, notice, battleLogo);
+      this.positionGameStage(var1, var2, notice, battleLogo, developmentCard);
       return var1;
    }
 
-   private void positionGameStage(JPanel stage, JPanel configStrip, JLabel notice, JComponent battleLogo) {
+   private void positionGameStage(JPanel stage, JPanel configStrip, JLabel notice, JComponent battleLogo, JButton developmentCard) {
       int width = stage.getWidth() > 0 ? stage.getWidth() : 1198;
       int height = stage.getHeight() > 0 ? stage.getHeight() : 655;
       int configX = Math.max(16, width - 668 - 24);
@@ -2227,6 +2241,33 @@ public final class ProjectBattleAlpha extends JFrame {
          int logoHeight = Math.max(1, (int)Math.round(logoWidth * 768.0 / 2048.0));
          battleLogo.setBounds(28, Math.max(20, height - logoHeight - 24), logoWidth, logoHeight);
       }
+      if (developmentCard != null) {
+         int cardWidth = Math.min(324, Math.max(280, width / 3));
+         int cardHeight = Math.min(360, Math.max(260, configY - 62));
+         developmentCard.setBounds(width - cardWidth - 28, 30, cardWidth, cardHeight);
+      }
+   }
+
+   private void openDevelopmentArticle() {
+      if (this.developmentOverlay != null) return;
+      String article;
+      try (InputStream stream = ProjectBattleAlpha.class.getResourceAsStream("/assets/project-battle-development-0.1.html")) {
+         if (stream == null) throw new IOException("Development article is missing from launcher assets.");
+         article = new String(stream.readAllBytes(), StandardCharsets.UTF_8);
+      } catch (IOException error) {
+         this.error(this.tr("Не удалось открыть новость", "Could not open article"), error);
+         return;
+      }
+      JLayeredPane layers = this.getLayeredPane();
+      ProjectBattleAlpha.DevelopmentArticleOverlay overlay = new ProjectBattleAlpha.DevelopmentArticleOverlay(
+            this.developmentNewsImage, article, this.tr("ПАТЧ ", "PATCH ") + PROJECT_PATCH_VERSION,
+            () -> this.developmentOverlay = null);
+      this.developmentOverlay = overlay;
+      overlay.setBounds(0, 0, layers.getWidth(), layers.getHeight());
+      layers.add(overlay, JLayeredPane.POPUP_LAYER);
+      layers.revalidate();
+      layers.repaint();
+      overlay.open();
    }
 
    private JPanel bsgPromoCard(BufferedImage var1, String var2, String var3, boolean var4) {
@@ -3074,7 +3115,7 @@ public final class ProjectBattleAlpha extends JFrame {
       var3.setOpaque(false);
       var3.setPreferredSize(new Dimension(320, 90));
       var3.setLayout(new BoxLayout(var3, 1));
-      this.versionLabel = this.infoLine(this.tr("Версия лаунчера:", "Launcher version:"), this.tr("0.1.78.26", "0.1.78.26"), ProjectBattleAlpha.Colors.MUTED);
+      this.versionLabel = this.infoLine(this.tr("Версия лаунчера:", "Launcher version:"), this.tr("0.1.78.27", "0.1.78.27"), ProjectBattleAlpha.Colors.MUTED);
       var3.add(this.versionLabel);
       var3.add(Box.createVerticalStrut(5));
       this.editionLabel = this.infoLine(this.tr("Издание:", "Edition:"), "Standard", ProjectBattleAlpha.Colors.MUTED);
@@ -4130,7 +4171,7 @@ public final class ProjectBattleAlpha extends JFrame {
    }
 
    private String diagnosticText() {
-      StringBuilder result = new StringBuilder("Project Battle Alpha 0.1.78.26\n");
+      StringBuilder result = new StringBuilder("Project Battle Alpha 0.1.78.27\n");
       try {
          Path javaPath = ProjectBattleAlpha.Runner.findJava(this.config.minecraftDir);
          Process process = new ProcessBuilder(javaPath.toString(), "-version").redirectErrorStream(true).start();
@@ -4692,7 +4733,7 @@ public final class ProjectBattleAlpha extends JFrame {
             this.log("Minecraft language preference preserved.");
          }
 
-         Files.writeString(var1, "0.1.78.26" + System.lineSeparator(), StandardCharsets.UTF_8, StandardOpenOption.CREATE_NEW);
+         Files.writeString(var1, "0.1.78.27" + System.lineSeparator(), StandardCharsets.UTF_8, StandardOpenOption.CREATE_NEW);
       }
    }
 
@@ -5031,7 +5072,7 @@ public final class ProjectBattleAlpha extends JFrame {
             label149: {
                var3 = (HttpURLConnection)var0.openConnection();
                var3.setInstanceFollowRedirects(true);
-               var3.setRequestProperty("User-Agent", "Project Battle Alpha/0.1.78.26");
+               var3.setRequestProperty("User-Agent", "Project Battle Alpha/0.1.78.27");
                var3.setConnectTimeout(45000);
                var3.setReadTimeout(180000);
                int var5 = var3.getResponseCode();
@@ -5078,7 +5119,7 @@ public final class ProjectBattleAlpha extends JFrame {
                Files.deleteIfExists(var2);
                var5 = (HttpURLConnection)var0.openConnection();
                var5.setInstanceFollowRedirects(true);
-               var5.setRequestProperty("User-Agent", "Project Battle Alpha/0.1.78.26");
+               var5.setRequestProperty("User-Agent", "Project Battle Alpha/0.1.78.27");
                var5.setConnectTimeout(45000);
                var5.setReadTimeout(180000);
                int var6 = var5.getResponseCode();
@@ -5470,6 +5511,230 @@ public final class ProjectBattleAlpha extends JFrame {
          int y = (this.getHeight() - height) / 2;
          g.drawImage(this.image, x, y, x + width, y + height, this.source.x, this.source.y,
                this.source.x + this.source.width, this.source.y + this.source.height, null);
+         g.dispose();
+      }
+   }
+
+   private static final class DevelopmentNewsCard extends JButton {
+      private final BufferedImage image;
+
+      DevelopmentNewsCard(BufferedImage image) {
+         this.image = image;
+         this.setContentAreaFilled(false);
+         this.setOpaque(false);
+         this.setFocusPainted(false);
+         this.setBorder(null);
+         this.setCursor(launcherCursor(12));
+         this.setToolTipText("Открыть новость: Project Battle — в разработке");
+      }
+
+      @Override
+      protected void paintComponent(Graphics graphics) {
+         Graphics2D g = (Graphics2D)graphics.create();
+         g.setRenderingHint(RenderingHints.KEY_INTERPOLATION, RenderingHints.VALUE_INTERPOLATION_BILINEAR);
+         g.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
+         int width = this.getWidth();
+         int height = this.getHeight();
+         if (width <= 0 || height <= 0) { g.dispose(); return; }
+         g.setColor(new Color(15, 23, 22, 235));
+         g.fillRoundRect(0, 0, width, height, 10, 10);
+         Shape oldClip = g.getClip();
+         g.setClip(new java.awt.geom.RoundRectangle2D.Double(2, 2, width - 4, height - 4, 9, 9));
+         int imageHeight = height - 42;
+         double scale = Math.max(width / (double)this.image.getWidth(), imageHeight / (double)this.image.getHeight());
+         int drawWidth = (int)Math.round(this.image.getWidth() * scale);
+         int drawHeight = (int)Math.round(this.image.getHeight() * scale);
+         g.drawImage(this.image, (width - drawWidth) / 2, (imageHeight - drawHeight) / 2, drawWidth, drawHeight, null);
+         g.setColor(new Color(12, 22, 21, 245));
+         g.fillRect(0, imageHeight, width, 42);
+         g.setClip(oldClip);
+         g.setColor(this.getModel().isRollover() ? Colors.PLAY : new Color(112, 128, 120));
+         g.setStroke(new BasicStroke(this.getModel().isRollover() ? 2F : 1F));
+         g.drawRoundRect(1, 1, width - 3, height - 3, 10, 10);
+         g.setFont(new Font("SansSerif", Font.BOLD, 13));
+         g.setColor(Colors.PLAY_LIGHT);
+         g.drawString("ПАТЧ " + PROJECT_PATCH_VERSION, 14, height - 15);
+         g.setFont(new Font("SansSerif", Font.PLAIN, 12));
+         g.setColor(Colors.MUTED);
+         g.drawString("Открыть ›", width - 91, height - 15);
+         g.dispose();
+      }
+   }
+
+   private static final class DevelopmentArticleOverlay extends JPanel {
+      private final JPanel card = new JPanel(new BorderLayout());
+      private final Timer animation;
+      private final Runnable onClosed;
+      private final java.awt.event.ComponentAdapter resizeListener;
+      private double progress;
+      private boolean closing;
+
+      DevelopmentArticleOverlay(BufferedImage image, String article, String patchLabel, Runnable onClosed) {
+         super(null);
+         this.onClosed = onClosed;
+         this.setOpaque(false);
+         this.setFocusable(true);
+         this.card.setBackground(new Color(17, 26, 25));
+         this.card.setBorder(BorderFactory.createLineBorder(new Color(96, 111, 103)));
+
+         JPanel header = new JPanel(new BorderLayout());
+         header.setBackground(new Color(23, 34, 32));
+         header.setBorder(new EmptyBorder(10, 18, 10, 14));
+         JLabel patch = new JLabel(patchLabel + "  ·  ZERO POINT GAMES");
+         patch.setForeground(Colors.PLAY);
+         patch.setFont(new Font("SansSerif", Font.BOLD, 13));
+         header.add(patch, BorderLayout.WEST);
+         JButton close = new JButton("×") {
+            @Override
+            protected void paintComponent(Graphics graphics) {
+               Graphics2D g = (Graphics2D)graphics.create();
+               boolean hover = this.getModel().isRollover();
+               g.setColor(hover ? Colors.PLAY : new Color(31, 43, 40));
+               g.fillRect(0, 0, this.getWidth(), this.getHeight());
+               g.setColor(hover ? Colors.PLAY_TEXT : Colors.TEXT);
+               g.setFont(new Font("SansSerif", Font.BOLD, 22));
+               FontMetrics metrics = g.getFontMetrics();
+               g.drawString("×", (this.getWidth() - metrics.stringWidth("×")) / 2,
+                     (this.getHeight() + metrics.getAscent() - metrics.getDescent()) / 2);
+               g.dispose();
+            }
+         };
+         close.setPreferredSize(new Dimension(38, 34));
+         close.setBorder(BorderFactory.createLineBorder(new Color(94, 109, 100)));
+         close.setContentAreaFilled(false);
+         close.setFocusPainted(false);
+         close.setCursor(launcherCursor(12));
+         close.setToolTipText("Закрыть новость");
+         close.addActionListener(event -> this.close());
+         header.add(close, BorderLayout.EAST);
+         this.card.add(header, BorderLayout.NORTH);
+
+         JPanel content = new JPanel(new BorderLayout());
+         content.setBackground(new Color(17, 26, 25));
+         JPanel hero = new JPanel(new BorderLayout(18, 0));
+         hero.setOpaque(false);
+         hero.setBorder(new EmptyBorder(16, 22, 12, 22));
+         hero.setPreferredSize(new Dimension(860, 174));
+         JLabel art = new JLabel(new ImageIcon(image.getScaledInstance(145, 145, java.awt.Image.SCALE_SMOOTH)));
+         hero.add(art, BorderLayout.WEST);
+         JPanel intro = new JPanel();
+         intro.setOpaque(false);
+         intro.setLayout(new BoxLayout(intro, BoxLayout.Y_AXIS));
+         JLabel title = new JLabel("PROJECT BATTLE — В РАЗРАБОТКЕ");
+         title.setForeground(Colors.PLAY_LIGHT);
+         title.setFont(new Font("SansSerif", Font.BOLD, 22));
+         JLabel subtitle = new JLabel("Последние изменения и дальнейшее развитие проекта");
+         subtitle.setForeground(Colors.MUTED);
+         subtitle.setFont(new Font("SansSerif", Font.PLAIN, 13));
+         intro.add(Box.createVerticalGlue());
+         intro.add(title);
+         intro.add(Box.createVerticalStrut(10));
+         intro.add(subtitle);
+         intro.add(Box.createVerticalGlue());
+         hero.add(intro, BorderLayout.CENTER);
+         content.add(hero, BorderLayout.NORTH);
+
+         JEditorPane body = new JEditorPane("text/html", article);
+         body.setEditable(false);
+         body.setBackground(new Color(17, 26, 25));
+         body.setCaretPosition(0);
+         JScrollPane scroll = new JScrollPane(body);
+         scroll.setBackground(new Color(17, 26, 25));
+         scroll.setBorder(new EmptyBorder(0, 17, 17, 17));
+         scroll.getViewport().setBackground(new Color(17, 26, 25));
+         scroll.getVerticalScrollBar().setUnitIncrement(18);
+         scroll.getVerticalScrollBar().setPreferredSize(new Dimension(11, 0));
+         scroll.getVerticalScrollBar().setUI(new BasicScrollBarUI() {
+            @Override
+            protected void configureScrollBarColors() {
+               this.trackColor = new Color(17, 26, 25);
+               this.thumbColor = new Color(79, 97, 85);
+            }
+
+            @Override
+            protected JButton createDecreaseButton(int orientation) {
+               JButton button = new JButton();
+               button.setPreferredSize(new Dimension(0, 0));
+               return button;
+            }
+
+            @Override
+            protected JButton createIncreaseButton(int orientation) {
+               JButton button = new JButton();
+               button.setPreferredSize(new Dimension(0, 0));
+               return button;
+            }
+         });
+         content.add(scroll, BorderLayout.CENTER);
+         this.card.add(content, BorderLayout.CENTER);
+         this.add(this.card);
+
+         this.animation = new Timer(16, event -> this.advance());
+         this.animation.setCoalesce(true);
+         this.resizeListener = new java.awt.event.ComponentAdapter() {
+            @Override
+            public void componentResized(java.awt.event.ComponentEvent event) {
+               DevelopmentArticleOverlay.this.setBounds(0, 0, event.getComponent().getWidth(), event.getComponent().getHeight());
+            }
+         };
+         this.addMouseListener(new MouseAdapter() {
+            @Override
+            public void mouseClicked(MouseEvent event) {
+               if (!DevelopmentArticleOverlay.this.card.getBounds().contains(event.getPoint())) DevelopmentArticleOverlay.this.close();
+            }
+         });
+         this.getInputMap(JComponent.WHEN_IN_FOCUSED_WINDOW).put(KeyStroke.getKeyStroke("ESCAPE"), "close");
+         this.getActionMap().put("close", new AbstractAction() {
+            @Override
+            public void actionPerformed(ActionEvent event) { DevelopmentArticleOverlay.this.close(); }
+         });
+      }
+
+      void open() {
+         this.getParent().addComponentListener(this.resizeListener);
+         this.animation.start();
+         this.requestFocusInWindow();
+      }
+
+      private void close() {
+         if (this.closing) return;
+         this.closing = true;
+         this.animation.start();
+      }
+
+      private void advance() {
+         this.progress += this.closing ? -0.12 : 0.12;
+         this.progress = Math.max(0, Math.min(1, this.progress));
+         this.revalidate();
+         this.repaint();
+         if ((this.closing && this.progress == 0) || (!this.closing && this.progress == 1)) {
+            this.animation.stop();
+            if (this.closing) {
+               Container parent = this.getParent();
+               if (parent != null) {
+                  parent.removeComponentListener(this.resizeListener);
+                  parent.remove(this);
+                  parent.repaint();
+               }
+               this.onClosed.run();
+            }
+         }
+      }
+
+      @Override
+      public void doLayout() {
+         int width = Math.min(940, Math.max(620, this.getWidth() - 64));
+         int height = Math.min(640, Math.max(400, this.getHeight() - 48));
+         double eased = 1 - Math.pow(1 - this.progress, 3);
+         this.card.setBounds((this.getWidth() - width) / 2,
+               (this.getHeight() - height) / 2 + (int)Math.round((1 - eased) * 26), width, height);
+      }
+
+      @Override
+      protected void paintComponent(Graphics graphics) {
+         Graphics2D g = (Graphics2D)graphics.create();
+         g.setColor(new Color(0, 8, 8, (int)Math.round(194 * this.progress)));
+         g.fillRect(0, 0, this.getWidth(), this.getHeight());
          g.dispose();
       }
    }
@@ -7157,7 +7422,7 @@ public final class ProjectBattleAlpha extends JFrame {
          var11.put("version_type", "PROJECT BATTLE");
          var11.put("natives_directory", var3.toString());
          var11.put("launcher_name", "ProjectBattleAlpha");
-         var11.put("launcher_version", "0.1.78.26");
+         var11.put("launcher_version", "0.1.78.27");
          var11.put("classpath", var9);
          var11.put("library_directory", this.config.minecraftDir.resolve("libraries").toString());
          var11.put("classpath_separator", File.pathSeparator);
@@ -7536,7 +7801,7 @@ public final class ProjectBattleAlpha extends JFrame {
          var1.add(Box.createVerticalStrut(7));
          var1.add(this.sectionButton("integrations", "◇", ProjectBattleAlpha.this.tr("Интеграции", "Integrations")));
          var1.add(Box.createVerticalGlue());
-         JLabel var3 = new JLabel("Project Battle Alpha 0.1.78.26");
+         JLabel var3 = new JLabel("Project Battle Alpha 0.1.78.27");
          var3.setForeground(ProjectBattleAlpha.Colors.MUTED);
          var3.setFont(new Font("SansSerif", 0, 11));
          var3.setAlignmentX(0.0F);
