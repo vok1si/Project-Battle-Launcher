@@ -134,6 +134,22 @@ final class PackMaintenance {
         return extras;
     }
 
+    static List<Path> matchingRetiredMods(Path instance, List<FileSpec> retired, Set<String> activePaths) throws IOException {
+        List<Path> matches = new ArrayList<>();
+        for (FileSpec file : retired) {
+            String relative = file.path();
+            if (relative == null || !relative.matches("mods/[A-Za-z0-9._-]+\\.jar")
+                    || activePaths.contains(relative) || file.size() < 0
+                    || file.sha256() == null || !file.sha256().matches("[a-fA-F0-9]{64}"))
+                throw new IOException("Invalid retired mod specification: " + relative);
+            Path target = inside(instance, relative);
+            if (Files.isRegularFile(target, LinkOption.NOFOLLOW_LINKS)
+                    && Files.size(target) == file.size()
+                    && file.sha256().equalsIgnoreCase(sha256(target))) matches.add(target);
+        }
+        return matches;
+    }
+
     static Path quarantineMods(Path instance, Path configDir, List<Path> extras) throws IOException {
         Path mods = instance.resolve("mods").toAbsolutePath().normalize();
         Path backup = configDir.resolve("mod-backups").resolve(String.valueOf(System.currentTimeMillis()));
