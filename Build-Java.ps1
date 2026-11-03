@@ -44,7 +44,7 @@ $resources = Join-Path $repo 'legacy-java\src\main\resources'
   -C $resources assets/project-battle-development-0.1.html `
   -C $resources assets/fonts/minecraft-regular.ttf `
   -C $resources assets/fonts/minecraft-ten.ttf `
-  -C $resources assets/fonts/PixelifySans-wght.ttf `
-  -C $resources assets/fonts/OFL-PixelifySans.txt
+  -C $resources assets/fonts/PressStart2P-Regular.ttf `
+  -C $resources assets/fonts/OFL-PressStart2P.txt
 if ($LASTEXITCODE -ne 0) { throw 'JAR asset update failed.' }
 Write-Output $output

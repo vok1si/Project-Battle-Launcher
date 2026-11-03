@@ -143,7 +143,7 @@ public final class ProjectBattleAlpha extends JFrame {
    private static final String APP_NAME = "Project Battle Alpha";
    private static final String APP_VERSION = "0.1.78.32";
    private static final Font MINECRAFT_FONT = loadSiteFont("/assets/fonts/minecraft-regular.ttf");
-   private static final Font AUTH_FONT = loadSiteFont("/assets/fonts/PixelifySans-wght.ttf");
+   private static final Font AUTH_FONT = loadSiteFont("/assets/fonts/PressStart2P-Regular.ttf");
    private static final String PROJECT_PATCH_VERSION = "0.1";
    private static final Cursor LAUNCHER_CURSOR = null;
    private static volatile ProjectBattleAlpha activeLauncher;
@@ -1398,7 +1398,7 @@ public final class ProjectBattleAlpha extends JFrame {
 
    private JButton authPrimaryButton(String text) {
       JButton button = new ProjectBattleAlpha.PixelButton(text, true, false);
-      button.setFont(AUTH_FONT.deriveFont(Font.BOLD, 17F));
+      button.setFont(AUTH_FONT.deriveFont(12F));
       button.setAlignmentX(0F);
       button.setMaximumSize(new Dimension(Integer.MAX_VALUE, 42));
       button.setPreferredSize(new Dimension(330, 42));
@@ -1412,7 +1412,7 @@ public final class ProjectBattleAlpha extends JFrame {
       button.setContentAreaFilled(false);
       button.setFocusPainted(false);
       button.setForeground(ProjectBattleAlpha.Colors.PLAY);
-      button.setFont(AUTH_FONT.deriveFont(15F));
+      button.setFont(AUTH_FONT.deriveFont(10F));
       button.setCursor(launcherCursor(12));
       button.setAlignmentX(0F);
       button.addMouseListener(new MouseAdapter() {
@@ -1426,7 +1426,7 @@ public final class ProjectBattleAlpha extends JFrame {
       JCheckBox consent = new JCheckBox("<html><u>" + text + "</u></html>");
       consent.setOpaque(false);
       consent.setForeground(ProjectBattleAlpha.Colors.TEXT);
-      consent.setFont(AUTH_FONT.deriveFont(13F));
+      consent.setFont(AUTH_FONT.deriveFont(9F));
       consent.setIcon(this.authCheckIcon(false));
       consent.setSelectedIcon(this.authCheckIcon(true));
       consent.setIconTextGap(8);
@@ -1534,7 +1534,7 @@ public final class ProjectBattleAlpha extends JFrame {
       label.setLineWrap(true);
       label.setWrapStyleWord(true);
       label.setForeground(ProjectBattleAlpha.Colors.TEXT);
-      label.setFont(AUTH_FONT.deriveFont(16F));
+      label.setFont(AUTH_FONT.deriveFont(11F));
       JButton ok = this.authPrimaryButton(this.tr("ПОНЯТНО", "OK"));
       ok.setPreferredSize(new Dimension(150, 42));
       ok.addActionListener(event -> dialog.dispose());
@@ -1607,10 +1607,6 @@ public final class ProjectBattleAlpha extends JFrame {
       JPanel leftText = new JPanel();
       leftText.setOpaque(false);
       leftText.setLayout(new BoxLayout(leftText, BoxLayout.Y_AXIS));
-      JLabel eyebrow = new JLabel("PJM  //  IDENTITY");
-      eyebrow.setFont(AUTH_FONT.deriveFont(Font.BOLD, 16F));
-      eyebrow.setForeground(ProjectBattleAlpha.Colors.PLAY);
-      eyebrow.setAlignmentX(0F);
       JLabel title = new JLabel("<html>" + heading + "</html>");
       title.setFont(new Font("Impact", Font.PLAIN, 67));
       title.setForeground(ProjectBattleAlpha.Colors.TEXT);
@@ -1618,11 +1614,9 @@ public final class ProjectBattleAlpha extends JFrame {
       JLabel description = new JLabel("<html>" + this.tr(
             "Один аккаунт для лаунчера,<br>обновлений и игры.<br><br>После входа можно загрузить<br>сборку и присоединиться к<br>Project Battle.",
             "One account for the launcher,<br>updates and game.<br><br>Sign in to download the pack<br>and join Project Battle.") + "</html>");
-      description.setFont(AUTH_FONT.deriveFont(16F));
+      description.setFont(AUTH_FONT.deriveFont(10F));
       description.setForeground(ProjectBattleAlpha.Colors.TEXT);
       description.setAlignmentX(0F);
-      leftText.add(eyebrow);
-      leftText.add(Box.createVerticalStrut(15));
       leftText.add(title);
       leftText.add(Box.createVerticalStrut(18));
       leftText.add(description);
@@ -1684,7 +1678,7 @@ public final class ProjectBattleAlpha extends JFrame {
             || component instanceof JTextField || component instanceof JTextArea) {
          Font current = component.getFont();
          if (current != null && !current.getFamily().equals(AUTH_FONT.getFamily())) {
-            component.setFont(AUTH_FONT.deriveFont(current.getStyle(), Math.max(13F, current.getSize2D())));
+            component.setFont(AUTH_FONT.deriveFont(Math.min(12F, Math.max(9F, current.getSize2D()))));
          }
       }
       if (component instanceof Container container) {
@@ -1703,7 +1697,7 @@ public final class ProjectBattleAlpha extends JFrame {
       JLabel var2 = new JLabel(var1);
       var2.setAlignmentX(0.0F);
       var2.setForeground(ProjectBattleAlpha.Colors.TEXT);
-      var2.setFont(AUTH_FONT.deriveFont(Font.BOLD, 28F));
+      var2.setFont(AUTH_FONT.deriveFont(17F));
       return var2;
    }
 
@@ -1714,7 +1708,7 @@ public final class ProjectBattleAlpha extends JFrame {
       var3.setMaximumSize(new Dimension(Integer.MAX_VALUE, 62));
       JLabel var4 = new JLabel(var1);
       var4.setForeground(ProjectBattleAlpha.Colors.TEXT);
-      var4.setFont(AUTH_FONT.deriveFont(15F));
+      var4.setFont(AUTH_FONT.deriveFont(10F));
       this.styleAuthInput(var2);
       var2.setPreferredSize(new Dimension(290, 38));
       var3.add(var4, "North");
@@ -1729,7 +1723,7 @@ public final class ProjectBattleAlpha extends JFrame {
          var2.setForeground(ProjectBattleAlpha.Colors.TEXT);
          var2.setCaretColor(ProjectBattleAlpha.Colors.TEXT);
          var2.setBorder(BorderFactory.createCompoundBorder(BorderFactory.createLineBorder(ProjectBattleAlpha.Colors.BORDER), new EmptyBorder(8, 10, 8, 10)));
-         var2.setFont(AUTH_FONT.deriveFont(16F));
+         var2.setFont(AUTH_FONT.deriveFont(11F));
          final float[] focus = { 0F };
          Timer focusTimer = new Timer(16, null);
          focusTimer.addActionListener(event -> {
@@ -1764,10 +1758,10 @@ public final class ProjectBattleAlpha extends JFrame {
       var3.setAlignmentX(0.0F);
       JLabel var4 = new JLabel(var1);
       var4.setForeground(ProjectBattleAlpha.Colors.TEXT);
-      var4.setFont(AUTH_FONT.deriveFont(Font.BOLD, 15F));
+      var4.setFont(AUTH_FONT.deriveFont(11F));
       JLabel var5 = new JLabel(var2 != null && !var2.isBlank() ? var2 : "-");
       var5.setForeground(ProjectBattleAlpha.Colors.MUTED);
-      var5.setFont(AUTH_FONT.deriveFont(15F));
+      var5.setFont(AUTH_FONT.deriveFont(11F));
       var3.add(var4, "West");
       var3.add(var5, "Center");
       return var3;
