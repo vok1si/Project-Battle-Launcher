@@ -142,6 +142,7 @@ import javax.swing.plaf.basic.BasicScrollBarUI;
 public final class ProjectBattleAlpha extends JFrame {
    private static final String APP_NAME = "Project Battle Alpha";
    private static final String APP_VERSION = "0.1.78.32";
+   private static final Font MINECRAFT_FONT = loadSiteFont("/assets/fonts/minecraft-regular.ttf");
    private static final String PROJECT_PATCH_VERSION = "0.1";
    private static final Cursor LAUNCHER_CURSOR = null;
    private static volatile ProjectBattleAlpha activeLauncher;
@@ -507,7 +508,7 @@ public final class ProjectBattleAlpha extends JFrame {
       var2.setOpaque(true);
       var2.setBackground(ProjectBattleAlpha.Colors.TOP);
       this.gameNav = this.navLabel(this.tr("ИГРА", "GAME"), true);
-      this.newsNav = this.navLabel(this.tr("НОВОСТИ ↗", "NEWS ↗"), false);
+      this.newsNav = this.navLabel(this.tr("НОВОСТИ", "NEWS"), false);
       this.rulesNav = this.navLabel(this.tr("ПРАВИЛА", "RULES"), false);
       this.etsNav = this.navLabel("ETS", false);
       this.faqNav = this.navLabel("FAQ", false);
@@ -547,7 +548,7 @@ public final class ProjectBattleAlpha extends JFrame {
             ProjectBattleAlpha.this.showView("faq");
          }
       });
-      this.forumNav = this.navLabel(this.tr("ФОРУМ ↗", "FORUM ↗"), false);
+      this.forumNav = this.navLabel(this.tr("ФОРУМ", "FORUM"), false);
       this.forumNav
          .addMouseListener(
             new MouseAdapter() {
@@ -2135,7 +2136,7 @@ public final class ProjectBattleAlpha extends JFrame {
       }
 
       if (this.newsNav != null) {
-         this.newsNav.setText(this.tr("НОВОСТИ ↗", "NEWS ↗"));
+         this.newsNav.setText(this.tr("НОВОСТИ", "NEWS"));
       }
 
       if (this.rulesNav != null) {
@@ -2151,7 +2152,7 @@ public final class ProjectBattleAlpha extends JFrame {
       }
 
       if (this.forumNav != null) {
-         this.forumNav.setText(this.tr("ФОРУМ ↗", "FORUM ↗"));
+         this.forumNav.setText(this.tr("ФОРУМ", "FORUM"));
       }
 
       if (this.extensionsNav != null) {
@@ -3160,7 +3161,7 @@ public final class ProjectBattleAlpha extends JFrame {
       var2.add(var3, "West");
       var2.add(Box.createHorizontalGlue(), "Center");
       this.playButton = new ProjectBattleAlpha.PlayButton(this.tr("Играть", "Play"), this.playButtonImage);
-      this.playButton.setPreferredSize(new Dimension(228, 52));
+      this.playButton.setPreferredSize(new Dimension(186, 48));
       this.playButton.addActionListener(this::onPlay);
       var2.add(this.playButton, "East");
       var1.add(var2, "Center");
@@ -3227,7 +3228,8 @@ public final class ProjectBattleAlpha extends JFrame {
    }
 
    private JLabel navLabel(String var1, boolean var2) {
-      final ProjectBattleAlpha.NavItemLabel var3 = new ProjectBattleAlpha.NavItemLabel(var1);
+      boolean external = var1.equals(this.tr("НОВОСТИ", "NEWS")) || var1.equals(this.tr("ФОРУМ", "FORUM"));
+      final ProjectBattleAlpha.NavItemLabel var3 = new ProjectBattleAlpha.NavItemLabel(var1, external);
       var3.setActive(var2);
       var3.addMouseListener(new MouseAdapter() {
          @Override
@@ -3450,13 +3452,13 @@ public final class ProjectBattleAlpha extends JFrame {
 
    private JButton smallButton(String var1) {
       ProjectBattleAlpha.DarkButton var2 = new ProjectBattleAlpha.DarkButton(var1);
-      var2.setFont(new Font("SansSerif", 1, 12));
+      var2.setFont(MINECRAFT_FONT.deriveFont(12F));
       return var2;
    }
 
    private JButton actionButton(String var1) {
       ProjectBattleAlpha.SoftActionButton var2 = new ProjectBattleAlpha.SoftActionButton(var1);
-      var2.setFont(new Font("SansSerif", 1, 12));
+      var2.setFont(MINECRAFT_FONT.deriveFont(12F));
       return var2;
    }
 
@@ -5274,6 +5276,14 @@ public final class ProjectBattleAlpha extends JFrame {
       }
    }
 
+   private static Font loadSiteFont(String path) {
+      try (InputStream stream = ProjectBattleAlpha.class.getResourceAsStream(path)) {
+         return stream == null ? new Font("SansSerif", Font.BOLD, 12) : Font.createFont(Font.TRUETYPE_FONT, stream);
+      } catch (Exception ignored) {
+         return new Font("SansSerif", Font.BOLD, 12);
+      }
+   }
+
    private static BufferedImage makeAvatarImage(BufferedImage var0, int var1) {
       BufferedImage var2 = new BufferedImage(var1, var1, 2);
       Graphics2D var3 = var2.createGraphics();
@@ -6055,7 +6065,7 @@ public final class ProjectBattleAlpha extends JFrame {
          this.setContentAreaFilled(false);
          this.setOpaque(false);
          this.setFocusPainted(false);
-         this.setBorder(new EmptyBorder(7, downloadIcon ? 35 : 12, 8, 12));
+         this.setBorder(new EmptyBorder(7, downloadIcon ? 36 : 12, 8, 12));
          this.setForeground(primary ? Colors.PLAY_TEXT : Colors.TEXT);
          this.setCursor(launcherCursor(12));
          this.hoverTimer = new Timer(16, null);
@@ -6083,17 +6093,21 @@ public final class ProjectBattleAlpha extends JFrame {
          boolean pressed = this.isEnabled() && this.getModel().isPressed();
          float light = this.isEnabled() ? this.hover : 0F;
          int offset = pressed ? 2 : -Math.round(light);
-         g.setColor(new Color(2, 5, 9, 125));
-         g.fillRect(2, height - 3, width - 4, 2);
+         g.setColor(new Color(2, 5, 9, 95));
+         g.fillRect(2, height - 2, width - 4, 1);
          Color fill = this.primary
-               ? new Color(121 + (int)(49 * light), 88 + (int)(35 * light), 34 + (int)(6 * light))
-               : new Color(16 + (int)(24 * light), 25 + (int)(21 * light), 37 + (int)(19 * light));
+               ? new Color(255, 179 + (int)(23 * light), 35 + (int)(63 * light))
+               : new Color(32 + (int)(10 * light), 42 + (int)(12 * light), 54 + (int)(14 * light));
          if (pressed) fill = fill.darker();
          g.setColor(fill);
          g.fillRect(2, 2 + offset, width - 4, height - 6);
-         g.setColor(this.primary ? new Color(169 + (int)(28 * light), 134 + (int)(24 * light), 67)
-               : new Color(68 + (int)(48 * light), 84 + (int)(42 * light), 101 + (int)(14 * light)));
+         g.setColor(this.primary ? new Color(255, 198 + (int)(13 * light), 90 + (int)(18 * light))
+               : new Color(68 + (int)(52 * light), 82 + (int)(38 * light), 99 + (int)(13 * light)));
          g.drawRect(2, 2 + offset, width - 5, height - 7);
+         if (this.primary) {
+            g.setColor(new Color(183, 116, 16));
+            g.fillRect(3, height - 7 + offset, width - 6, 3);
+         }
          if (this.downloadIcon) {
             g.setStroke(new BasicStroke(1.8F, BasicStroke.CAP_SQUARE, BasicStroke.JOIN_MITER));
             g.setColor(this.isEnabled() ? (this.primary ? Colors.PLAY_TEXT : Colors.PLAY_LIGHT) : Colors.MUTED);
@@ -6110,7 +6124,7 @@ public final class ProjectBattleAlpha extends JFrame {
          g.dispose();
          Graphics2D textGraphics = (Graphics2D)graphics.create();
          textGraphics.translate(0, offset);
-         this.setForeground(this.primary ? new Color(25, 19, 10) : this.isEnabled() && light > 0.45F ? Colors.PLAY_LIGHT : Colors.TEXT);
+         this.setForeground(this.primary ? Colors.PLAY_TEXT : this.isEnabled() && light > 0.45F ? Colors.PLAY_LIGHT : Colors.TEXT);
          super.paintComponent(textGraphics);
          textGraphics.dispose();
       }
@@ -6176,9 +6190,9 @@ public final class ProjectBattleAlpha extends JFrame {
 
    private static final class DownloadButton extends PixelButton {
       DownloadButton(String text) {
-         super(text, false, true);
+         super(text, true, true);
          this.setHorizontalAlignment(JButton.CENTER);
-         this.setFont(new Font("Monospaced", Font.BOLD, 12));
+         this.setFont(MINECRAFT_FONT.deriveFont(13F));
       }
    }
 
@@ -6965,15 +6979,17 @@ public final class ProjectBattleAlpha extends JFrame {
    }
 
    private static final class NavItemLabel extends JLabel {
+      private final boolean external;
       private boolean active;
       private boolean hover;
       private float glow;
       private Timer glowTimer;
 
-      NavItemLabel(String var1) {
+      NavItemLabel(String var1, boolean external) {
          super(var1);
+         this.external = external;
          this.setOpaque(false);
-         this.setFont(new Font("SansSerif", 0, 20));
+         this.setFont(MINECRAFT_FONT.deriveFont(17F));
          this.setBorder(new EmptyBorder(0, 0, 9, 0));
          this.setCursor(ProjectBattleAlpha.launcherCursor(12));
          this.addMouseListener(new MouseAdapter() {
@@ -6998,10 +7014,17 @@ public final class ProjectBattleAlpha extends JFrame {
          });
       }
 
+      @Override
+      public Dimension getPreferredSize() {
+         Dimension size = super.getPreferredSize();
+         if (this.external) size.width += 17;
+         return size;
+      }
+
       void setActive(boolean var1) {
          this.active = var1;
          this.setForeground(!var1 && !this.hover ? ProjectBattleAlpha.Colors.MUTED : ProjectBattleAlpha.Colors.PLAY_LIGHT);
-         this.setFont(new Font("SansSerif", 0, 20));
+         this.setFont(MINECRAFT_FONT.deriveFont(17F));
          if (!var1 && !this.hover) {
             this.resetGlow();
          } else {
@@ -7072,6 +7095,15 @@ public final class ProjectBattleAlpha extends JFrame {
             var14.fillRect(0, this.getHeight() - 2, var16, 2);
             var14.dispose();
          }
+         if (this.external) {
+            Graphics2D arrow = (Graphics2D)var1.create();
+            arrow.setFont(new Font("SansSerif", Font.PLAIN, 15));
+            arrow.setColor(var2 ? ProjectBattleAlpha.Colors.PLAY_LIGHT : ProjectBattleAlpha.Colors.MUTED);
+            FontMetrics metrics = arrow.getFontMetrics();
+            int y = (this.getHeight() - metrics.getHeight()) / 2 + metrics.getAscent() - 3;
+            arrow.drawString("↗", this.getWidth() - 15, y - Math.round(this.glow * 3F));
+            arrow.dispose();
+         }
       }
    }
 
@@ -7136,7 +7168,24 @@ public final class ProjectBattleAlpha extends JFrame {
    private static final class PlayButton extends PixelButton {
       PlayButton(String text, BufferedImage ignoredOldBackground) {
          super(text, true, false);
-         this.setFont(new Font("Monospaced", Font.BOLD, 16));
+         this.setFont(MINECRAFT_FONT.deriveFont(17F));
+         this.setIcon(new CrosshairIcon());
+         this.setIconTextGap(9);
+      }
+   }
+
+   private static final class CrosshairIcon implements javax.swing.Icon {
+      @Override public int getIconWidth() { return 15; }
+      @Override public int getIconHeight() { return 15; }
+      @Override public void paintIcon(Component component, Graphics graphics, int x, int y) {
+         Graphics2D g = (Graphics2D)graphics.create();
+         g.setColor(Colors.PLAY_TEXT);
+         g.setStroke(new BasicStroke(1.3F));
+         g.drawOval(x + 2, y + 2, 10, 10);
+         g.drawOval(x + 5, y + 5, 4, 4);
+         g.drawLine(x + 7, y, x + 7, y + 3);
+         g.drawLine(x + 7, y + 11, x + 7, y + 14);
+         g.dispose();
       }
    }
 
