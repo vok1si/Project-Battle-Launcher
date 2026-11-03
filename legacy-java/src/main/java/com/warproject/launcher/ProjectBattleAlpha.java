@@ -3161,7 +3161,7 @@ public final class ProjectBattleAlpha extends JFrame {
       var2.add(var3, "West");
       var2.add(Box.createHorizontalGlue(), "Center");
       this.playButton = new ProjectBattleAlpha.PlayButton(this.tr("Играть", "Play"), this.playButtonImage);
-      this.playButton.setPreferredSize(new Dimension(186, 48));
+      this.playButton.setPreferredSize(new Dimension(292, 66));
       this.playButton.addActionListener(this::onPlay);
       var2.add(this.playButton, "East");
       var1.add(var2, "Center");
@@ -6092,7 +6092,7 @@ public final class ProjectBattleAlpha extends JFrame {
          if (width < 5 || height < 8) { g.dispose(); return; }
          boolean pressed = this.isEnabled() && this.getModel().isPressed();
          float light = this.isEnabled() ? this.hover : 0F;
-         int offset = pressed ? 2 : -Math.round(light);
+         int offset = pressed ? 2 : -Math.round(light * 2F);
          g.setColor(new Color(2, 5, 9, 95));
          g.fillRect(2, height - 2, width - 4, 1);
          Color fill = this.primary
@@ -7168,23 +7168,22 @@ public final class ProjectBattleAlpha extends JFrame {
    private static final class PlayButton extends PixelButton {
       PlayButton(String text, BufferedImage ignoredOldBackground) {
          super(text, true, false);
-         this.setFont(MINECRAFT_FONT.deriveFont(17F));
-         this.setIcon(new CrosshairIcon());
-         this.setIconTextGap(9);
+         this.setFont(MINECRAFT_FONT.deriveFont(16F));
+         this.setHorizontalAlignment(JButton.LEFT);
+         this.setBorder(new EmptyBorder(8, 22, 10, 48));
       }
-   }
 
-   private static final class CrosshairIcon implements javax.swing.Icon {
-      @Override public int getIconWidth() { return 15; }
-      @Override public int getIconHeight() { return 15; }
-      @Override public void paintIcon(Component component, Graphics graphics, int x, int y) {
+      @Override
+      protected void paintComponent(Graphics graphics) {
+         super.paintComponent(graphics);
          Graphics2D g = (Graphics2D)graphics.create();
          g.setColor(Colors.PLAY_TEXT);
-         g.setStroke(new BasicStroke(1.3F));
-         g.drawOval(x + 2, y + 2, 10, 10);
-         g.drawOval(x + 5, y + 5, 4, 4);
-         g.drawLine(x + 7, y, x + 7, y + 3);
-         g.drawLine(x + 7, y + 11, x + 7, y + 14);
+         g.setStroke(new BasicStroke(2F, BasicStroke.CAP_SQUARE, BasicStroke.JOIN_MITER));
+         int x = this.getWidth() - 30;
+         int y = this.getHeight() / 2 + (this.getModel().isPressed() ? 2 : 0);
+         g.drawLine(x - 7, y + 5, x + 6, y - 8);
+         g.drawLine(x, y - 8, x + 6, y - 8);
+         g.drawLine(x + 6, y - 8, x + 6, y - 2);
          g.dispose();
       }
    }
