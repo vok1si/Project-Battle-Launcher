@@ -37,13 +37,22 @@ public static class Engine {
  public static readonly JavaScriptSerializer Json = new JavaScriptSerializer();
  public static string PublicKey;
  public static Release Verify(string body) {
-  Envelope e = Json.Deserialize<Envelope>(body);
+  if(String.IsNullOrWhiteSpace(body) || !body.TrimStart('\uFEFF',' ','\r','\n','\t').StartsWith("{",StringComparison.Ordinal))
+   throw new IOException("Сервер обновлений вернул некорректный ответ.");
+  Envelope e;
+  try { e = Json.Deserialize<Envelope>(body); }
+  catch(ArgumentException) { throw new IOException("Сервер обновлений вернул некорректный JSON."); }
+  if(e == null || String.IsNullOrWhiteSpace(e.payload) || String.IsNullOrWhiteSpace(e.signature))
+   throw new IOException("В ответе сервера обновлений отсутствуют данные подписи.");
   byte[] bytes = Convert.FromBase64String(e.payload);
   using(var rsa = new RSACryptoServiceProvider()) {
    rsa.FromXmlString(PublicKey);
    if(!rsa.VerifyData(bytes, CryptoConfig.MapNameToOID("SHA256"), Convert.FromBase64String(e.signature))) throw new IOException("Подпись обновления недействительна.");
   }
-  Release r = Json.Deserialize<Release>(Encoding.UTF8.GetString(bytes));
+  Release r;
+  try { r = Json.Deserialize<Release>(Encoding.UTF8.GetString(bytes)); }
+  catch(ArgumentException) { throw new IOException("Некорректный подписанный манифест обновления."); }
+  if(r == null || String.IsNullOrWhiteSpace(r.version)) throw new IOException("Некорректный манифест обновления.");
   Version.Parse(r.version);
   Uri uri;
   if(!Uri.TryCreate(r.url, UriKind.Absolute, out uri) || uri.Scheme != "https" || uri.Host != "github.com") throw new IOException("Недопустимый адрес обновления.");
@@ -120,7 +129,7 @@ public sealed class GoldProgress:Control {
 }
 public sealed class Window:Form {
  readonly Label title=new Label(), status=new Label(), detail=new Label();
- readonly Button update=new Button(), cancel=new Button();
+ readonly Button update=new Button(), cancel=new Button(), retry=new Button();
  readonly GoldProgress progress=new GoldProgress();
  readonly CancellationTokenSource stop=new CancellationTokenSource();
  readonly System.Windows.Forms.Timer animation=new System.Windows.Forms.Timer();
@@ -142,12 +151,14 @@ public sealed class Window:Form {
   detail.SetBounds(32,310,656,45); detail.ForeColor=Color.FromArgb(155,165,158);
   progress.SetBounds(32,365,656,5);
   update.SetBounds(390,395,144,40); update.Text="Обновить"; update.Visible=false;
+  retry.SetBounds(390,395,144,40); retry.Text="Повторить"; retry.Visible=false;
   cancel.SetBounds(544,395,144,40); cancel.Text="Отмена";
-  foreach(Button button in new[]{update,cancel}) {button.FlatStyle=FlatStyle.Flat;button.BackColor=Color.FromArgb(36,44,39);button.ForeColor=ForeColor;}
-  Controls.AddRange(new Control[]{title,status,detail,progress,update,cancel});
+  foreach(Button button in new[]{update,retry,cancel}) {button.FlatStyle=FlatStyle.Flat;button.BackColor=Color.FromArgb(36,44,39);button.ForeColor=ForeColor;}
+  Controls.AddRange(new Control[]{title,status,detail,progress,update,retry,cancel});
   var close=new Button{Text="×",FlatStyle=FlatStyle.Flat,ForeColor=Color.FromArgb(165,171,157),TabStop=false};close.FlatAppearance.BorderSize=0;close.SetBounds(681,5,32,26);close.Click+=(s,e)=>Close();Controls.Add(close);
   var minimize=new Button{Text="−",FlatStyle=FlatStyle.Flat,ForeColor=close.ForeColor,TabStop=false};minimize.FlatAppearance.BorderSize=0;minimize.SetBounds(647,5,32,26);minimize.Click+=(s,e)=>WindowState=FormWindowState.Minimized;Controls.Add(minimize);
   cancel.Click+=(s,e)=>Close(); update.Click+=async(s,e)=>await Install();
+  retry.Click+=async(s,e)=>await Check();
   animation.Interval=16; animation.Tick+=(s,e)=>Invalidate(new Rectangle(275,105,170,160));animation.Start();
   FormClosed+=(s,e)=>{animation.Stop();animation.Dispose();planet.Dispose();};
   FormClosing+=(s,e)=>stop.Cancel();
@@ -186,13 +197,32 @@ public sealed class Window:Form {
   }
  }
  async Task Check() {
+  retry.Visible=false;
+  status.Text="Проверяем обновление лаунчера…";
+  detail.Text="";
+  string failure=null;
   try {
    Directory.CreateDirectory(Engine.Root);
    using(var client=Engine.Client()) using(var timeout=CancellationTokenSource.CreateLinkedTokenSource(stop.Token)) {
-    timeout.CancelAfter(TimeSpan.FromSeconds(30));
-    using(var response=await client.GetAsync(Engine.Channel,timeout.Token)) {
-     response.EnsureSuccessStatusCode();release=Engine.Verify(await response.Content.ReadAsStringAsync());
+    timeout.CancelAfter(TimeSpan.FromSeconds(45));
+    Exception last=null;
+    for(int attempt=0;attempt<3;attempt++) {
+     bool retryNeeded=false;
+     try {
+      string url=Engine.Channel+"?check="+DateTime.UtcNow.Ticks.ToString()+"-"+attempt;
+      using(var response=await client.GetAsync(url,timeout.Token)) {
+       response.EnsureSuccessStatusCode();
+       release=Engine.Verify(await response.Content.ReadAsStringAsync());
+       break;
+      }
+     } catch(Exception ex) {
+      if(ex is OperationCanceledException) throw;
+      last=ex;
+      retryNeeded=true;
+     }
+     if(retryNeeded && attempt<2) await Task.Delay(500*(attempt+1),timeout.Token);
     }
+    if(release==null) throw new IOException("Не удалось получить корректные данные обновления после трёх попыток.",last);
    }
    Installed current=null;
    try {current=Engine.Current();} catch(IOException) { }
@@ -200,13 +230,26 @@ public sealed class Window:Form {
    status.Text=current==null?"Установить актуальную версию лаунчера":"Выпущено обновление лаунчера "+release.version;
    detail.Text=(release.notes??"")+"\nРазмер: "+(release.size/1048576.0).ToString("F1")+" МБ";
    update.Visible=true;
-  } catch(OperationCanceledException) {if(!stop.IsCancellationRequested) Failure("Проверка обновлений заняла слишком много времени.");}
-    catch(Exception ex) {Failure(ex.Message);}
+  } catch(OperationCanceledException) {if(!stop.IsCancellationRequested) failure="Проверка обновлений заняла слишком много времени.";}
+    catch(Exception ex) {failure=ex.Message;}
+  if(failure!=null) await LaunchInstalledOrFail(failure);
+ }
+ async Task LaunchInstalledOrFail(string message) {
+  try {
+   Installed installed=Engine.Current();
+   if(installed!=null) {
+    status.Text="Не удалось проверить обновления. Запускаем установленный лаунчер…";
+    detail.Text="Проверку можно повторить при следующем запуске.";
+    await Launch(installed);
+    return;
+   }
+  } catch(Exception) { }
+  Failure(message);
  }
  void Failure(string message) {
   if(IsDisposed) return;
   status.Text="Не удалось завершить обновление";detail.Text=message;
-  update.Visible=false;cancel.Text="Закрыть";
+  update.Visible=false;retry.Visible=true;cancel.Text="Закрыть";
  }
  async Task Install() {
   if(busy)return;busy=true;update.Enabled=false;

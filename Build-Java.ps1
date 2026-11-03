@@ -39,9 +39,12 @@ $resources = Join-Path $repo 'legacy-java\src\main\resources'
   -C $resources assets/zero-point-games-logo.png `
   -C $resources assets/project-battle-menu-logo.png `
   -C $resources assets/profile-pixel-avatar.png `
+  -C $resources assets/account-identity-landscape.png `
   -C $resources assets/project-battle-development-0.1.png `
   -C $resources assets/project-battle-development-0.1.html `
   -C $resources assets/fonts/minecraft-regular.ttf `
-  -C $resources assets/fonts/minecraft-ten.ttf
+  -C $resources assets/fonts/minecraft-ten.ttf `
+  -C $resources assets/fonts/PressStart2P-Regular.ttf `
+  -C $resources assets/fonts/OFL-PressStart2P.txt
 if ($LASTEXITCODE -ne 0) { throw 'JAR asset update failed.' }
 Write-Output $output
