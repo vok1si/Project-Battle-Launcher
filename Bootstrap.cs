@@ -70,10 +70,17 @@ public static class Engine {
  public static Installed Current() {
   string p = Path.Combine(Root,"current.json");
   if(!File.Exists(p)) return null;
-  Installed state = Json.Deserialize<Installed>(File.ReadAllText(p));
-  Version.Parse(state.version);
-  string dir = SafePath(Path.Combine(Root,"versions"), state.directory);
-  if(!File.Exists(SafePath(dir,state.entry))) throw new IOException("Установленный лаунчер повреждён. Нажмите «Восстановить».");
+  Installed state;
+  try { state=Json.Deserialize<Installed>(File.ReadAllText(p,Encoding.UTF8)); }
+  catch(ArgumentException) { return null; }
+  if(state==null || String.IsNullOrWhiteSpace(state.version) ||
+     String.IsNullOrWhiteSpace(state.directory) || String.IsNullOrWhiteSpace(state.entry)) return null;
+  Version version;
+  if(!Version.TryParse(state.version,out version)) return null;
+  try {
+   string dir=SafePath(Path.Combine(Root,"versions"),state.directory);
+   if(!File.Exists(SafePath(dir,state.entry))) return null;
+  } catch(IOException) { return null; }
   return state;
  }
  public static void Extract(string archive,string destination) {
