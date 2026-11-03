@@ -141,7 +141,7 @@ import javax.swing.plaf.basic.BasicScrollBarUI;
 
 public final class ProjectBattleAlpha extends JFrame {
    private static final String APP_NAME = "Project Battle Alpha";
-   private static final String APP_VERSION = "0.1.78.31";
+   private static final String APP_VERSION = "0.1.78.32";
    private static final String PROJECT_PATCH_VERSION = "0.1";
    private static final Cursor LAUNCHER_CURSOR = null;
    private static volatile ProjectBattleAlpha activeLauncher;
@@ -481,7 +481,7 @@ public final class ProjectBattleAlpha extends JFrame {
       var3.setOpaque(false);
       var3.setBorder(new EmptyBorder(0, 26, 22, 26));
       this.updateButton = new ProjectBattleAlpha.DownloadButton(this.tr("Загрузить", "Download"));
-      this.updateButton.setPreferredSize(new Dimension(176, 52));
+      this.updateButton.setPreferredSize(new Dimension(176, 46));
       this.updateButton.addActionListener(this::onUpdate);
       this.progress = new JProgressBar(0, 100);
       this.progress.setStringPainted(true);
@@ -502,7 +502,7 @@ public final class ProjectBattleAlpha extends JFrame {
       var1.setPreferredSize(new Dimension(1198, 104));
       var1.setBackground(ProjectBattleAlpha.Colors.TOP);
       var1.setBorder(BorderFactory.createCompoundBorder(
-            BorderFactory.createMatteBorder(0, 0, 1, 0, new Color(50, 51, 48)), new EmptyBorder(0, 26, 0, 6)));
+            BorderFactory.createMatteBorder(0, 0, 1, 0, ProjectBattleAlpha.Colors.BORDER), new EmptyBorder(0, 26, 0, 6)));
       JPanel var2 = new JPanel(new FlowLayout(0, 24, 38));
       var2.setOpaque(true);
       var2.setBackground(ProjectBattleAlpha.Colors.TOP);
@@ -774,7 +774,7 @@ public final class ProjectBattleAlpha extends JFrame {
             .setText(
                infoHtml(
                   this.tr("Версия лаунчера:", "Launcher version:"),
-                  this.arenaMode ? this.tr("Альфа 0.1", "Alpha 0.1") : this.tr("0.1.78.31", "0.1.78.31"),
+                  this.arenaMode ? this.tr("Альфа 0.1", "Alpha 0.1") : APP_VERSION,
                   ProjectBattleAlpha.Colors.MUTED
                )
             );
@@ -925,7 +925,7 @@ public final class ProjectBattleAlpha extends JFrame {
       JLabel var3 = new JLabel(this.tr("версия лаунчера", "launcher version"));
       var3.setForeground(ProjectBattleAlpha.Colors.MUTED);
       var3.setFont(new Font("SansSerif", 0, 11));
-      JLabel var4 = new JLabel("0.1.78.31");
+      JLabel var4 = new JLabel("0.1.78.32");
       var4.setForeground(ProjectBattleAlpha.Colors.MUTED);
       var4.setFont(new Font("SansSerif", 0, 11));
       var2.add(var3, "West");
@@ -1497,7 +1497,7 @@ public final class ProjectBattleAlpha extends JFrame {
       var5.setConnectTimeout(30000);
       var5.setReadTimeout(120000);
       var5.setDoOutput(true);
-      var5.setRequestProperty("User-Agent", "Project Battle Alpha/0.1.78.31");
+      var5.setRequestProperty("User-Agent", "Project Battle Alpha/0.1.78.32");
       var5.setRequestProperty("Accept", "application/json");
       var5.setRequestProperty("Content-Type", "application/json; charset=utf-8");
       if (var3 != null && !var3.isBlank()) {
@@ -1548,7 +1548,7 @@ public final class ProjectBattleAlpha extends JFrame {
       var4.setRequestMethod("GET");
       var4.setConnectTimeout(30000);
       var4.setReadTimeout(120000);
-      var4.setRequestProperty("User-Agent", "Project Battle Alpha/0.1.78.31");
+      var4.setRequestProperty("User-Agent", "Project Battle Alpha/0.1.78.32");
       var4.setRequestProperty("Accept", "application/json");
       if (var2 != null && !var2.isBlank()) {
          var4.setRequestProperty("Authorization", "Bearer " + var2);
@@ -2182,7 +2182,7 @@ public final class ProjectBattleAlpha extends JFrame {
 
       if (this.versionLabel != null) {
          this.versionLabel
-            .setText(infoHtml(this.tr("Версия лаунчера:", "Launcher version:"), this.tr("0.1.78.31", "0.1.78.31"), ProjectBattleAlpha.Colors.MUTED));
+            .setText(infoHtml(this.tr("Версия лаунчера:", "Launcher version:"), this.tr("0.1.78.32", "0.1.78.32"), ProjectBattleAlpha.Colors.MUTED));
       }
 
       if (this.editionLabel != null) {
@@ -3115,7 +3115,7 @@ public final class ProjectBattleAlpha extends JFrame {
       var3.setOpaque(false);
       var3.setPreferredSize(new Dimension(320, 90));
       var3.setLayout(new BoxLayout(var3, 1));
-      this.versionLabel = this.infoLine(this.tr("Версия лаунчера:", "Launcher version:"), this.tr("0.1.78.31", "0.1.78.31"), ProjectBattleAlpha.Colors.MUTED);
+      this.versionLabel = this.infoLine(this.tr("Версия лаунчера:", "Launcher version:"), APP_VERSION, ProjectBattleAlpha.Colors.MUTED);
       var3.add(this.versionLabel);
       var3.add(Box.createVerticalStrut(5));
       this.editionLabel = this.infoLine(this.tr("Издание:", "Edition:"), "Standard", ProjectBattleAlpha.Colors.MUTED);
@@ -3160,7 +3160,7 @@ public final class ProjectBattleAlpha extends JFrame {
       var2.add(var3, "West");
       var2.add(Box.createHorizontalGlue(), "Center");
       this.playButton = new ProjectBattleAlpha.PlayButton(this.tr("Играть", "Play"), this.playButtonImage);
-      this.playButton.setPreferredSize(new Dimension(292, 66));
+      this.playButton.setPreferredSize(new Dimension(228, 52));
       this.playButton.addActionListener(this::onPlay);
       var2.add(this.playButton, "East");
       var1.add(var2, "Center");
@@ -4171,7 +4171,7 @@ public final class ProjectBattleAlpha extends JFrame {
    }
 
    private String diagnosticText() {
-      StringBuilder result = new StringBuilder("Project Battle Alpha 0.1.78.31\n");
+      StringBuilder result = new StringBuilder("Project Battle Alpha 0.1.78.32\n");
       try {
          Path javaPath = ProjectBattleAlpha.Runner.findJava(this.config.minecraftDir);
          Process process = new ProcessBuilder(javaPath.toString(), "-version").redirectErrorStream(true).start();
@@ -4740,7 +4740,7 @@ public final class ProjectBattleAlpha extends JFrame {
             this.log("Minecraft language preference preserved.");
          }
 
-         Files.writeString(var1, "0.1.78.31" + System.lineSeparator(), StandardCharsets.UTF_8, StandardOpenOption.CREATE_NEW);
+         Files.writeString(var1, "0.1.78.32" + System.lineSeparator(), StandardCharsets.UTF_8, StandardOpenOption.CREATE_NEW);
       }
    }
 
@@ -5079,7 +5079,7 @@ public final class ProjectBattleAlpha extends JFrame {
             label149: {
                var3 = (HttpURLConnection)var0.openConnection();
                var3.setInstanceFollowRedirects(true);
-               var3.setRequestProperty("User-Agent", "Project Battle Alpha/0.1.78.31");
+               var3.setRequestProperty("User-Agent", "Project Battle Alpha/0.1.78.32");
                var3.setConnectTimeout(45000);
                var3.setReadTimeout(180000);
                int var5 = var3.getResponseCode();
@@ -5126,7 +5126,7 @@ public final class ProjectBattleAlpha extends JFrame {
                Files.deleteIfExists(var2);
                var5 = (HttpURLConnection)var0.openConnection();
                var5.setInstanceFollowRedirects(true);
-               var5.setRequestProperty("User-Agent", "Project Battle Alpha/0.1.78.31");
+               var5.setRequestProperty("User-Agent", "Project Battle Alpha/0.1.78.32");
                var5.setConnectTimeout(45000);
                var5.setReadTimeout(180000);
                int var6 = var5.getResponseCode();
@@ -5543,7 +5543,7 @@ public final class ProjectBattleAlpha extends JFrame {
          int width = this.getWidth();
          int height = this.getHeight();
          if (width <= 0 || height <= 0) { g.dispose(); return; }
-         g.setColor(new Color(15, 23, 22, 235));
+         g.setColor(new Color(10, 17, 26, 235));
          g.fillRoundRect(0, 0, width, height, 10, 10);
          Shape oldClip = g.getClip();
          g.setClip(new java.awt.geom.RoundRectangle2D.Double(2, 2, width - 4, height - 4, 9, 9));
@@ -5552,7 +5552,7 @@ public final class ProjectBattleAlpha extends JFrame {
          int drawWidth = (int)Math.round(this.image.getWidth() * scale);
          int drawHeight = (int)Math.round(this.image.getHeight() * scale);
          g.drawImage(this.image, (width - drawWidth) / 2, (imageHeight - drawHeight) / 2, drawWidth, drawHeight, null);
-         g.setColor(new Color(12, 22, 21, 245));
+         g.setColor(new Color(7, 13, 21, 245));
          g.fillRect(0, imageHeight, width, 42);
          g.setClip(oldClip);
          g.setColor(this.getModel().isRollover() ? Colors.PLAY : new Color(112, 128, 120));
@@ -5903,19 +5903,19 @@ public final class ProjectBattleAlpha extends JFrame {
    }
 
    private static final class Colors {
-      static final Color SIDEBAR = new Color(14, 20, 20);
-      static final Color TOP = new Color(21, 20, 19);
-      static final Color PANEL = new Color(16, 22, 23);
-      static final Color STAGE_CLEAR = new Color(11, 14, 14);
-      static final Color PANEL_LIGHT = new Color(38, 47, 45);
-      static final Color BUTTON = new Color(30, 38, 38);
-      static final Color BORDER = new Color(82, 91, 86);
-      static final Color TEXT = new Color(232, 232, 222);
-      static final Color MUTED = new Color(142, 148, 140);
-      static final Color LOGO = new Color(218, 222, 204);
-      static final Color PLAY = new Color(214, 198, 151);
-      static final Color PLAY_LIGHT = new Color(238, 232, 196);
-      static final Color PLAY_TEXT = new Color(70, 52, 38);
+      static final Color SIDEBAR = new Color(5, 9, 15);
+      static final Color TOP = new Color(8, 14, 23);
+      static final Color PANEL = new Color(11, 17, 25);
+      static final Color STAGE_CLEAR = new Color(5, 9, 15);
+      static final Color PANEL_LIGHT = new Color(25, 36, 49);
+      static final Color BUTTON = new Color(20, 30, 44);
+      static final Color BORDER = new Color(59, 70, 84);
+      static final Color TEXT = new Color(238, 234, 221);
+      static final Color MUTED = new Color(154, 167, 183);
+      static final Color LOGO = new Color(229, 230, 219);
+      static final Color PLAY = new Color(255, 179, 35);
+      static final Color PLAY_LIGHT = new Color(255, 202, 98);
+      static final Color PLAY_TEXT = new Color(32, 22, 5);
       static final Color ONLINE = new Color(116, 220, 35);
       static final Color ERROR = new Color(255, 105, 105);
    }
@@ -6042,32 +6042,82 @@ public final class ProjectBattleAlpha extends JFrame {
       }
    }
 
-   private static final class DarkButton extends JButton {
-      DarkButton(String var1) {
-         super(var1);
+   private static class PixelButton extends JButton {
+      private final boolean primary;
+      private final boolean downloadIcon;
+      private float hover;
+      private final Timer hoverTimer;
+
+      PixelButton(String text, boolean primary, boolean downloadIcon) {
+         super(text);
+         this.primary = primary;
+         this.downloadIcon = downloadIcon;
          this.setContentAreaFilled(false);
          this.setOpaque(false);
          this.setFocusPainted(false);
-         this.setForeground(ProjectBattleAlpha.Colors.TEXT);
-         this.setBorder(new EmptyBorder(8, 13, 8, 13));
+         this.setBorder(new EmptyBorder(7, downloadIcon ? 35 : 12, 8, 12));
+         this.setForeground(primary ? Colors.PLAY_TEXT : Colors.TEXT);
+         this.setCursor(launcherCursor(12));
+         this.hoverTimer = new Timer(16, null);
+         this.hoverTimer.addActionListener(event -> {
+            float target = this.isEnabled() && this.getModel().isRollover() ? 1F : 0F;
+            this.hover += (target - this.hover) * 0.22F;
+            if (Math.abs(target - this.hover) < 0.02F) {
+               this.hover = target;
+               this.hoverTimer.stop();
+            }
+            this.repaint();
+         });
+         this.addMouseListener(new MouseAdapter() {
+            @Override public void mouseEntered(MouseEvent event) { PixelButton.this.hoverTimer.start(); }
+            @Override public void mouseExited(MouseEvent event) { PixelButton.this.hoverTimer.start(); }
+         });
       }
 
       @Override
-      protected void paintComponent(Graphics var1) {
-         Graphics2D var2 = (Graphics2D)var1.create();
-         var2.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
-         var2.setPaint(new GradientPaint(0.0F, 0.0F, new Color(46, 55, 53), this.getWidth(), this.getHeight(), new Color(22, 28, 28)));
-         var2.fillRoundRect(0, 0, this.getWidth(), this.getHeight(), 14, 14);
-         var2.setColor(ProjectBattleAlpha.Colors.BORDER);
-         var2.drawRoundRect(0, 0, this.getWidth() - 1, this.getHeight() - 1, 14, 14);
-         if (this.getModel().isRollover()) {
-            var2.setColor(new Color(255, 255, 255, 18));
-            var2.fillRoundRect(1, 1, this.getWidth() - 2, this.getHeight() - 2, 12, 12);
+      protected void paintComponent(Graphics graphics) {
+         Graphics2D g = (Graphics2D)graphics.create();
+         int width = this.getWidth();
+         int height = this.getHeight();
+         if (width < 5 || height < 8) { g.dispose(); return; }
+         boolean pressed = this.isEnabled() && this.getModel().isPressed();
+         float light = this.isEnabled() ? this.hover : 0F;
+         int offset = pressed ? 2 : -Math.round(light);
+         g.setColor(new Color(2, 5, 9, 125));
+         g.fillRect(2, height - 3, width - 4, 2);
+         Color fill = this.primary
+               ? new Color(121 + (int)(49 * light), 88 + (int)(35 * light), 34 + (int)(6 * light))
+               : new Color(16 + (int)(24 * light), 25 + (int)(21 * light), 37 + (int)(19 * light));
+         if (pressed) fill = fill.darker();
+         g.setColor(fill);
+         g.fillRect(2, 2 + offset, width - 4, height - 6);
+         g.setColor(this.primary ? new Color(169 + (int)(28 * light), 134 + (int)(24 * light), 67)
+               : new Color(68 + (int)(48 * light), 84 + (int)(42 * light), 101 + (int)(14 * light)));
+         g.drawRect(2, 2 + offset, width - 5, height - 7);
+         if (this.downloadIcon) {
+            g.setStroke(new BasicStroke(1.8F, BasicStroke.CAP_SQUARE, BasicStroke.JOIN_MITER));
+            g.setColor(this.isEnabled() ? (this.primary ? Colors.PLAY_TEXT : Colors.PLAY_LIGHT) : Colors.MUTED);
+            int cy = height / 2 + offset;
+            g.drawLine(22, cy - 8, 22, cy + 3);
+            g.drawLine(17, cy - 2, 22, cy + 3);
+            g.drawLine(27, cy - 2, 22, cy + 3);
+            g.drawLine(16, cy + 7, 28, cy + 7);
          }
-
-         var2.dispose();
-         super.paintComponent(var1);
+         if (!this.isEnabled()) {
+            g.setColor(new Color(5, 9, 15, 100));
+            g.fillRect(2, 2 + offset, width - 4, height - 6);
+         }
+         g.dispose();
+         Graphics2D textGraphics = (Graphics2D)graphics.create();
+         textGraphics.translate(0, offset);
+         this.setForeground(this.primary ? new Color(25, 19, 10) : this.isEnabled() && light > 0.45F ? Colors.PLAY_LIGHT : Colors.TEXT);
+         super.paintComponent(textGraphics);
+         textGraphics.dispose();
       }
+   }
+
+   private static final class DarkButton extends PixelButton {
+      DarkButton(String text) { super(text, false, false); }
    }
 
    private static final class DarkComboBox extends JComboBox<String> {
@@ -6124,43 +6174,11 @@ public final class ProjectBattleAlpha extends JFrame {
       }
    }
 
-   private static final class DownloadButton extends JButton {
-      DownloadButton(String var1) {
-         super(var1);
-         this.setContentAreaFilled(false);
-         this.setOpaque(false);
-         this.setFocusPainted(false);
-         this.setForeground(ProjectBattleAlpha.Colors.TEXT);
-         this.setBorder(new EmptyBorder(8, 52, 8, 12));
-         this.setHorizontalAlignment(2);
-         this.setFont(new Font("SansSerif", 1, 16));
-      }
-
-      @Override
-      protected void paintComponent(Graphics var1) {
-         Graphics2D var2 = (Graphics2D)var1.create();
-         var2.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
-         var2.setPaint(new GradientPaint(0.0F, 0.0F, new Color(30, 36, 36), this.getWidth(), this.getHeight(), new Color(15, 19, 20)));
-         var2.fillRoundRect(0, 0, this.getWidth(), this.getHeight(), 6, 6);
-         if (this.isEnabled() && this.getModel().isRollover()) {
-            var2.setColor(new Color(255, 255, 255, 18));
-            var2.fillRoundRect(1, 1, this.getWidth() - 2, this.getHeight() - 2, 6, 6);
-         }
-
-         var2.setColor(ProjectBattleAlpha.Colors.BORDER);
-         var2.drawRoundRect(0, 0, this.getWidth() - 1, this.getHeight() - 1, 6, 6);
-         var2.setStroke(new BasicStroke(2.2F, 1, 1));
-         var2.setColor(this.isEnabled() ? ProjectBattleAlpha.Colors.TEXT : ProjectBattleAlpha.Colors.MUTED);
-         byte var3 = 28;
-         int var4 = this.getHeight() / 2;
-         var2.drawLine(var3, var4 - 12, var3, var4 + 2);
-         var2.drawLine(var3 - 6, var4 - 4, var3, var4 + 2);
-         var2.drawLine(var3 + 6, var4 - 4, var3, var4 + 2);
-         var2.drawLine(var3 - 8, var4 + 8, var3 + 8, var4 + 8);
-         var2.drawLine(var3 - 8, var4 + 4, var3 - 8, var4 + 8);
-         var2.drawLine(var3 + 8, var4 + 4, var3 + 8, var4 + 8);
-         var2.dispose();
-         super.paintComponent(var1);
+   private static final class DownloadButton extends PixelButton {
+      DownloadButton(String text) {
+         super(text, false, true);
+         this.setHorizontalAlignment(JButton.CENTER);
+         this.setFont(new Font("Monospaced", Font.BOLD, 12));
       }
    }
 
@@ -6239,7 +6257,7 @@ public final class ProjectBattleAlpha extends JFrame {
          var2.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
          boolean var3 = this.getModel().isRollover();
          var2.setPaint(
-            new GradientPaint(0.0F, 0.0F, var3 ? new Color(54, 66, 63) : new Color(42, 52, 50), this.getWidth(), this.getHeight(), new Color(19, 26, 26))
+            new GradientPaint(0.0F, 0.0F, var3 ? new Color(49, 62, 81) : new Color(27, 39, 55), this.getWidth(), this.getHeight(), new Color(10, 18, 30))
          );
          var2.fillRoundRect(0, 0, this.getWidth() - 1, this.getHeight() - 1, 14, 14);
          var2.setColor(ProjectBattleAlpha.Colors.BORDER);
@@ -6255,7 +6273,7 @@ public final class ProjectBattleAlpha extends JFrame {
          }
 
          var2.fillOval(-5, -5, 10, 10);
-         var2.setColor(var3 ? new Color(31, 41, 40) : new Color(23, 30, 30));
+         var2.setColor(var3 ? new Color(31, 42, 55) : new Color(17, 26, 38));
          var2.fillOval(-2, -2, 4, 4);
          var2.dispose();
       }
@@ -6357,11 +6375,11 @@ public final class ProjectBattleAlpha extends JFrame {
          Graphics2D base = backdrop.createGraphics();
          base.setRenderingHint(RenderingHints.KEY_INTERPOLATION, RenderingHints.VALUE_INTERPOLATION_BILINEAR);
          base.drawImage(this.background, imageX, imageY, imageWidth, imageHeight, null);
-         base.setPaint(new GradientPaint(-origin.x, -origin.y, new Color(0, 0, 0, 205), fullWidth - origin.x, fullHeight - origin.y, new Color(0, 0, 0, 120)));
+         base.setPaint(new GradientPaint(-origin.x, -origin.y, new Color(2, 7, 17, 195), fullWidth - origin.x, fullHeight - origin.y, new Color(3, 9, 19, 118)));
          base.fillRect(0, 0, this.getWidth(), this.getHeight());
-         base.setColor(new Color(225, 210, 180, 18));
+         base.setColor(new Color(79, 110, 151, 12));
          base.fillRect(0, 0, this.getWidth(), this.getHeight());
-         base.setColor(new Color(0, 0, 0, 110));
+         base.setColor(new Color(1, 4, 11, 90));
          base.fillRect(0, 0, this.getWidth(), this.getHeight());
          base.dispose();
 
@@ -6982,7 +7000,7 @@ public final class ProjectBattleAlpha extends JFrame {
 
       void setActive(boolean var1) {
          this.active = var1;
-         this.setForeground(!var1 && !this.hover ? ProjectBattleAlpha.Colors.MUTED : ProjectBattleAlpha.Colors.TEXT);
+         this.setForeground(!var1 && !this.hover ? ProjectBattleAlpha.Colors.MUTED : ProjectBattleAlpha.Colors.PLAY_LIGHT);
          this.setFont(new Font("SansSerif", 0, 20));
          if (!var1 && !this.hover) {
             this.resetGlow();
@@ -7024,7 +7042,7 @@ public final class ProjectBattleAlpha extends JFrame {
       @Override
       protected void paintComponent(Graphics var1) {
          boolean var2 = this.active || this.hover || this.glow > 0.02F;
-         this.setForeground(var2 ? ProjectBattleAlpha.Colors.TEXT : ProjectBattleAlpha.Colors.MUTED);
+         this.setForeground(var2 ? ProjectBattleAlpha.Colors.PLAY_LIGHT : ProjectBattleAlpha.Colors.MUTED);
          Graphics2D var3 = (Graphics2D)var1.create();
          var3.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
          if (this.glow > 0.02F) {
@@ -7033,7 +7051,7 @@ public final class ProjectBattleAlpha extends JFrame {
             int var6 = (this.getHeight() - var5.top - var5.bottom - var4.getHeight()) / 2 + var4.getAscent() + var5.top;
             int var7 = var5.left;
             int var8 = Math.max(1, Math.min(12, Math.round(this.glow * 12.0F)));
-            var3.setColor(new Color(238, 232, 196, var8));
+            var3.setColor(new Color(255, 179, 35, var8));
             int[][] var9 = new int[][]{{-1, 0}, {1, 0}, {0, -1}, {0, 1}};
 
             for (int[] var13 : var9) {
@@ -7042,11 +7060,14 @@ public final class ProjectBattleAlpha extends JFrame {
          }
 
          var3.dispose();
-         super.paintComponent(var1);
+         Graphics2D raised = (Graphics2D)var1.create();
+         raised.translate(0, -Math.round(this.glow * 3F));
+         super.paintComponent(raised);
+         raised.dispose();
          if (this.active || this.hover) {
             Graphics2D var14 = (Graphics2D)var1.create();
             int var15 = this.active ? 180 : 82;
-            var14.setColor(new Color(238, 232, 196, var15));
+            var14.setColor(new Color(255, 179, 35, var15));
             int var16 = Math.max(22, this.getWidth());
             var14.fillRect(0, this.getHeight() - 2, var16, 2);
             var14.dispose();
@@ -7112,51 +7133,10 @@ public final class ProjectBattleAlpha extends JFrame {
       }
    }
 
-   private static final class PlayButton extends JButton {
-      private final BufferedImage image;
-
-      PlayButton(String var1, BufferedImage var2) {
-         super(var1);
-         this.image = var2;
-         this.setContentAreaFilled(false);
-         this.setOpaque(false);
-         this.setFocusPainted(false);
-         this.setBorder(new EmptyBorder(8, 16, 8, 16));
-         this.setFont(new Font("SansSerif", 1, 28));
-         this.setForeground(ProjectBattleAlpha.Colors.PLAY_TEXT);
-      }
-
-      @Override
-      protected void paintComponent(Graphics var1) {
-         Graphics2D var2 = (Graphics2D)var1.create();
-         var2.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
-         byte var3 = 5;
-         Float var4 = new Float(0.0F, 0.0F, this.getWidth(), this.getHeight(), var3, var3);
-         var2.setClip(var4);
-         if (this.image != null) {
-            double var5 = Math.max((double)this.getWidth() / this.image.getWidth(), (double)this.getHeight() / this.image.getHeight());
-            int var7 = Math.max(1, (int)Math.round(this.image.getWidth() * var5));
-            int var8 = Math.max(1, (int)Math.round(this.image.getHeight() * var5));
-            int var9 = Math.min(0, (this.getWidth() - var7) / 2);
-            int var10 = (this.getHeight() - var8) / 2;
-            var2.drawImage(this.image, var9, var10, var7, var8, null);
-         } else {
-            var2.setPaint(new GradientPaint(0.0F, 0.0F, new Color(244, 239, 196), this.getWidth(), this.getHeight(), new Color(193, 171, 119)));
-            var2.fillRect(0, 0, this.getWidth(), this.getHeight());
-         }
-
-         var2.setPaint(new GradientPaint(0.0F, 0.0F, new Color(255, 250, 207, 75), this.getWidth(), this.getHeight(), new Color(120, 84, 48, 78)));
-         var2.fillRect(0, 0, this.getWidth(), this.getHeight());
-         if (this.getModel().isRollover()) {
-            var2.setColor(new Color(255, 255, 255, 28));
-            var2.fillRect(0, 0, this.getWidth(), this.getHeight());
-         }
-
-         var2.setClip(null);
-         var2.setColor(new Color(255, 255, 255, 70));
-         var2.drawRoundRect(0, 0, this.getWidth() - 1, this.getHeight() - 1, var3, var3);
-         var2.dispose();
-         super.paintComponent(var1);
+   private static final class PlayButton extends PixelButton {
+      PlayButton(String text, BufferedImage ignoredOldBackground) {
+         super(text, true, false);
+         this.setFont(new Font("Monospaced", Font.BOLD, 16));
       }
    }
 
@@ -7457,7 +7437,7 @@ public final class ProjectBattleAlpha extends JFrame {
          var11.put("version_type", "PROJECT BATTLE");
          var11.put("natives_directory", var3.toString());
          var11.put("launcher_name", "ProjectBattleAlpha");
-         var11.put("launcher_version", "0.1.78.31");
+         var11.put("launcher_version", "0.1.78.32");
          var11.put("classpath", var9);
          var11.put("library_directory", this.config.minecraftDir.resolve("libraries").toString());
          var11.put("classpath_separator", File.pathSeparator);
@@ -7757,7 +7737,7 @@ public final class ProjectBattleAlpha extends JFrame {
       private JComponent buildHeader() {
          JPanel var1 = new JPanel(new BorderLayout(16, 0));
          var1.setOpaque(true);
-         var1.setBackground(new Color(18, 21, 20));
+         var1.setBackground(ProjectBattleAlpha.Colors.TOP);
          var1.setBorder(new EmptyBorder(12, 18, 12, 22));
          JPanel var2 = new JPanel();
          var2.setOpaque(false);
@@ -7785,18 +7765,18 @@ public final class ProjectBattleAlpha extends JFrame {
       private JComponent buildSidebar() {
          JPanel var1 = new JPanel();
          var1.setOpaque(true);
-         var1.setBackground(new Color(15, 19, 18));
+         var1.setBackground(ProjectBattleAlpha.Colors.SIDEBAR);
          var1.setPreferredSize(new Dimension(294, 10));
          var1.setBorder(new EmptyBorder(18, 16, 18, 16));
          var1.setLayout(new BoxLayout(var1, 1));
          this.search.setMaximumSize(new Dimension(Integer.MAX_VALUE, 40));
          this.search.setPreferredSize(new Dimension(256, 40));
-         this.search.setBackground(new Color(28, 34, 33));
+         this.search.setBackground(ProjectBattleAlpha.Colors.PANEL_LIGHT);
          this.search.setForeground(ProjectBattleAlpha.Colors.TEXT);
          this.search.setCaretColor(ProjectBattleAlpha.Colors.TEXT);
          this.search.setFont(new Font("SansSerif", 0, 13));
          this.search
-            .setBorder(BorderFactory.createCompoundBorder(BorderFactory.createLineBorder(new Color(76, 88, 84), 1, true), new EmptyBorder(0, 13, 0, 13)));
+            .setBorder(BorderFactory.createCompoundBorder(BorderFactory.createLineBorder(ProjectBattleAlpha.Colors.BORDER), new EmptyBorder(0, 13, 0, 13)));
          this.search.setToolTipText(ProjectBattleAlpha.this.tr("Поиск настроек", "Search settings"));
          this.search.getDocument().addDocumentListener(new DocumentListener() {
             @Override
@@ -7836,7 +7816,7 @@ public final class ProjectBattleAlpha extends JFrame {
          var1.add(Box.createVerticalStrut(7));
          var1.add(this.sectionButton("integrations", "◇", ProjectBattleAlpha.this.tr("Интеграции", "Integrations")));
          var1.add(Box.createVerticalGlue());
-         JLabel var3 = new JLabel("Project Battle Alpha 0.1.78.31");
+         JLabel var3 = new JLabel("Project Battle Alpha 0.1.78.32");
          var3.setForeground(ProjectBattleAlpha.Colors.MUTED);
          var3.setFont(new Font("SansSerif", 0, 11));
          var3.setAlignmentX(0.0F);
@@ -8723,32 +8703,8 @@ public final class ProjectBattleAlpha extends JFrame {
       }
    }
 
-   private static final class SoftActionButton extends JButton {
-      SoftActionButton(String var1) {
-         super(var1);
-         this.setContentAreaFilled(false);
-         this.setOpaque(false);
-         this.setFocusPainted(false);
-         this.setForeground(ProjectBattleAlpha.Colors.TEXT);
-         this.setBorder(new EmptyBorder(8, 14, 8, 14));
-      }
-
-      @Override
-      protected void paintComponent(Graphics var1) {
-         Graphics2D var2 = (Graphics2D)var1.create();
-         var2.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
-         var2.setPaint(new GradientPaint(0.0F, 0.0F, new Color(33, 42, 41), this.getWidth(), this.getHeight(), new Color(18, 24, 24)));
-         var2.fillRoundRect(0, 0, this.getWidth(), this.getHeight(), 14, 14);
-         if (this.getModel().isRollover()) {
-            var2.setColor(new Color(255, 255, 255, 18));
-            var2.fillRoundRect(1, 1, this.getWidth() - 2, this.getHeight() - 2, 12, 12);
-         }
-
-         var2.setColor(new Color(114, 124, 118));
-         var2.drawRoundRect(0, 0, this.getWidth() - 1, this.getHeight() - 1, 14, 14);
-         var2.dispose();
-         super.paintComponent(var1);
-      }
+   private static final class SoftActionButton extends PixelButton {
+      SoftActionButton(String text) { super(text, false, false); }
    }
 
    private static final class SoftPanel extends JPanel {
@@ -8760,9 +8716,9 @@ public final class ProjectBattleAlpha extends JFrame {
       protected void paintComponent(Graphics var1) {
          Graphics2D var2 = (Graphics2D)var1.create();
          var2.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
-         var2.setPaint(new GradientPaint(0.0F, 0.0F, new Color(22, 25, 24, 238), this.getWidth(), this.getHeight(), new Color(13, 17, 17, 238)));
+         var2.setPaint(new GradientPaint(0.0F, 0.0F, new Color(15, 24, 36, 242), this.getWidth(), this.getHeight(), new Color(7, 12, 20, 242)));
          var2.fillRoundRect(0, 0, this.getWidth(), this.getHeight(), 18, 18);
-         var2.setPaint(new GradientPaint(this.getWidth() * 0.15F, 0.0F, new Color(210, 185, 120, 24), this.getWidth(), this.getHeight(), new Color(0, 0, 0, 0)));
+         var2.setPaint(new GradientPaint(this.getWidth() * 0.15F, 0.0F, new Color(255, 179, 35, 18), this.getWidth(), this.getHeight(), new Color(0, 0, 0, 0)));
          var2.fillRoundRect(0, 0, this.getWidth(), this.getHeight(), 18, 18);
          var2.dispose();
          super.paintComponent(var1);
