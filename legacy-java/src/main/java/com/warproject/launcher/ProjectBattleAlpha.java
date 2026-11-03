@@ -209,6 +209,7 @@ public final class ProjectBattleAlpha extends JFrame {
    private final BufferedImage settingsImage = loadImage("/assets/settings-background.png");
    private final BufferedImage accountLoginImage = loadImage("/assets/account-login-background.png");
    private final BufferedImage accountRegisterImage = loadImage("/assets/account-register-background.png");
+   private final BufferedImage accountIdentityImage = loadImage("/assets/account-identity-landscape.png");
    private final BufferedImage bodycamShaderImage = loadImage("/assets/extensions/bodycam-shader-icon.png");
    private final BufferedImage complementaryShaderImage = loadImage("/assets/extensions/complementary-reimagined-icon.png");
    private final BufferedImage iterationShaderImage = loadImage("/assets/extensions/iteration-icon.png");
@@ -1028,35 +1029,30 @@ public final class ProjectBattleAlpha extends JFrame {
 
    private void openLoginDialog() {
       this.discordPresence.setState("Выполняет вход");
-      JDialog var1 = this.authDialog(this.tr("Вход в аккаунт", "Account login"), this.accountLoginImage, 620, 420);
+      JDialog var1 = this.authDialog(this.tr("Вход в систему", "Sign in"), this.accountLoginImage, 900, 540);
       JPanel var2 = this.authContent();
-      var2.add(this.authTitle(this.tr("Вход в аккаунт", "Account login")));
-      var2.add(Box.createVerticalStrut(22));
       JTextField var3 = this.input();
       var3.setToolTipText(this.tr("Логин или email", "Login or email"));
       JPasswordField var4 = this.passwordInput();
       var2.add(this.authField(this.tr("Логин или email", "Login or email"), var3));
       var2.add(Box.createVerticalStrut(12));
       var2.add(this.authField(this.tr("Пароль", "Password"), var4));
-      var2.add(Box.createVerticalStrut(18));
-      JButton var5 = this.smallButton(this.tr("Войти", "Sign in"));
-      JButton var6 = this.smallButton(this.tr("Создать аккаунт", "Create account"));
-      JButton var7 = this.smallButton(this.tr("Забыли пароль", "Forgot password"));
-      JPanel var8 = new JPanel(new BorderLayout(8, 0));
+      var2.add(Box.createVerticalStrut(20));
+      JButton var5 = this.authPrimaryButton(this.tr("ВОЙТИ", "SIGN IN"));
+      JButton var6 = this.authLinkButton(this.tr("Зарегистрироваться", "Create account"));
+      JButton var7 = this.authLinkButton(this.tr("Забыли пароль?", "Forgot password?"));
+      var2.add(var5);
+      var2.add(Box.createVerticalStrut(16));
+      JPanel var8 = new JPanel(new FlowLayout(FlowLayout.LEFT, 5, 0));
       var8.setOpaque(false);
-      JPanel var9 = new JPanel(new FlowLayout(0, 0, 0));
-      var9.setOpaque(false);
-      var9.add(var6);
-      JPanel var10 = new JPanel(new FlowLayout(1, 0, 0));
-      var10.setOpaque(false);
-      var10.add(var5);
-      JPanel var11 = new JPanel(new FlowLayout(2, 0, 0));
-      var11.setOpaque(false);
-      var11.add(var7);
-      var8.add(var9, "West");
-      var8.add(var10, "Center");
-      var8.add(var11, "East");
+      JLabel var9 = new JLabel(this.tr("Нет аккаунта?", "No account?"));
+      var9.setForeground(ProjectBattleAlpha.Colors.MUTED);
+      var9.setFont(MINECRAFT_FONT.deriveFont(11F));
+      var8.add(var9);
+      var8.add(var6);
       var2.add(var8);
+      var2.add(Box.createVerticalStrut(10));
+      var2.add(var7);
       var5.addActionListener(var5x -> {
          String var6x = var3.getText().trim();
          String var7x = new String(var4.getPassword());
@@ -1066,30 +1062,28 @@ public final class ProjectBattleAlpha extends JFrame {
                try {
                   this.authPost("/auth/login", this.json("login", var6x, "password", var7x), null);
                   SwingUtilities.invokeLater(() -> {
-                     var1.dispose();
-                     this.openLoginCodeDialog(var6x);
+                     this.authTransition(var1, () -> this.openLoginCodeDialog(var6x));
                   });
                } catch (Exception var6xx) {
-                  this.error(this.tr("Ошибка входа", "Login error"), var6xx);
+                  this.authError(var1, this.tr("Ошибка входа", "Login error"), var6xx);
                   SwingUtilities.invokeLater(() -> var5.setEnabled(true));
                }
             });
          } else {
-            JOptionPane.showMessageDialog(var1, this.tr("Введите логин/email и пароль.", "Enter login/email and password."), "Project Battle Alpha", 2);
+            this.authMessage(var1, this.tr("Введите логин/email и пароль.", "Enter login/email and password."), false);
          }
       });
       var6.addActionListener(var2x -> {
-         var1.dispose();
-         this.openRegisterDialog();
+         this.authTransition(var1, this::openRegisterDialog);
       });
-      var7.addActionListener(var1x -> this.openForgotPasswordDialog());
+      var7.addActionListener(var1x -> this.authTransition(var1, this::openForgotPasswordDialog));
       var1.setContentPane(this.authRoot(this.accountLoginImage, var2));
       var1.setLocationRelativeTo(this);
-      var1.setVisible(true);
+      this.showAuthDialog(var1);
    }
 
    private void openLoginCodeDialog(String var1) {
-      JDialog var2 = this.authDialog(this.tr("Код подтверждения", "Verification code"), this.accountLoginImage, 420, 260);
+      JDialog var2 = this.authDialog(this.tr("Код подтверждения", "Verification code"), this.accountLoginImage, 860, 480);
       JPanel var3 = this.authContent();
       var3.add(this.authTitle(this.tr("Код с почты", "Email code")));
       var3.add(Box.createVerticalStrut(12));
@@ -1100,7 +1094,7 @@ public final class ProjectBattleAlpha extends JFrame {
       JTextField var5 = this.input();
       var3.add(this.authField(this.tr("Код", "Code"), var5));
       var3.add(Box.createVerticalStrut(14));
-      JButton var6 = this.smallButton(this.tr("Подтвердить", "Confirm"));
+      JButton var6 = this.authPrimaryButton(this.tr("ПОДТВЕРДИТЬ", "CONFIRM"));
       var3.add(var6);
       var6.addActionListener(var5x -> {
          var6.setEnabled(false);
@@ -1110,25 +1104,23 @@ public final class ProjectBattleAlpha extends JFrame {
                this.saveAuthFromResponse(var5xx);
                SwingUtilities.invokeLater(() -> {
                   var2.dispose();
-                  JOptionPane.showMessageDialog(this, this.tr("Вход выполнен.", "Signed in."), "Project Battle Alpha", 1);
+                  this.authSuccess(this.tr("Вход выполнен", "Signed in"));
                });
             } catch (Exception var6x) {
-               this.error(this.tr("Ошибка кода", "Code error"), var6x);
+               this.authError(var2, this.tr("Ошибка кода", "Code error"), var6x);
                SwingUtilities.invokeLater(() -> var6.setEnabled(true));
             }
          });
       });
       var2.setContentPane(this.authRoot(this.accountLoginImage, var3));
       var2.setLocationRelativeTo(this);
-      var2.setVisible(true);
+      this.showAuthDialog(var2);
    }
 
    private void openRegisterDialog() {
       this.discordPresence.setState("Создаёт аккаунт");
-      JDialog var1 = this.authDialog(this.tr("Создать аккаунт", "Create account"), this.accountRegisterImage, 900, 560);
+      JDialog var1 = this.authDialog(this.tr("Новый боец", "New fighter"), this.accountRegisterImage, 980, 690);
       JPanel var2 = this.authContent();
-      var2.add(this.authTitle(this.tr("Создать аккаунт", "Create account")));
-      var2.add(Box.createVerticalStrut(18));
       JTextField var3 = this.input();
       JTextField var4 = this.input();
       JPasswordField var5 = this.passwordInput();
@@ -1146,14 +1138,26 @@ public final class ProjectBattleAlpha extends JFrame {
       var2.add(var7);
       var2.add(Box.createVerticalStrut(10));
       var2.add(this.authField(this.tr("Повторите пароль", "Repeat password"), var6));
-      var2.add(Box.createVerticalStrut(18));
-      JButton var8 = this.smallButton(this.tr("Создать", "Create"));
-      JButton var9 = this.smallButton(this.tr("Назад", "Back"));
-      JPanel var10 = new JPanel(new FlowLayout(0, 8, 0));
-      var10.setOpaque(false);
-      var10.add(var8);
-      var10.add(var9);
-      var2.add(var10);
+      var2.add(Box.createVerticalStrut(12));
+      JTextField partnerCode = this.input();
+      partnerCode.setEnabled(false);
+      partnerCode.setText(this.tr("Временно недоступно", "Temporarily unavailable"));
+      var2.add(this.authField(this.tr("Код автора", "Creator code"), partnerCode));
+      var2.add(Box.createVerticalStrut(12));
+      JCheckBox licenseAccepted = this.authConsent(this.tr("Я принимаю лицензионное соглашение", "I accept the license agreement"),
+            "https://project-battle-portal.vokisu9.workers.dev/legal#license");
+      JCheckBox privacyAccepted = this.authConsent(this.tr("Даю согласие на обработку данных<br>и ознакомлен с политикой конфиденциальности",
+            "I consent to data processing and have read<br>the privacy policy"),
+            "https://project-battle-portal.vokisu9.workers.dev/privacy");
+      var2.add(licenseAccepted);
+      var2.add(Box.createVerticalStrut(7));
+      var2.add(privacyAccepted);
+      var2.add(Box.createVerticalStrut(14));
+      JButton var8 = this.authPrimaryButton(this.tr("СОЗДАТЬ АККАУНТ", "CREATE ACCOUNT"));
+      JButton var9 = this.authLinkButton(this.tr("Уже зарегистрированы? Войти", "Already registered? Sign in"));
+      var2.add(var8);
+      var2.add(Box.createVerticalStrut(8));
+      var2.add(var9);
       var8.addActionListener(
          var7x -> {
             String var8x = var3.getText().trim();
@@ -1161,34 +1165,28 @@ public final class ProjectBattleAlpha extends JFrame {
             String var10x = new String(var5.getPassword());
             String var11 = new String(var6.getPassword());
             if (var8x.isBlank() || var9x.isBlank() || var10x.isBlank()) {
-               JOptionPane.showMessageDialog(var1, this.tr("Заполните логин, email и пароль.", "Fill in login, email and password."), "Project Battle Alpha", 2);
+               this.authMessage(var1, this.tr("Заполните логин, email и пароль.", "Fill in login, email and password."), false);
             } else if (!var8x.matches("[A-Za-z0-9_]{3,16}")) {
-               JOptionPane.showMessageDialog(
-                  var1,
-                  this.tr(
+               this.authMessage(var1, this.tr(
                      "Логин будет ником Minecraft: 3-16 символов, только A-Z, 0-9 и _.",
-                     "Login will be your Minecraft nickname: 3-16 characters, only A-Z, 0-9 and _."
-                  ),
-                  "Project Battle Alpha",
-                  2
-               );
+                     "Login will be your Minecraft nickname: 3-16 characters, only A-Z, 0-9 and _."), false);
             } else if (var10x.length() < 8 || var10x.length() > 128) {
-               JOptionPane.showMessageDialog(
-                  var1, this.tr("Пароль должен быть от 8 до 128 символов.", "Password must be 8-128 characters."), "Project Battle Alpha", 2
-               );
+               this.authMessage(var1, this.tr("Пароль должен быть от 8 до 128 символов.", "Password must be 8-128 characters."), false);
             } else if (!var10x.equals(var11)) {
-               JOptionPane.showMessageDialog(var1, this.tr("Пароли не совпадают.", "Passwords do not match."), "Project Battle Alpha", 2);
+               this.authMessage(var1, this.tr("Пароли не совпадают.", "Passwords do not match."), false);
+            } else if (!licenseAccepted.isSelected() || !privacyAccepted.isSelected()) {
+               this.authMessage(var1, this.tr("Подтвердите согласие с условиями и политикой конфиденциальности.",
+                     "Please accept the license and privacy policy."), false);
             } else {
                var8.setEnabled(false);
                this.worker.submit(() -> {
                   try {
                      this.authPost("/auth/start-register", this.json("email", var9x), null);
                      SwingUtilities.invokeLater(() -> {
-                        var1.dispose();
-                        this.openRegisterCodeDialog(var9x, var8x, var10x);
+                        this.authTransition(var1, () -> this.openRegisterCodeDialog(var9x, var8x, var10x));
                      });
                   } catch (Exception var7xx) {
-                     this.error(this.tr("Ошибка регистрации", "Registration error"), var7xx);
+                     this.authError(var1, this.tr("Ошибка регистрации", "Registration error"), var7xx);
                      SwingUtilities.invokeLater(() -> var8.setEnabled(true));
                   }
                });
@@ -1196,23 +1194,22 @@ public final class ProjectBattleAlpha extends JFrame {
          }
       );
       var9.addActionListener(var2x -> {
-         var1.dispose();
-         this.openLoginDialog();
+         this.authTransition(var1, this::openLoginDialog);
       });
       var1.setContentPane(this.authRoot(this.accountRegisterImage, var2));
       var1.setLocationRelativeTo(this);
-      var1.setVisible(true);
+      this.showAuthDialog(var1);
    }
 
    private void openRegisterCodeDialog(String var1, String var2, String var3) {
-      JDialog var4 = this.authDialog(this.tr("Код регистрации", "Registration code"), this.accountRegisterImage, 440, 280);
+      JDialog var4 = this.authDialog(this.tr("Код регистрации", "Registration code"), this.accountRegisterImage, 860, 480);
       JPanel var5 = this.authContent();
       var5.add(this.authTitle(this.tr("Подтвердите email", "Verify email")));
       var5.add(Box.createVerticalStrut(12));
       JTextField var6 = this.input();
       var5.add(this.authField(this.tr("Код", "Code"), var6));
       var5.add(Box.createVerticalStrut(14));
-      JButton var7 = this.smallButton(this.tr("Подтвердить", "Confirm"));
+      JButton var7 = this.authPrimaryButton(this.tr("ПОДТВЕРДИТЬ", "CONFIRM"));
       var5.add(var7);
       var7.addActionListener(var7x -> {
          var7.setEnabled(false);
@@ -1223,21 +1220,21 @@ public final class ProjectBattleAlpha extends JFrame {
                this.saveAuthFromResponse(var7xx);
                SwingUtilities.invokeLater(() -> {
                   var4.dispose();
-                  JOptionPane.showMessageDialog(this, this.tr("Аккаунт создан.", "Account created."), "Project Battle Alpha", 1);
+                  this.authSuccess(this.tr("Аккаунт создан", "Account created"));
                });
             } catch (Exception var8) {
-               this.error(this.tr("Ошибка кода", "Code error"), var8);
+               this.authError(var4, this.tr("Ошибка кода", "Code error"), var8);
                SwingUtilities.invokeLater(() -> var7.setEnabled(true));
             }
          });
       });
       var4.setContentPane(this.authRoot(this.accountRegisterImage, var5));
       var4.setLocationRelativeTo(this);
-      var4.setVisible(true);
+      this.showAuthDialog(var4);
    }
 
    private void openAccountDetailsDialog() {
-      JDialog var1 = this.authDialog(this.tr("Аккаунт", "Account"), this.accountLoginImage, 620, 500);
+      JDialog var1 = this.authDialog(this.tr("Аккаунт", "Account"), this.accountLoginImage, 900, 600);
       JPanel var2 = this.authContent();
       var2.add(this.authTitle(this.tr("Аккаунт Project Battle", "Project Battle Account")));
       var2.add(Box.createVerticalStrut(18));
@@ -1305,11 +1302,11 @@ public final class ProjectBattleAlpha extends JFrame {
       });
       var1.setContentPane(this.authRoot(this.accountLoginImage, var2));
       var1.setLocationRelativeTo(this);
-      var1.setVisible(true);
+      this.showAuthDialog(var1);
    }
 
    private void openForgotPasswordDialog() {
-      JDialog var1 = this.authDialog(this.tr("Восстановить пароль", "Reset password"), this.accountLoginImage, 460, 300);
+      JDialog var1 = this.authDialog(this.tr("Восстановить пароль", "Reset password"), this.accountLoginImage, 860, 480);
       JPanel var2 = this.authContent();
       var2.add(this.authTitle(this.tr("Восстановить пароль", "Reset password")));
       var2.add(Box.createVerticalStrut(16));
@@ -1323,27 +1320,26 @@ public final class ProjectBattleAlpha extends JFrame {
       var2.add(Box.createVerticalStrut(16));
       JPanel var5 = new JPanel(new FlowLayout(0, 8, 0));
       var5.setOpaque(false);
-      JButton var6 = this.smallButton(this.tr("Отправить код", "Send code"));
+      JButton var6 = this.authPrimaryButton(this.tr("ОТПРАВИТЬ КОД", "SEND CODE"));
       JButton var7 = this.smallButton(this.tr("Отмена", "Cancel"));
       var5.add(var6);
       var5.add(var7);
       var2.add(var5);
-      var7.addActionListener(var1x -> var1.dispose());
+      var7.addActionListener(var1x -> this.authTransition(var1, this::openLoginDialog));
       var6.addActionListener(var4x -> {
          String var5x = var4.getText().trim();
          if (var5x.isBlank()) {
-            JOptionPane.showMessageDialog(var1, this.tr("Введите email.", "Enter email."), "Project Battle Alpha", 2);
+            this.authMessage(var1, this.tr("Введите email.", "Enter email."), false);
          } else {
             var6.setEnabled(false);
             this.worker.submit(() -> {
                try {
                   this.authPost("/auth/forgot-password", this.json("email", var5x), null);
                   SwingUtilities.invokeLater(() -> {
-                     var1.dispose();
-                     this.openResetPasswordCodeDialog(var5x);
+                     this.authTransition(var1, () -> this.openResetPasswordCodeDialog(var5x));
                   });
                } catch (Exception var5xx) {
-                  this.error(this.tr("Ошибка пароля", "Password error"), var5xx);
+                  this.authError(var1, this.tr("Ошибка пароля", "Password error"), var5xx);
                   SwingUtilities.invokeLater(() -> var6.setEnabled(true));
                }
             });
@@ -1351,11 +1347,11 @@ public final class ProjectBattleAlpha extends JFrame {
       });
       var1.setContentPane(this.authRoot(this.accountLoginImage, var2));
       var1.setLocationRelativeTo(this);
-      var1.setVisible(true);
+      this.showAuthDialog(var1);
    }
 
    private void openResetPasswordCodeDialog(String var1) {
-      JDialog var2 = this.authDialog(this.tr("Код и новый пароль", "Code and new password"), this.accountLoginImage, 480, 390);
+      JDialog var2 = this.authDialog(this.tr("Код и новый пароль", "Code and new password"), this.accountLoginImage, 860, 530);
       JPanel var3 = this.authContent();
       var3.add(this.authTitle(this.tr("Новый пароль", "New password")));
       var3.add(Box.createVerticalStrut(16));
@@ -1368,13 +1364,13 @@ public final class ProjectBattleAlpha extends JFrame {
       var3.add(Box.createVerticalStrut(10));
       var3.add(this.authField(this.tr("Повторите пароль", "Repeat password"), var6));
       var3.add(Box.createVerticalStrut(16));
-      JButton var7 = this.smallButton(this.tr("Сменить пароль", "Change password"));
+      JButton var7 = this.authPrimaryButton(this.tr("СМЕНИТЬ ПАРОЛЬ", "CHANGE PASSWORD"));
       var3.add(var7);
       var7.addActionListener(var7x -> {
          String var8 = new String(var5.getPassword());
          if (!var4.getText().trim().isBlank() && !var8.isBlank()) {
             if (!var8.equals(new String(var6.getPassword()))) {
-               JOptionPane.showMessageDialog(var2, this.tr("Пароли не совпадают.", "Passwords do not match."), "Project Battle Alpha", 2);
+               this.authMessage(var2, this.tr("Пароли не совпадают.", "Passwords do not match."), false);
             } else {
                var7.setEnabled(false);
                this.worker.submit(() -> {
@@ -1382,44 +1378,303 @@ public final class ProjectBattleAlpha extends JFrame {
                      this.authPost("/auth/reset-password", this.json("email", var1, "code", var4.getText().trim(), "password", var8), null);
                      SwingUtilities.invokeLater(() -> {
                         var2.dispose();
-                        JOptionPane.showMessageDialog(this, this.tr("Пароль изменён.", "Password changed."), "Project Battle Alpha", 1);
+                        this.authSuccess(this.tr("Пароль изменён", "Password changed"));
                      });
                   } catch (Exception var7xx) {
-                     this.error(this.tr("Ошибка пароля", "Password error"), var7xx);
+                     this.authError(var2, this.tr("Ошибка пароля", "Password error"), var7xx);
                      SwingUtilities.invokeLater(() -> var7.setEnabled(true));
                   }
                });
             }
          } else {
-            JOptionPane.showMessageDialog(var2, this.tr("Введите код и новый пароль.", "Enter code and new password."), "Project Battle Alpha", 2);
+            this.authMessage(var2, this.tr("Введите код и новый пароль.", "Enter code and new password."), false);
          }
       });
       var2.setContentPane(this.authRoot(this.accountLoginImage, var3));
       var2.setLocationRelativeTo(this);
-      var2.setVisible(true);
+      this.showAuthDialog(var2);
+   }
+
+   private JButton authPrimaryButton(String text) {
+      JButton button = new ProjectBattleAlpha.PixelButton(text, true, false);
+      button.setFont(MINECRAFT_FONT.deriveFont(13F));
+      button.setAlignmentX(0F);
+      button.setMaximumSize(new Dimension(Integer.MAX_VALUE, 42));
+      button.setPreferredSize(new Dimension(330, 42));
+      return button;
+   }
+
+   private JButton authLinkButton(String text) {
+      JButton button = new JButton(text);
+      button.setBorder(null);
+      button.setOpaque(false);
+      button.setContentAreaFilled(false);
+      button.setFocusPainted(false);
+      button.setForeground(ProjectBattleAlpha.Colors.PLAY);
+      button.setFont(MINECRAFT_FONT.deriveFont(11F));
+      button.setCursor(launcherCursor(12));
+      button.setAlignmentX(0F);
+      button.addMouseListener(new MouseAdapter() {
+         @Override public void mouseEntered(MouseEvent event) { button.setForeground(ProjectBattleAlpha.Colors.PLAY_LIGHT); }
+         @Override public void mouseExited(MouseEvent event) { button.setForeground(ProjectBattleAlpha.Colors.PLAY); }
+      });
+      return button;
+   }
+
+   private JCheckBox authConsent(String text, String url) {
+      JCheckBox consent = new JCheckBox("<html><u>" + text + "</u></html>");
+      consent.setOpaque(false);
+      consent.setForeground(ProjectBattleAlpha.Colors.TEXT);
+      consent.setFont(MINECRAFT_FONT.deriveFont(10F));
+      consent.setIcon(this.authCheckIcon(false));
+      consent.setSelectedIcon(this.authCheckIcon(true));
+      consent.setIconTextGap(8);
+      consent.setAlignmentX(0F);
+      consent.setCursor(launcherCursor(12));
+      consent.setToolTipText(this.tr("Нажмите текст, чтобы открыть документ", "Click the text to open the document"));
+      consent.addMouseListener(new MouseAdapter() {
+         @Override public void mouseClicked(MouseEvent event) {
+            if (event.getX() > 22) {
+               try { Desktop.getDesktop().browse(URI.create(url)); }
+               catch (Exception error) { ProjectBattleAlpha.this.error(ProjectBattleAlpha.this.tr("Не удалось открыть документ", "Could not open document"), error); }
+            }
+         }
+      });
+      return consent;
+   }
+
+   private javax.swing.Icon authCheckIcon(boolean selected) {
+      return new javax.swing.Icon() {
+         @Override public int getIconWidth() { return 16; }
+         @Override public int getIconHeight() { return 16; }
+         @Override public void paintIcon(Component component, Graphics graphics, int x, int y) {
+            Graphics2D g = (Graphics2D) graphics.create();
+            g.setColor(selected ? ProjectBattleAlpha.Colors.PLAY : new Color(8, 14, 23));
+            g.fillRoundRect(x + 1, y + 1, 14, 14, 4, 4);
+            g.setColor(selected ? ProjectBattleAlpha.Colors.PLAY_LIGHT : ProjectBattleAlpha.Colors.BORDER);
+            g.drawRoundRect(x + 1, y + 1, 14, 14, 4, 4);
+            if (selected) {
+               g.setColor(ProjectBattleAlpha.Colors.PLAY_TEXT);
+               g.setStroke(new BasicStroke(2F, BasicStroke.CAP_ROUND, BasicStroke.JOIN_ROUND));
+               g.drawLine(x + 4, y + 8, x + 7, y + 11);
+               g.drawLine(x + 7, y + 11, x + 12, y + 5);
+            }
+            g.dispose();
+         }
+      };
+   }
+
+   private void showAuthDialog(JDialog dialog) {
+      try {
+         dialog.setOpacity(0F);
+         Timer reveal = new Timer(16, null);
+         reveal.addActionListener(event -> {
+            if (!dialog.isDisplayable()) { reveal.stop(); return; }
+            float next = Math.min(1F, dialog.getOpacity() + 0.13F);
+            dialog.setOpacity(next);
+            if (next >= 1F) reveal.stop();
+         });
+         dialog.addWindowListener(new java.awt.event.WindowAdapter() {
+            @Override public void windowOpened(java.awt.event.WindowEvent event) { reveal.start(); }
+            @Override public void windowClosed(java.awt.event.WindowEvent event) { reveal.stop(); }
+         });
+      } catch (UnsupportedOperationException | IllegalArgumentException ignored) {
+         // Some graphics devices do not support translucent windows.
+      }
+      dialog.setVisible(true);
+   }
+
+   private void authTransition(JDialog dialog, Runnable next) {
+      if (!dialog.isDisplayable()) { next.run(); return; }
+      try {
+         Timer fade = new Timer(16, null);
+         fade.addActionListener(event -> {
+            float opacity;
+            try {
+               opacity = Math.max(0F, dialog.getOpacity() - 0.18F);
+               dialog.setOpacity(opacity);
+            } catch (UnsupportedOperationException | IllegalArgumentException error) {
+               opacity = 0F;
+            }
+            if (opacity <= 0F) {
+               fade.stop();
+               dialog.dispose();
+               next.run();
+            }
+         });
+         fade.start();
+      } catch (UnsupportedOperationException | IllegalArgumentException ignored) {
+         dialog.dispose();
+         next.run();
+      }
+   }
+
+   private void authSuccess(String message) {
+      this.authMessage(this, message, true);
+   }
+
+   private void authError(JDialog owner, String title, Exception error) {
+      SwingUtilities.invokeLater(() -> this.authMessage(owner,
+            title + ": " + (error.getMessage() == null ? error.getClass().getSimpleName() : error.getMessage()), false));
+   }
+
+   private void authMessage(Component owner, String message, boolean success) {
+      JDialog dialog = new JDialog(this, true);
+      dialog.setUndecorated(true);
+      JPanel panel = new JPanel(new BorderLayout(16, 16));
+      panel.setBackground(ProjectBattleAlpha.Colors.PANEL);
+      panel.setBorder(BorderFactory.createCompoundBorder(
+            BorderFactory.createLineBorder(success ? ProjectBattleAlpha.Colors.ONLINE : ProjectBattleAlpha.Colors.PLAY),
+            new EmptyBorder(24, 30, 24, 30)));
+      JTextArea label = new JTextArea(message, 3, 38);
+      label.setEditable(false);
+      label.setFocusable(false);
+      label.setOpaque(false);
+      label.setLineWrap(true);
+      label.setWrapStyleWord(true);
+      label.setForeground(ProjectBattleAlpha.Colors.TEXT);
+      label.setFont(MINECRAFT_FONT.deriveFont(13F));
+      JButton ok = this.authPrimaryButton(this.tr("ПОНЯТНО", "OK"));
+      ok.setPreferredSize(new Dimension(150, 42));
+      ok.addActionListener(event -> dialog.dispose());
+      if (success) {
+         JLabel check = new JLabel("✓");
+         check.setFont(new Font("SansSerif", Font.BOLD, 36));
+         check.setForeground(ProjectBattleAlpha.Colors.ONLINE);
+         panel.add(check, BorderLayout.WEST);
+      }
+      panel.add(label, BorderLayout.CENTER);
+      JPanel actions = new JPanel(new FlowLayout(FlowLayout.RIGHT, 0, 0));
+      actions.setOpaque(false);
+      actions.add(ok);
+      panel.add(actions, BorderLayout.SOUTH);
+      dialog.setContentPane(panel);
+      dialog.pack();
+      dialog.setMinimumSize(new Dimension(420, 150));
+      try {
+         dialog.setShape(new java.awt.geom.RoundRectangle2D.Double(0, 0, dialog.getWidth(), dialog.getHeight(), 10, 10));
+      } catch (UnsupportedOperationException | IllegalArgumentException ignored) {
+      }
+      dialog.setLocationRelativeTo(owner);
+      this.showAuthDialog(dialog);
    }
 
    private JDialog authDialog(String var1, BufferedImage var2, int var3, int var4) {
       JDialog var5 = new JDialog(this, var1, true);
-      var5.setSize(var3, var4);
+      var5.setUndecorated(true);
+      var5.setSize(Math.min(Math.max(var3, 840), Math.max(720, this.getWidth() - 60)),
+            Math.min(Math.max(var4, 480), Math.max(440, this.getHeight() - 60)));
       var5.setResizable(false);
+      try {
+         var5.setShape(new java.awt.geom.RoundRectangle2D.Double(0, 0, var5.getWidth(), var5.getHeight(), 12, 12));
+      } catch (UnsupportedOperationException | IllegalArgumentException ignored) {
+      }
       if (this.iconImage != null) {
          var5.setIconImage(this.iconImage);
       }
-
+      var5.getRootPane().registerKeyboardAction(event -> var5.dispose(),
+            javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_ESCAPE, 0),
+            JComponent.WHEN_IN_FOCUSED_WINDOW);
       return var5;
    }
 
    private JPanel authRoot(BufferedImage var1, JPanel var2) {
-      ProjectBattleAlpha.SettingsPanel var3 = new ProjectBattleAlpha.SettingsPanel(var1);
-      var3.setLayout(new GridBagLayout());
-      var3.setBorder(BorderFactory.createLineBorder(ProjectBattleAlpha.Colors.BORDER));
-      JPanel var4 = new JPanel(new BorderLayout());
-      var4.setOpaque(false);
-      var4.setBorder(new EmptyBorder(22, 28, 22, 28));
-      var4.add(var2, "Center");
-      var3.add(var4, new GridBagConstraints());
-      return var3;
+      JPanel root = new JPanel(new BorderLayout());
+      root.setBackground(ProjectBattleAlpha.Colors.PANEL);
+      root.setBorder(BorderFactory.createLineBorder(ProjectBattleAlpha.Colors.BORDER));
+      boolean registration = var1 == this.accountRegisterImage;
+      String heading = registration ? this.tr("НОВЫЙ<br>БОЕЦ", "NEW<br>FIGHTER")
+            : this.tr("ВХОД В<br>СИСТЕМУ", "SIGN<br>IN");
+      JPanel left = new JPanel(new GridBagLayout()) {
+         @Override protected void paintComponent(Graphics graphics) {
+            super.paintComponent(graphics);
+            Graphics2D g = (Graphics2D) graphics.create();
+            if (accountIdentityImage != null) {
+               double scale = Math.max((double) getWidth() / accountIdentityImage.getWidth(), (double) getHeight() / accountIdentityImage.getHeight());
+               int width = (int) Math.ceil(accountIdentityImage.getWidth() * scale);
+               int height = (int) Math.ceil(accountIdentityImage.getHeight() * scale);
+               g.drawImage(accountIdentityImage, (getWidth() - width) / 2, (getHeight() - height) / 2, width, height, null);
+            }
+            g.setPaint(new GradientPaint(0, 0, new Color(5, 9, 15, 110), 0, getHeight(), new Color(5, 9, 15, 145)));
+            g.fillRect(0, 0, getWidth(), getHeight());
+            g.dispose();
+         }
+      };
+      left.setOpaque(true);
+      left.setBackground(ProjectBattleAlpha.Colors.TOP);
+      left.setBorder(new EmptyBorder(36, 60, 32, 38));
+      JPanel leftText = new JPanel();
+      leftText.setOpaque(false);
+      leftText.setLayout(new BoxLayout(leftText, BoxLayout.Y_AXIS));
+      JLabel eyebrow = new JLabel("PJM  //  IDENTITY");
+      eyebrow.setFont(MINECRAFT_FONT.deriveFont(13F));
+      eyebrow.setForeground(ProjectBattleAlpha.Colors.PLAY);
+      eyebrow.setAlignmentX(0F);
+      JLabel title = new JLabel("<html>" + heading + "</html>");
+      title.setFont(new Font("Impact", Font.PLAIN, 67));
+      title.setForeground(ProjectBattleAlpha.Colors.TEXT);
+      title.setAlignmentX(0F);
+      JLabel description = new JLabel("<html>" + this.tr(
+            "Один аккаунт для лаунчера,<br>обновлений и игры.<br><br>После входа можно загрузить<br>сборку и присоединиться к<br>Project Battle.",
+            "One account for the launcher,<br>updates and game.<br><br>Sign in to download the pack<br>and join Project Battle.") + "</html>");
+      description.setFont(MINECRAFT_FONT.deriveFont(13F));
+      description.setForeground(ProjectBattleAlpha.Colors.TEXT);
+      description.setAlignmentX(0F);
+      leftText.add(eyebrow);
+      leftText.add(Box.createVerticalStrut(15));
+      leftText.add(title);
+      leftText.add(Box.createVerticalStrut(18));
+      leftText.add(description);
+      GridBagConstraints leftConstraints = new GridBagConstraints();
+      leftConstraints.gridx = 0;
+      leftConstraints.gridy = 0;
+      leftConstraints.weightx = 1;
+      leftConstraints.anchor = GridBagConstraints.WEST;
+      leftConstraints.fill = GridBagConstraints.HORIZONTAL;
+      left.add(leftText, leftConstraints);
+      JPanel right = new JPanel(new BorderLayout());
+      right.setBackground(ProjectBattleAlpha.Colors.PANEL);
+      JPanel bar = new JPanel(new BorderLayout());
+      bar.setOpaque(false);
+      bar.setBorder(new EmptyBorder(12, 18, 0, 14));
+      JButton close = new JButton("×");
+      close.setFont(new Font("SansSerif", Font.BOLD, 18));
+      close.setPreferredSize(new Dimension(34, 32));
+      close.setBackground(ProjectBattleAlpha.Colors.BUTTON);
+      close.setForeground(ProjectBattleAlpha.Colors.MUTED);
+      close.setBorder(BorderFactory.createLineBorder(ProjectBattleAlpha.Colors.BORDER));
+      close.setFocusPainted(false);
+      close.setCursor(launcherCursor(12));
+      close.addMouseListener(new MouseAdapter() {
+         @Override public void mouseEntered(MouseEvent event) { close.setForeground(ProjectBattleAlpha.Colors.PLAY); }
+         @Override public void mouseExited(MouseEvent event) { close.setForeground(ProjectBattleAlpha.Colors.MUTED); }
+      });
+      close.addActionListener(event -> SwingUtilities.getWindowAncestor(root).dispose());
+      bar.add(close, BorderLayout.EAST);
+      right.add(bar, BorderLayout.NORTH);
+      JPanel body = new JPanel(new GridBagLayout());
+      body.setOpaque(false);
+      body.setBorder(new EmptyBorder(10, 30, 30, 30));
+      boolean scrollable = var2.getPreferredSize().height > 360;
+      JScrollPane scroll = new JScrollPane(var2);
+      scroll.setOpaque(false);
+      scroll.getViewport().setOpaque(false);
+      scroll.setBorder(null);
+      scroll.getVerticalScrollBar().setUnitIncrement(14);
+      scroll.getVerticalScrollBar().setPreferredSize(new Dimension(0, 0));
+      GridBagConstraints constraints = new GridBagConstraints();
+      constraints.fill = scrollable ? GridBagConstraints.BOTH : GridBagConstraints.HORIZONTAL;
+      constraints.anchor = GridBagConstraints.CENTER;
+      constraints.weightx = 1;
+      constraints.weighty = scrollable ? 1 : 0;
+      body.add(scrollable ? scroll : var2, constraints);
+      right.add(body, BorderLayout.CENTER);
+      JPanel split = new JPanel(new BorderLayout());
+      left.setPreferredSize(new Dimension(Math.min(490, Math.max(300, this.getWidth() - 470)), 0));
+      split.add(left, BorderLayout.WEST);
+      split.add(right, BorderLayout.CENTER);
+      root.add(split, BorderLayout.CENTER);
+      return root;
    }
 
    private JPanel authContent() {
@@ -1433,7 +1688,7 @@ public final class ProjectBattleAlpha extends JFrame {
       JLabel var2 = new JLabel(var1);
       var2.setAlignmentX(0.0F);
       var2.setForeground(ProjectBattleAlpha.Colors.TEXT);
-      var2.setFont(new Font("SansSerif", 1, 24));
+      var2.setFont(MINECRAFT_FONT.deriveFont(Font.BOLD, 25F));
       return var2;
    }
 
@@ -1441,11 +1696,12 @@ public final class ProjectBattleAlpha extends JFrame {
       JPanel var3 = new JPanel(new BorderLayout(0, 5));
       var3.setOpaque(false);
       var3.setAlignmentX(0.0F);
+      var3.setMaximumSize(new Dimension(Integer.MAX_VALUE, 62));
       JLabel var4 = new JLabel(var1);
       var4.setForeground(ProjectBattleAlpha.Colors.TEXT);
-      var4.setFont(new Font("SansSerif", 1, 12));
+      var4.setFont(MINECRAFT_FONT.deriveFont(12F));
       this.styleAuthInput(var2);
-      var2.setPreferredSize(new Dimension(290, 34));
+      var2.setPreferredSize(new Dimension(290, 38));
       var3.add(var4, "North");
       var3.add(var2, "Center");
       return var3;
@@ -1453,12 +1709,37 @@ public final class ProjectBattleAlpha extends JFrame {
 
    private void styleAuthInput(JComponent var1) {
       if (var1 instanceof JTextField var2) {
-         var2.setOpaque(false);
-         var2.setBackground(new Color(0, 0, 0, 0));
+         var2.setOpaque(true);
+         var2.setBackground(new Color(7, 12, 19));
          var2.setForeground(ProjectBattleAlpha.Colors.TEXT);
          var2.setCaretColor(ProjectBattleAlpha.Colors.TEXT);
-         var2.setBorder(BorderFactory.createCompoundBorder(BorderFactory.createLineBorder(ProjectBattleAlpha.Colors.BORDER), new EmptyBorder(6, 8, 6, 8)));
-         var2.setFont(new Font("SansSerif", 1, 12));
+         var2.setBorder(BorderFactory.createCompoundBorder(BorderFactory.createLineBorder(ProjectBattleAlpha.Colors.BORDER), new EmptyBorder(8, 10, 8, 10)));
+         var2.setFont(MINECRAFT_FONT.deriveFont(13F));
+         final float[] focus = { 0F };
+         Timer focusTimer = new Timer(16, null);
+         focusTimer.addActionListener(event -> {
+            float target = var2.isFocusOwner() ? 1F : 0F;
+            focus[0] += (target - focus[0]) * 0.24F;
+            if (Math.abs(target - focus[0]) < 0.02F) {
+               focus[0] = target;
+               focusTimer.stop();
+            }
+            Color base = ProjectBattleAlpha.Colors.BORDER;
+            Color gold = ProjectBattleAlpha.Colors.PLAY;
+            float amount = focus[0];
+            Color border = new Color((int)(base.getRed() + (gold.getRed() - base.getRed()) * amount),
+                  (int)(base.getGreen() + (gold.getGreen() - base.getGreen()) * amount),
+                  (int)(base.getBlue() + (gold.getBlue() - base.getBlue()) * amount));
+            var2.setBorder(BorderFactory.createCompoundBorder(BorderFactory.createLineBorder(border), new EmptyBorder(8, 10, 8, 10)));
+         });
+         var2.addFocusListener(new java.awt.event.FocusAdapter() {
+            @Override public void focusGained(java.awt.event.FocusEvent event) {
+               focusTimer.start();
+            }
+            @Override public void focusLost(java.awt.event.FocusEvent event) {
+               focusTimer.start();
+            }
+         });
       }
    }
 

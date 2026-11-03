@@ -39,6 +39,7 @@ $resources = Join-Path $repo 'legacy-java\src\main\resources'
   -C $resources assets/zero-point-games-logo.png `
   -C $resources assets/project-battle-menu-logo.png `
   -C $resources assets/profile-pixel-avatar.png `
+  -C $resources assets/account-identity-landscape.png `
   -C $resources assets/project-battle-development-0.1.png `
   -C $resources assets/project-battle-development-0.1.html `
   -C $resources assets/fonts/minecraft-regular.ttf `
