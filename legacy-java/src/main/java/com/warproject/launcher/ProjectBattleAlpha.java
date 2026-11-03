@@ -143,6 +143,7 @@ public final class ProjectBattleAlpha extends JFrame {
    private static final String APP_NAME = "Project Battle Alpha";
    private static final String APP_VERSION = "0.1.78.32";
    private static final Font MINECRAFT_FONT = loadSiteFont("/assets/fonts/minecraft-regular.ttf");
+   private static final Font AUTH_FONT = loadSiteFont("/assets/fonts/PixelifySans-wght.ttf");
    private static final String PROJECT_PATCH_VERSION = "0.1";
    private static final Cursor LAUNCHER_CURSOR = null;
    private static volatile ProjectBattleAlpha activeLauncher;
@@ -1397,7 +1398,7 @@ public final class ProjectBattleAlpha extends JFrame {
 
    private JButton authPrimaryButton(String text) {
       JButton button = new ProjectBattleAlpha.PixelButton(text, true, false);
-      button.setFont(MINECRAFT_FONT.deriveFont(13F));
+      button.setFont(AUTH_FONT.deriveFont(Font.BOLD, 17F));
       button.setAlignmentX(0F);
       button.setMaximumSize(new Dimension(Integer.MAX_VALUE, 42));
       button.setPreferredSize(new Dimension(330, 42));
@@ -1411,7 +1412,7 @@ public final class ProjectBattleAlpha extends JFrame {
       button.setContentAreaFilled(false);
       button.setFocusPainted(false);
       button.setForeground(ProjectBattleAlpha.Colors.PLAY);
-      button.setFont(MINECRAFT_FONT.deriveFont(11F));
+      button.setFont(AUTH_FONT.deriveFont(15F));
       button.setCursor(launcherCursor(12));
       button.setAlignmentX(0F);
       button.addMouseListener(new MouseAdapter() {
@@ -1425,7 +1426,7 @@ public final class ProjectBattleAlpha extends JFrame {
       JCheckBox consent = new JCheckBox("<html><u>" + text + "</u></html>");
       consent.setOpaque(false);
       consent.setForeground(ProjectBattleAlpha.Colors.TEXT);
-      consent.setFont(MINECRAFT_FONT.deriveFont(10F));
+      consent.setFont(AUTH_FONT.deriveFont(13F));
       consent.setIcon(this.authCheckIcon(false));
       consent.setSelectedIcon(this.authCheckIcon(true));
       consent.setIconTextGap(8);
@@ -1533,7 +1534,7 @@ public final class ProjectBattleAlpha extends JFrame {
       label.setLineWrap(true);
       label.setWrapStyleWord(true);
       label.setForeground(ProjectBattleAlpha.Colors.TEXT);
-      label.setFont(MINECRAFT_FONT.deriveFont(13F));
+      label.setFont(AUTH_FONT.deriveFont(16F));
       JButton ok = this.authPrimaryButton(this.tr("ПОНЯТНО", "OK"));
       ok.setPreferredSize(new Dimension(150, 42));
       ok.addActionListener(event -> dialog.dispose());
@@ -1607,7 +1608,7 @@ public final class ProjectBattleAlpha extends JFrame {
       leftText.setOpaque(false);
       leftText.setLayout(new BoxLayout(leftText, BoxLayout.Y_AXIS));
       JLabel eyebrow = new JLabel("PJM  //  IDENTITY");
-      eyebrow.setFont(MINECRAFT_FONT.deriveFont(13F));
+      eyebrow.setFont(AUTH_FONT.deriveFont(Font.BOLD, 16F));
       eyebrow.setForeground(ProjectBattleAlpha.Colors.PLAY);
       eyebrow.setAlignmentX(0F);
       JLabel title = new JLabel("<html>" + heading + "</html>");
@@ -1617,7 +1618,7 @@ public final class ProjectBattleAlpha extends JFrame {
       JLabel description = new JLabel("<html>" + this.tr(
             "Один аккаунт для лаунчера,<br>обновлений и игры.<br><br>После входа можно загрузить<br>сборку и присоединиться к<br>Project Battle.",
             "One account for the launcher,<br>updates and game.<br><br>Sign in to download the pack<br>and join Project Battle.") + "</html>");
-      description.setFont(MINECRAFT_FONT.deriveFont(13F));
+      description.setFont(AUTH_FONT.deriveFont(16F));
       description.setForeground(ProjectBattleAlpha.Colors.TEXT);
       description.setAlignmentX(0F);
       leftText.add(eyebrow);
@@ -1667,6 +1668,7 @@ public final class ProjectBattleAlpha extends JFrame {
       constraints.anchor = GridBagConstraints.CENTER;
       constraints.weightx = 1;
       constraints.weighty = scrollable ? 1 : 0;
+      this.applyAuthFont(var2);
       body.add(scrollable ? scroll : var2, constraints);
       right.add(body, BorderLayout.CENTER);
       JPanel split = new JPanel(new BorderLayout());
@@ -1675,6 +1677,19 @@ public final class ProjectBattleAlpha extends JFrame {
       split.add(right, BorderLayout.CENTER);
       root.add(split, BorderLayout.CENTER);
       return root;
+   }
+
+   private void applyAuthFont(Component component) {
+      if (component instanceof JLabel || component instanceof JButton || component instanceof JCheckBox
+            || component instanceof JTextField || component instanceof JTextArea) {
+         Font current = component.getFont();
+         if (current != null && !current.getFamily().equals(AUTH_FONT.getFamily())) {
+            component.setFont(AUTH_FONT.deriveFont(current.getStyle(), Math.max(13F, current.getSize2D())));
+         }
+      }
+      if (component instanceof Container container) {
+         for (Component child : container.getComponents()) this.applyAuthFont(child);
+      }
    }
 
    private JPanel authContent() {
@@ -1688,7 +1703,7 @@ public final class ProjectBattleAlpha extends JFrame {
       JLabel var2 = new JLabel(var1);
       var2.setAlignmentX(0.0F);
       var2.setForeground(ProjectBattleAlpha.Colors.TEXT);
-      var2.setFont(MINECRAFT_FONT.deriveFont(Font.BOLD, 25F));
+      var2.setFont(AUTH_FONT.deriveFont(Font.BOLD, 28F));
       return var2;
    }
 
@@ -1699,7 +1714,7 @@ public final class ProjectBattleAlpha extends JFrame {
       var3.setMaximumSize(new Dimension(Integer.MAX_VALUE, 62));
       JLabel var4 = new JLabel(var1);
       var4.setForeground(ProjectBattleAlpha.Colors.TEXT);
-      var4.setFont(MINECRAFT_FONT.deriveFont(12F));
+      var4.setFont(AUTH_FONT.deriveFont(15F));
       this.styleAuthInput(var2);
       var2.setPreferredSize(new Dimension(290, 38));
       var3.add(var4, "North");
@@ -1714,7 +1729,7 @@ public final class ProjectBattleAlpha extends JFrame {
          var2.setForeground(ProjectBattleAlpha.Colors.TEXT);
          var2.setCaretColor(ProjectBattleAlpha.Colors.TEXT);
          var2.setBorder(BorderFactory.createCompoundBorder(BorderFactory.createLineBorder(ProjectBattleAlpha.Colors.BORDER), new EmptyBorder(8, 10, 8, 10)));
-         var2.setFont(MINECRAFT_FONT.deriveFont(13F));
+         var2.setFont(AUTH_FONT.deriveFont(16F));
          final float[] focus = { 0F };
          Timer focusTimer = new Timer(16, null);
          focusTimer.addActionListener(event -> {
@@ -1749,10 +1764,10 @@ public final class ProjectBattleAlpha extends JFrame {
       var3.setAlignmentX(0.0F);
       JLabel var4 = new JLabel(var1);
       var4.setForeground(ProjectBattleAlpha.Colors.TEXT);
-      var4.setFont(new Font("SansSerif", 1, 13));
+      var4.setFont(AUTH_FONT.deriveFont(Font.BOLD, 15F));
       JLabel var5 = new JLabel(var2 != null && !var2.isBlank() ? var2 : "-");
       var5.setForeground(ProjectBattleAlpha.Colors.MUTED);
-      var5.setFont(new Font("SansSerif", 0, 13));
+      var5.setFont(AUTH_FONT.deriveFont(15F));
       var3.add(var4, "West");
       var3.add(var5, "Center");
       return var3;
