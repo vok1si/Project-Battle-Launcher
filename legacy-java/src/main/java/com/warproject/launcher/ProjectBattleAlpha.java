@@ -141,7 +141,7 @@ import javax.swing.plaf.basic.BasicScrollBarUI;
 
 public final class ProjectBattleAlpha extends JFrame {
    private static final String APP_NAME = "Project Battle Alpha";
-   private static final String APP_VERSION = "0.1.78.34";
+   private static final String APP_VERSION = "0.1.78.35";
    private static final Font AUTH_FONT = loadSiteFont("/assets/fonts/PressStart2P-Regular.ttf");
    private static final String PROJECT_PATCH_VERSION = "0.1";
    private static final Cursor LAUNCHER_CURSOR = null;
@@ -149,12 +149,12 @@ public final class ProjectBattleAlpha extends JFrame {
    private static final String PROJECT_NAME = "PROJECT BATTLE";
    private static final String CONFIG_DIR = "ProjectBattleAlpha";
    private static final String INSTANCE_DIR = ".projectbattle";
-   private static final String STANDARD_MANIFEST_URL = "https://github.com/vok1si/project-battle-pack-NOW/releases/download/v0.1.0/launcher-manifest.project-battle.generated.json";
+   private static final String STANDARD_MANIFEST_URL = "https://github.com/vok1si/project-battle-pack-NOW/releases/download/v0.2.26/launcher-manifest.project-battle.generated.json";
    private static final String MANIFEST_OVERRIDE_URL = System.getProperty("projectbattle.manifest.url", "").trim();
    private static final String DEFAULT_MANIFEST_URL = MANIFEST_OVERRIDE_URL.isEmpty()
-      ? "https://github.com/vok1si/project-battle-pack-NOW/releases/download/v0.1.0/launcher-manifest.project-battle.generated.json"
+      ? "https://github.com/vok1si/project-battle-pack-NOW/releases/download/v0.2.26/launcher-manifest.project-battle.generated.json"
       : MANIFEST_OVERRIDE_URL;
-   private static final String MANIFEST_RELEASE_API_URL = "https://api.github.com/repos/vok1si/project-battle-pack-NOW/releases/tags/v0.1.0";
+   private static final String MANIFEST_RELEASE_API_URL = "https://api.github.com/repos/vok1si/project-battle-pack-NOW/releases/tags/v0.2.26";
    private static final String MANIFEST_ASSET_PREFIX = "launcher-manifest.project-battle.generated";
    private static final String FORGE_INSTALLER_URL = "https://maven.minecraftforge.net/net/minecraftforge/forge/1.20.1-47.4.28/forge-1.20.1-47.4.28-installer.jar";
    private static final String FORGE_INSTALLER_FILE = "forge-1.20.1-47.4.28-installer.jar";
@@ -776,7 +776,7 @@ public final class ProjectBattleAlpha extends JFrame {
             .setText(
                infoHtml(
                   this.tr("Версия лаунчера:", "Launcher version:"),
-                  this.arenaMode ? this.tr("Альфа 0.1", "Alpha 0.1") : this.tr("0.1.78.34", "0.1.78.34"),
+                  this.arenaMode ? this.tr("Альфа 0.1", "Alpha 0.1") : this.tr("0.1.78.35", "0.1.78.35"),
                   ProjectBattleAlpha.Colors.MUTED
                )
             );
@@ -927,7 +927,7 @@ public final class ProjectBattleAlpha extends JFrame {
       JLabel var3 = new JLabel(this.tr("версия лаунчера", "launcher version"));
       var3.setForeground(ProjectBattleAlpha.Colors.MUTED);
       var3.setFont(new Font("SansSerif", 0, 11));
-      JLabel var4 = new JLabel("0.1.78.34");
+      JLabel var4 = new JLabel("0.1.78.35");
       var4.setForeground(ProjectBattleAlpha.Colors.MUTED);
       var4.setFont(new Font("SansSerif", 0, 11));
       var2.add(var3, "West");
@@ -1811,7 +1811,7 @@ public final class ProjectBattleAlpha extends JFrame {
       var5.setConnectTimeout(30000);
       var5.setReadTimeout(120000);
       var5.setDoOutput(true);
-      var5.setRequestProperty("User-Agent", "Project Battle Alpha/0.1.78.34");
+      var5.setRequestProperty("User-Agent", "Project Battle Alpha/0.1.78.35");
       var5.setRequestProperty("Accept", "application/json");
       var5.setRequestProperty("Content-Type", "application/json; charset=utf-8");
       if (var3 != null && !var3.isBlank()) {
@@ -1866,7 +1866,7 @@ public final class ProjectBattleAlpha extends JFrame {
       var4.setRequestMethod("GET");
       var4.setConnectTimeout(30000);
       var4.setReadTimeout(120000);
-      var4.setRequestProperty("User-Agent", "Project Battle Alpha/0.1.78.34");
+      var4.setRequestProperty("User-Agent", "Project Battle Alpha/0.1.78.35");
       var4.setRequestProperty("Accept", "application/json");
       if (var2 != null && !var2.isBlank()) {
          var4.setRequestProperty("Authorization", "Bearer " + var2);
@@ -2509,7 +2509,7 @@ public final class ProjectBattleAlpha extends JFrame {
 
       if (this.versionLabel != null) {
          this.versionLabel
-            .setText(infoHtml(this.tr("Версия лаунчера:", "Launcher version:"), this.tr("0.1.78.34", "0.1.78.34"), ProjectBattleAlpha.Colors.MUTED));
+            .setText(infoHtml(this.tr("Версия лаунчера:", "Launcher version:"), this.tr("0.1.78.35", "0.1.78.35"), ProjectBattleAlpha.Colors.MUTED));
       }
 
       if (this.editionLabel != null) {
@@ -3442,7 +3442,7 @@ public final class ProjectBattleAlpha extends JFrame {
       var3.setOpaque(false);
       var3.setPreferredSize(new Dimension(320, 90));
       var3.setLayout(new BoxLayout(var3, 1));
-      this.versionLabel = this.infoLine(this.tr("Версия лаунчера:", "Launcher version:"), this.tr("0.1.78.34", "0.1.78.34"), ProjectBattleAlpha.Colors.MUTED);
+      this.versionLabel = this.infoLine(this.tr("Версия лаунчера:", "Launcher version:"), this.tr("0.1.78.35", "0.1.78.35"), ProjectBattleAlpha.Colors.MUTED);
       var3.add(this.versionLabel);
       var3.add(Box.createVerticalStrut(5));
       this.editionLabel = this.infoLine(this.tr("Издание:", "Edition:"), "Standard", ProjectBattleAlpha.Colors.MUTED);
@@ -4510,7 +4510,7 @@ public final class ProjectBattleAlpha extends JFrame {
    }
 
    private String diagnosticText() {
-      StringBuilder result = new StringBuilder("Project Battle Alpha 0.1.78.34\n");
+      StringBuilder result = new StringBuilder("Project Battle Alpha 0.1.78.35\n");
       try {
          Path javaPath = ProjectBattleAlpha.Runner.findJava(this.config.minecraftDir);
          Process process = new ProcessBuilder(javaPath.toString(), "-version").redirectErrorStream(true).start();
@@ -5079,7 +5079,7 @@ public final class ProjectBattleAlpha extends JFrame {
             this.log("Minecraft language preference preserved.");
          }
 
-         Files.writeString(var1, "0.1.78.34" + System.lineSeparator(), StandardCharsets.UTF_8, StandardOpenOption.CREATE_NEW);
+         Files.writeString(var1, "0.1.78.35" + System.lineSeparator(), StandardCharsets.UTF_8, StandardOpenOption.CREATE_NEW);
       }
    }
 
@@ -5276,7 +5276,7 @@ public final class ProjectBattleAlpha extends JFrame {
 
    private static String resolveReleaseManifestUrl() throws IOException {
       if (!(
-         ProjectBattleAlpha.Json.parse(stripBom(readText(new URL("https://api.github.com/repos/vok1si/project-battle-pack-NOW/releases/tags/v0.1.0")))) instanceof Map var0
+         ProjectBattleAlpha.Json.parse(stripBom(readText(new URL("https://api.github.com/repos/vok1si/project-battle-pack-NOW/releases/tags/v0.2.26")))) instanceof Map var0
       )) {
          throw new IOException("Bad GitHub release response.");
       } else {
@@ -5418,7 +5418,7 @@ public final class ProjectBattleAlpha extends JFrame {
             label149: {
                var3 = (HttpURLConnection)var0.openConnection();
                var3.setInstanceFollowRedirects(true);
-               var3.setRequestProperty("User-Agent", "Project Battle Alpha/0.1.78.34");
+               var3.setRequestProperty("User-Agent", "Project Battle Alpha/0.1.78.35");
                var3.setConnectTimeout(45000);
                var3.setReadTimeout(180000);
                int var5 = var3.getResponseCode();
@@ -5465,7 +5465,7 @@ public final class ProjectBattleAlpha extends JFrame {
                Files.deleteIfExists(var2);
                var5 = (HttpURLConnection)var0.openConnection();
                var5.setInstanceFollowRedirects(true);
-               var5.setRequestProperty("User-Agent", "Project Battle Alpha/0.1.78.34");
+               var5.setRequestProperty("User-Agent", "Project Battle Alpha/0.1.78.35");
                var5.setConnectTimeout(45000);
                var5.setReadTimeout(180000);
                int var6 = var5.getResponseCode();
@@ -7804,7 +7804,7 @@ public final class ProjectBattleAlpha extends JFrame {
          var11.put("version_type", "PROJECT BATTLE");
          var11.put("natives_directory", var3.toString());
          var11.put("launcher_name", "ProjectBattleAlpha");
-         var11.put("launcher_version", "0.1.78.34");
+         var11.put("launcher_version", "0.1.78.35");
          var11.put("classpath", var9);
          var11.put("library_directory", this.config.minecraftDir.resolve("libraries").toString());
          var11.put("classpath_separator", File.pathSeparator);
@@ -8183,7 +8183,7 @@ public final class ProjectBattleAlpha extends JFrame {
          var1.add(Box.createVerticalStrut(7));
          var1.add(this.sectionButton("integrations", "◇", ProjectBattleAlpha.this.tr("Интеграции", "Integrations")));
          var1.add(Box.createVerticalGlue());
-         JLabel var3 = new JLabel("Project Battle Alpha 0.1.78.34");
+         JLabel var3 = new JLabel("Project Battle Alpha 0.1.78.35");
          var3.setForeground(ProjectBattleAlpha.Colors.MUTED);
          var3.setFont(new Font("SansSerif", 0, 11));
          var3.setAlignmentX(0.0F);
