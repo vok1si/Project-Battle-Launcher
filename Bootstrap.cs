@@ -69,7 +69,9 @@ public static class Engine {
   return result;
  }
  public static Installed Current() {
-  string p = Path.Combine(Root,"current.json");
+  return ReadInstalled(Path.Combine(Root,"current.json")) ?? ReadInstalled(Path.Combine(Root,"previous.json"));
+ }
+ static Installed ReadInstalled(string p) {
   if(!File.Exists(p)) return null;
   Installed state;
   try { state=Json.Deserialize<Installed>(File.ReadAllText(p,Encoding.UTF8)); }
@@ -106,6 +108,13 @@ public static class Engine {
   }
  }
  public static Installed Commit(string archive, Release release) {
+  Directory.CreateDirectory(Root);
+  FileStream gate;
+  try {gate=new FileStream(Path.Combine(Root,"install.lock"),FileMode.OpenOrCreate,FileAccess.ReadWrite,FileShare.None);}
+  catch(IOException ex){throw new IOException("Установка обновления уже выполняется или папка недоступна. Закройте второе окно лаунчера и повторите попытку.",ex);}
+  using(gate){return CommitExclusive(archive,release);}
+ }
+ static Installed CommitExclusive(string archive, Release release) {
   ValidateHash(archive,release);
   string id=release.version+"-"+Guid.NewGuid().ToString("N");
   string stage=Path.Combine(Root,"versions",id);
@@ -120,6 +129,18 @@ public static class Engine {
    else File.Move(next,current);
    return installed;
   } catch { if(Directory.Exists(stage)) Directory.Delete(stage,true); throw; }
+ }
+ public static async Task<int> ReadWithTimeout(Stream input,byte[] buffer,CancellationToken stop,int milliseconds) {
+  using(var deadline=CancellationTokenSource.CreateLinkedTokenSource(stop)) {
+   Task<int> read=input.ReadAsync(buffer,0,buffer.Length,stop);
+   Task delay=Task.Delay(milliseconds,deadline.Token);
+   if(await Task.WhenAny(read,delay)==read) {deadline.Cancel();return await read;}
+   input.Dispose();
+   // Observe a late fault even when the transport ignores cancellation.
+   read.ContinueWith(t=>{var ignored=t.Exception;},TaskContinuationOptions.OnlyOnFaulted);
+   stop.ThrowIfCancellationRequested();
+   throw new IOException("Превышено время ожидания загрузки. Повторите попытку.");
+  }
  }
  public static HttpClient Client() {
   ServicePointManager.SecurityProtocol=SecurityProtocolType.Tls12;
@@ -267,11 +288,9 @@ public sealed class Window:Form {
    using(var client=Engine.Client()) using(var response=await client.GetAsync(release.url,HttpCompletionOption.ResponseHeadersRead,stop.Token)) {
     response.EnsureSuccessStatusCode();
     using(var input=await response.Content.ReadAsStreamAsync()) using(var output=new FileStream(download,FileMode.CreateNew,FileAccess.Write,FileShare.None,131072,true)) {
-     using(var readTimeout=CancellationTokenSource.CreateLinkedTokenSource(stop.Token)) {
      byte[] buffer=new byte[131072];long total=0;int count;
      while(true) {
-      readTimeout.CancelAfter(TimeSpan.FromSeconds(45));
-      count=await input.ReadAsync(buffer,0,buffer.Length,readTimeout.Token);
+      count=await Engine.ReadWithTimeout(input,buffer,stop.Token,45000);
       if(count==0)break;
       total+=count;if(total>release.size) throw new IOException("Сервер вернул пакет неожиданного размера.");
       await output.WriteAsync(buffer,0,count,stop.Token);
@@ -279,7 +298,6 @@ public sealed class Window:Form {
       detail.Text=String.Format("{0:F1} / {1:F1} МБ — {2}%",total/1048576.0,release.size/1048576.0,progress.Value);
      }
     }
-   }
    }
    stop.Token.ThrowIfCancellationRequested();
    status.Text="Проверяем и устанавливаем обновление…";detail.Text="Проверка SHA-256 и распаковка файлов";

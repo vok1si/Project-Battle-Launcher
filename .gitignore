@@ -14,3 +14,6 @@ dist/
 .env.*
 /legacy-java/.build/
 *.jar
+
+/tests/classes/
+/tests/launcher-channel.json

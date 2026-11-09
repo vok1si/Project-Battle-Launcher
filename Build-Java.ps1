@@ -30,11 +30,12 @@ if ($LASTEXITCODE -ne 0) { throw 'Java compilation failed.' }
 
 $parent = Split-Path -Parent $output
 New-Item -ItemType Directory -Force -Path $parent | Out-Null
-Copy-Item -LiteralPath $base -Destination $output -Force
-& $jar uf $output -C $resolvedBuild com/warproject/launcher
+$packageJar = Join-Path $resolvedBuild 'launcher-candidate.jar'
+Copy-Item -LiteralPath $base -Destination $packageJar -Force
+& $jar uf $packageJar -C $resolvedBuild com/warproject/launcher
 if ($LASTEXITCODE -ne 0) { throw 'JAR update failed.' }
 $resources = Join-Path $repo 'legacy-java\src\main\resources'
-& $jar uf $output -C $resources assets/project-battle-parallax-background.png `
+& $jar uf $packageJar -C $resources assets/project-battle-parallax-background.png `
   -C $resources assets/project-battle-parallax-foreground.png `
   -C $resources assets/zero-point-games-logo.png `
   -C $resources assets/project-battle-menu-logo.png `
@@ -47,4 +48,5 @@ $resources = Join-Path $repo 'legacy-java\src\main\resources'
   -C $resources assets/fonts/PressStart2P-Regular.ttf `
   -C $resources assets/fonts/OFL-PressStart2P.txt
 if ($LASTEXITCODE -ne 0) { throw 'JAR asset update failed.' }
+Move-Item -LiteralPath $packageJar -Destination $output -Force -ErrorAction Stop
 Write-Output $output

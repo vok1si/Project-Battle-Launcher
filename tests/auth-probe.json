@@ -1,0 +1,32 @@
+[
+  {
+    "path": "/health",
+    "status": 200,
+    "seconds": 0.26,
+    "keys": [
+      "ok",
+      "service",
+      "revision",
+      "telegramBot"
+    ]
+  },
+  {
+    "path": "/auth/me",
+    "status": 401,
+    "seconds": 0.29
+  },
+  {
+    "path": "/server/status",
+    "status": 200,
+    "seconds": 0.36,
+    "keys": [
+      "ok",
+      "status",
+      "statusCode",
+      "address",
+      "port",
+      "players",
+      "checkedAt"
+    ]
+  }
+]
