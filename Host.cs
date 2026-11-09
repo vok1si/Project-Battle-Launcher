@@ -9,6 +9,25 @@ using System.Web.Script.Serialization;
 using System.Threading;
 using System.Windows.Forms;
 class Host {
+ sealed class TimedWebClient:WebClient {
+  protected override WebRequest GetWebRequest(Uri address) {
+   WebRequest request=base.GetWebRequest(address);request.Timeout=45000;
+   var http=request as HttpWebRequest;if(http!=null)http.ReadWriteTimeout=45000;
+   return request;
+  }
+ }
+ static int RunInstaller(ProcessStartInfo start,int timeoutMs,out string output,out string error) {
+  using(var process=Process.Start(start)) {
+   var stdout=process.StandardOutput.ReadToEndAsync();
+   var stderr=process.StandardError.ReadToEndAsync();
+   if(!process.WaitForExit(timeoutMs)) {
+    try{process.Kill();}catch(InvalidOperationException){}
+    throw new IOException("Установка Forge превысила время ожидания. Повторите запуск.");
+   }
+   output=stdout.GetAwaiter().GetResult();error=stderr.GetAwaiter().GetResult();
+   return process.ExitCode;
+  }
+ }
  const string ForgeVersion="1.20.1-forge-47.4.28";
  const string ForgeInstallerUrl="https://maven.minecraftforge.net/net/minecraftforge/forge/1.20.1-47.4.28/forge-1.20.1-47.4.28-installer.jar";
  const string ForgeInstallerSha1="585dd6071897becaed3b09bff4c3d9559e0cbc75";
@@ -43,7 +62,7 @@ class Host {
   Directory.CreateDirectory(baseDir);
   if(!File.Exists(baseJson)) {
    ServicePointManager.SecurityProtocol|=SecurityProtocolType.Tls12;
-   using(var client=new WebClient()) {
+   using(var client=new TimedWebClient()) {
     string manifest=client.DownloadString("https://piston-meta.mojang.com/mc/game/version_manifest_v2.json");
     var serializer=new JavaScriptSerializer();
     var root=(System.Collections.Generic.Dictionary<string,object>)serializer.DeserializeObject(manifest);
@@ -94,16 +113,16 @@ class Host {
    string installer=Path.Combine(tempDir,"forge-1.20.1-47.4.28-installer.jar");
    string partial=installer+".download";
    try {
-    using(var client=new WebClient())client.DownloadFile(ForgeInstallerUrl,partial);
+    using(var client=new TimedWebClient())client.DownloadFile(ForgeInstallerUrl,partial);
     if(!Sha1(partial).Equals(ForgeInstallerSha1,StringComparison.OrdinalIgnoreCase))throw new IOException("Контрольная сумма установщика Forge не совпала. Загрузка отменена.");
     if(File.Exists(installer))File.Delete(installer);File.Move(partial,installer);
     var install=new ProcessStartInfo(Path.Combine(bundledJava,"bin","java.exe"),"-jar "+Q(installer)+" --installClient "+Q(minecraftDir)) {
      WorkingDirectory=tempDir,UseShellExecute=false,CreateNoWindow=true,RedirectStandardOutput=true,RedirectStandardError=true
     };
-    using(var process=Process.Start(install)) {
-     string output=process.StandardOutput.ReadToEnd();string error=process.StandardError.ReadToEnd();process.WaitForExit();
-     if(process.ExitCode!=0)throw new IOException("Не удалось установить Forge 47.4.28 (код "+process.ExitCode+"). Проверьте подключение к интернету и повторите запуск."+(String.IsNullOrWhiteSpace(error)?"":"\n"+error.Trim()));
-    }
+    string output,error;
+    int exitCode=RunInstaller(install,600000,out output,out error);
+    File.WriteAllText(Path.Combine(tempDir,"forge-install.log"),output+"\n"+error,Encoding.UTF8);
+    if(exitCode!=0)throw new IOException("Не удалось установить Forge 47.4.28 (код "+exitCode+"). Подробности сохранены в forge-install.log.");
     if(!ForgeInstalled(minecraftDir))throw new IOException("Установщик завершился, но файлы Forge 47.4.28 не прошли проверку. Повторите запуск; старая версия Forge не удалена.");
    } finally {try{if(File.Exists(partial))File.Delete(partial);}catch(IOException){}}
   }
@@ -118,9 +137,17 @@ class Host {
   string versions=Path.GetFullPath(Path.Combine(data,"versions"));
   string current=Path.GetFullPath(currentPackage);
   if(!Path.GetDirectoryName(current).Equals(versions,StringComparison.OrdinalIgnoreCase))return;
+  string previous=null;
+  try {
+   string state=Path.Combine(data,"previous.json");
+   if(File.Exists(state)) {
+    var record=(System.Collections.Generic.Dictionary<string,object>)new JavaScriptSerializer().DeserializeObject(File.ReadAllText(state));
+    previous=Path.GetFullPath(Path.Combine(versions,Convert.ToString(record["directory"])));
+   }
+  }catch(Exception){return;} // Keep recovery packages if state cannot be read.
   foreach(string path in Directory.GetDirectories(versions)) {
    string full=Path.GetFullPath(path);
-   if(full.Equals(current,StringComparison.OrdinalIgnoreCase))continue;
+   if(full.Equals(current,StringComparison.OrdinalIgnoreCase)||full.Equals(previous,StringComparison.OrdinalIgnoreCase))continue;
    string name=Path.GetFileName(full);
    int separator=name.LastIndexOf('-');
    Version version;Guid id;

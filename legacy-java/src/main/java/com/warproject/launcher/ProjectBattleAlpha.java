@@ -149,12 +149,12 @@ public final class ProjectBattleAlpha extends JFrame {
    private static final String PROJECT_NAME = "PROJECT BATTLE";
    private static final String CONFIG_DIR = "ProjectBattleAlpha";
    private static final String INSTANCE_DIR = ".projectbattle";
-   private static final String STANDARD_MANIFEST_URL = "https://github.com/vok1si/project-battle-pack-NOW/releases/download/v0.2.26/launcher-manifest.project-battle.generated.json";
+   private static final String STANDARD_MANIFEST_URL = "https://github.com/vok1si/project-battle-pack-NOW/releases/download/v0.1.0/launcher-manifest.project-battle.generated.json";
    private static final String MANIFEST_OVERRIDE_URL = System.getProperty("projectbattle.manifest.url", "").trim();
    private static final String DEFAULT_MANIFEST_URL = MANIFEST_OVERRIDE_URL.isEmpty()
-      ? "https://github.com/vok1si/project-battle-pack-NOW/releases/download/v0.2.26/launcher-manifest.project-battle.generated.json"
+      ? "https://github.com/vok1si/project-battle-pack-NOW/releases/download/v0.1.0/launcher-manifest.project-battle.generated.json"
       : MANIFEST_OVERRIDE_URL;
-   private static final String MANIFEST_RELEASE_API_URL = "https://api.github.com/repos/vok1si/project-battle-pack-NOW/releases/tags/v0.2.26";
+   private static final String MANIFEST_RELEASE_API_URL = "https://api.github.com/repos/vok1si/project-battle-pack-NOW/releases/tags/v0.1.0";
    private static final String MANIFEST_ASSET_PREFIX = "launcher-manifest.project-battle.generated";
    private static final String FORGE_INSTALLER_URL = "https://maven.minecraftforge.net/net/minecraftforge/forge/1.20.1-47.4.28/forge-1.20.1-47.4.28-installer.jar";
    private static final String FORGE_INSTALLER_FILE = "forge-1.20.1-47.4.28-installer.jar";
@@ -4014,13 +4014,9 @@ public final class ProjectBattleAlpha extends JFrame {
                this.discordPresence.setState("Подготавливает игру");
                this.worker.submit(() -> {
                   try {
-                     try {
-                        ProjectBattleAlpha.Manifest var1x = ProjectBattleAlpha.Manifest.load(this.config);
-                        this.sync(var1x);
-                        this.setUpdateAvailable(false, var1x.version);
-                     } catch (FileNotFoundException var7) {
-                        this.log("No manifest configured, launching current instance.");
-                     }
+                     ProjectBattleAlpha.Manifest var1x = ProjectBattleAlpha.Manifest.load(this.config);
+                     this.sync(var1x);
+                     this.setUpdateAvailable(false, var1x.version);
 
                      this.prepareWritableGameProfile();
                      this.removeBundledAuthMods();
@@ -4109,7 +4105,7 @@ public final class ProjectBattleAlpha extends JFrame {
                if ((var3 = var2.readLine()) == null) {
                   int exitCode = var1.waitFor();
                   this.log("Minecraft exited with code " + exitCode + ".");
-                  if (exitCode != 0) this.showLaunchFailure(new IOException("Minecraft exited with code " + exitCode));
+                  if (exitCode != 0) this.showLaunchFailure(new IOException(PackMaintenance.processFailure(this.config.instanceDir, var1.pid(), exitCode)));
                   break;
                }
 
@@ -5000,13 +4996,13 @@ public final class ProjectBattleAlpha extends JFrame {
                   download(new URL(var23), var26);
                }
 
-               this.ensureLanguageAssets(var26);
+               this.ensureMinecraftAssets(var26);
             }
          }
       }
    }
 
-   private void ensureLanguageAssets(Path var1) throws IOException {
+   private void ensureMinecraftAssets(Path var1) throws IOException {
       if (Files.exists(var1)
          && ProjectBattleAlpha.Json.parse(stripBom(Files.readString(var1, StandardCharsets.UTF_8))) instanceof Map var2
          && var2.get("objects") instanceof Map var3) {
@@ -5015,9 +5011,9 @@ public final class ProjectBattleAlpha extends JFrame {
          for (Object entryObject : var3.entrySet()) {
             Entry var6 = (Entry)entryObject;
             String var7 = str(var6.getKey());
-            if (var7 != null && var7.startsWith("minecraft/lang/") && var7.endsWith(".json") && var6.getValue() instanceof Map var8) {
+            if (var7 != null && var6.getValue() instanceof Map var8) {
                String var17 = str(var8.get("hash"));
-               if (var17 != null && var17.length() >= 3) {
+               if (var17 != null && var17.matches("[0-9a-fA-F]{40}")) {
                   Path var10 = this.config.minecraftDir.resolve("assets").resolve("objects").resolve(var17.substring(0, 2)).resolve(var17);
                   long var11 = var8.get("size") instanceof Number var13 ? var13.longValue() : -1L;
                   boolean var18 = Files.exists(var10);
@@ -5032,6 +5028,10 @@ public final class ProjectBattleAlpha extends JFrame {
                   if (!var18) {
                      Files.createDirectories(var10.getParent());
                      download(new URL("https://resources.download.minecraft.net/" + var17.substring(0, 2) + "/" + var17), var10);
+                     if ((var11 >= 0L && Files.size(var10) != var11) || !var17.equalsIgnoreCase(sha1(var10))) {
+                        Files.deleteIfExists(var10);
+                        throw new IOException("Minecraft asset checksum mismatch: " + var7);
+                     }
                      var16++;
                   }
                }
@@ -5039,7 +5039,7 @@ public final class ProjectBattleAlpha extends JFrame {
          }
 
          if (var16 > 0) {
-            this.log("Downloaded Minecraft language assets: " + var16);
+            this.log("Downloaded Minecraft assets: " + var16);
          }
       }
    }
@@ -5276,7 +5276,7 @@ public final class ProjectBattleAlpha extends JFrame {
 
    private static String resolveReleaseManifestUrl() throws IOException {
       if (!(
-         ProjectBattleAlpha.Json.parse(stripBom(readText(new URL("https://api.github.com/repos/vok1si/project-battle-pack-NOW/releases/tags/v0.2.26")))) instanceof Map var0
+         ProjectBattleAlpha.Json.parse(stripBom(readText(new URL("https://api.github.com/repos/vok1si/project-battle-pack-NOW/releases/tags/v0.1.0")))) instanceof Map var0
       )) {
          throw new IOException("Bad GitHub release response.");
       } else {
@@ -5663,7 +5663,7 @@ public final class ProjectBattleAlpha extends JFrame {
 
    private static int normalizeRamMb(int var0) {
       if (var0 <= 0) {
-         return 8192;
+         var0 = 8192;
       }
 
       int var1 = Math.max(2048, Math.min(MAX_RAM_MB, var0));
@@ -5674,7 +5674,7 @@ public final class ProjectBattleAlpha extends JFrame {
       try {
          if (ManagementFactory.getOperatingSystemMXBean() instanceof OperatingSystemMXBean var0) {
             long var6 = var0.getTotalMemorySize() / 1048576L;
-            long var3 = Math.max(2048L, var6 / 1024L * 1024L);
+            long var3 = Math.max(2048L, (var6 - Math.max(2048L, var6 / 4L)) / 1024L * 1024L);
             return (int)Math.min(var3, 262144L);
          }
       } catch (RuntimeException var5) {
@@ -7812,6 +7812,7 @@ public final class ProjectBattleAlpha extends JFrame {
          var11.put("resolution_height", "720");
          ArrayList var12 = new ArrayList();
          Path var13 = findJava(this.config.minecraftDir);
+         PackMaintenance.requireJava17(var13);
          this.log.log("Java: " + var13);
          var12.add(var13.toString());
          var12.add("-Dprojectbattle.authTicket=" + (this.config.gameTicket == null ? "" : this.config.gameTicket));
@@ -7879,7 +7880,7 @@ public final class ProjectBattleAlpha extends JFrame {
       }
 
       private void ensureLibraryFile(Path var1, String var2, String var3) throws IOException {
-         if (!Files.exists(var1)) {
+         if (!PackMaintenance.readableJar(var1)) {
             if ((var2 == null || var2.isBlank()) && var1.startsWith(this.config.minecraftDir.resolve("libraries"))) {
                Path var4 = this.config.minecraftDir.resolve("libraries").relativize(var1);
                var2 = "https://libraries.minecraft.net/" + var4.toString().replace(File.separatorChar, '/');
@@ -7887,8 +7888,9 @@ public final class ProjectBattleAlpha extends JFrame {
 
             if (var2 != null && !var2.isBlank()) {
                Files.createDirectories(var1.getParent());
-               this.log.log("Downloading missing " + var3 + ".");
+               this.log.log("Restoring missing or damaged " + var3 + ".");
                ProjectBattleAlpha.download(new URL(var2), var1);
+               if (!PackMaintenance.readableJar(var1)) throw new IOException("Invalid library archive: " + var1.getFileName());
             }
          }
       }

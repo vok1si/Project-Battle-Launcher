@@ -25,6 +25,41 @@ final class PackMaintenance {
 
     private PackMaintenance() {}
 
+    static boolean readableJar(Path file) {
+        if (!Files.isRegularFile(file)) return false;
+        try (var zip = new java.util.zip.ZipFile(file.toFile())) { return zip.size() > 0; }
+        catch (IOException ex) { return false; }
+    }
+
+    static void requireJava17(Path javaPath) throws IOException {
+        Process process = new ProcessBuilder(javaPath.toString(), "-version").redirectErrorStream(true).start();
+        try {
+            if (!process.waitFor(10, java.util.concurrent.TimeUnit.SECONDS)) {
+                process.destroyForcibly();
+                throw new IOException("Проверка Java превысила время ожидания: " + javaPath);
+            }
+            String version = new String(process.getInputStream().readNBytes(16384), java.nio.charset.StandardCharsets.UTF_8);
+            if (process.exitValue() != 0 || !version.matches("(?s).*version \"17[.\"].*"))
+                throw new IOException("Для этой сборки требуется Java 17. Проверьте или восстановите Java в лаунчере. Путь: " + javaPath);
+        } catch (InterruptedException ex) {
+            process.destroyForcibly(); Thread.currentThread().interrupt();
+            throw new IOException("Проверка Java прервана", ex);
+        }
+    }
+
+    static String processFailure(Path instance, long pid, int exitCode) {
+        Path crash = instance.resolve("hs_err_pid" + pid + ".log");
+        try (var reader = Files.newBufferedReader(crash, java.nio.charset.StandardCharsets.UTF_8)) {
+            for (int i = 0; i < 24; i++) {
+                String line = reader.readLine();
+                if (line == null) break;
+                if (line.contains("insufficient memory") || line.contains("Native memory allocation"))
+                    return "Недостаточно системной памяти для Minecraft. Уменьшите RAM в настройках игры, закройте лишние приложения и проверьте свободное место на диске с файлом подкачки.";
+            }
+        } catch (IOException ignored) { }
+        return "Minecraft exited with code " + exitCode;
+    }
+
     static Path inside(Path root, String relative) throws IOException {
         if (relative == null || relative.isBlank() || Path.of(relative).isAbsolute())
             throw new IOException("Invalid manifest path: " + relative);
