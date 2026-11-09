@@ -39,6 +39,7 @@ public static class Engine {
  public static Release Verify(string body) {
   if(String.IsNullOrWhiteSpace(body) || !body.TrimStart('\uFEFF',' ','\r','\n','\t').StartsWith("{",StringComparison.Ordinal))
    throw new IOException("Сервер обновлений вернул некорректный ответ.");
+  body=body.TrimStart('\uFEFF',' ','\r','\n','\t');
   Envelope e;
   try { e = Json.Deserialize<Envelope>(body); }
   catch(ArgumentException) { throw new IOException("Сервер обновлений вернул некорректный JSON."); }
@@ -266,8 +267,12 @@ public sealed class Window:Form {
    using(var client=Engine.Client()) using(var response=await client.GetAsync(release.url,HttpCompletionOption.ResponseHeadersRead,stop.Token)) {
     response.EnsureSuccessStatusCode();
     using(var input=await response.Content.ReadAsStreamAsync()) using(var output=new FileStream(download,FileMode.CreateNew,FileAccess.Write,FileShare.None,131072,true)) {
+     using(var readTimeout=CancellationTokenSource.CreateLinkedTokenSource(stop.Token)) {
      byte[] buffer=new byte[131072];long total=0;int count;
-     while((count=await input.ReadAsync(buffer,0,buffer.Length,stop.Token))>0) {
+     while(true) {
+      readTimeout.CancelAfter(TimeSpan.FromSeconds(45));
+      count=await input.ReadAsync(buffer,0,buffer.Length,readTimeout.Token);
+      if(count==0)break;
       total+=count;if(total>release.size) throw new IOException("Сервер вернул пакет неожиданного размера.");
       await output.WriteAsync(buffer,0,count,stop.Token);
       progress.Value=(int)Math.Min(100,total*100/release.size);
@@ -275,13 +280,14 @@ public sealed class Window:Form {
      }
     }
    }
+   }
    stop.Token.ThrowIfCancellationRequested();
    status.Text="Проверяем и устанавливаем обновление…";detail.Text="Проверка SHA-256 и распаковка файлов";
    // Do not interrupt a commit: the old pointer remains valid until the new package is complete.
    cancel.Enabled=false;
    Installed installed=await Task.Run(()=>Engine.Commit(download,release));
    if(!stop.IsCancellationRequested) await Launch(installed);
-  } catch(OperationCanceledException) { }
+  } catch(OperationCanceledException) { if(!stop.IsCancellationRequested) {Failure("Превышено время ожидания загрузки. Повторите попытку.");cancel.Enabled=true;} }
     catch(Exception ex) {Failure(ex.Message);cancel.Enabled=true;}
   finally {busy=false;if(File.Exists(download))File.Delete(download);}
  }

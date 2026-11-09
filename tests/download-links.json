@@ -1,0 +1,368 @@
+[
+  {
+    "path": "mods/aas-1.7.1.jar",
+    "status": 200,
+    "length": "4216046",
+    "expected": 4216046
+  },
+  {
+    "path": "mods/AmbientSounds_FORGE_v6.3.8_mc1.20.1.1.jar",
+    "status": 200,
+    "length": "53429226",
+    "expected": 53429226
+  },
+  {
+    "path": "mods/ashvehicle-1.20.1-4.5-8.8.jar",
+    "status": 200,
+    "length": "18152787",
+    "expected": 18152787
+  },
+  {
+    "path": "mods/ChickenChunks-1.20.1-2.10.0.100-universal.1.1.jar",
+    "status": 200,
+    "length": "112603",
+    "expected": 112603
+  },
+  {
+    "path": "mods/CodeChickenLib-1.20.1-4.4.0.516-universal.1.1.jar",
+    "status": 200,
+    "length": "1472390",
+    "expected": 1472390
+  },
+  {
+    "path": "mods/coolrain-1.20.1-Forge-1.0.2.jar",
+    "status": 200,
+    "length": "4155676",
+    "expected": 4155676
+  },
+  {
+    "path": "mods/corpse-forge-1.20.1-1.0.23.1.1.jar",
+    "status": 200,
+    "length": "245644",
+    "expected": 245644
+  },
+  {
+    "path": "mods/CreativeCore_FORGE_v2.12.32_mc1.20.1.jar",
+    "status": 200,
+    "length": "1158417",
+    "expected": 1158417
+  },
+  {
+    "path": "mods/CreativeCore_FORGE_v2.12.37_mc1.20.1.1.jar",
+    "status": 200,
+    "length": "1144037",
+    "expected": 1144037
+  },
+  {
+    "path": "mods/curios-forge-5.14.1+1.20.1.3.jar",
+    "status": 200,
+    "length": "398066",
+    "expected": 398066
+  },
+  {
+    "path": "mods/disablef5-1.2.1.jar",
+    "status": 200,
+    "length": "13147",
+    "expected": 13147
+  },
+  {
+    "path": "mods/drone_detector-1.1.0.1.jar",
+    "status": 200,
+    "length": "64336",
+    "expected": 64336
+  },
+  {
+    "path": "mods/embeddium-0.3.31-mc1.20.1.jar",
+    "status": 200,
+    "length": "1320675",
+    "expected": 1320675
+  },
+  {
+    "path": "mods/endlessammo-1.2.0.1.jar",
+    "status": 200,
+    "length": "165237",
+    "expected": 165237
+  },
+  {
+    "path": "mods/firstaid-1.20.1-1.1.jar",
+    "status": 200,
+    "length": "450159",
+    "expected": 450159
+  },
+  {
+    "path": "mods/fzzy_config-0.7.3+1.20.1+forge.jar",
+    "status": 200,
+    "length": "2312969",
+    "expected": 2312969
+  },
+  {
+    "path": "mods/geckolib-forge-1.20.1-4.8.3.1.jar",
+    "status": 200,
+    "length": "1039046",
+    "expected": 1039046
+  },
+  {
+    "path": "mods/jei-1.20.1-forge-15.20.0.112.2.jar",
+    "status": 200,
+    "length": "1385600",
+    "expected": 1385600
+  },
+  {
+    "path": "mods/journeymap-1.20.1-5.10.3-forge.2.jar",
+    "status": 200,
+    "length": "7160405",
+    "expected": 7160405
+  },
+  {
+    "path": "mods/kotlinforforge-4.11.0-all.jar",
+    "status": 200,
+    "length": "7193768",
+    "expected": 7193768
+  },
+  {
+    "path": "mods/lexiconfig-forge-1.4.18-1.jar",
+    "status": 200,
+    "length": "54205",
+    "expected": 54205
+  },
+  {
+    "path": "mods/maxstuff-1.8.1.1.jar",
+    "status": 200,
+    "length": "33775172",
+    "expected": 33775172
+  },
+  {
+    "path": "mods/MouseTweaks-forge-mc1.20.1-2.25.1.jar",
+    "status": 200,
+    "length": "76237",
+    "expected": 76237
+  },
+  {
+    "path": "mods/oculus-mc1.20.1-1.8.0.jar",
+    "status": 200,
+    "length": "2851119",
+    "expected": 2851119
+  },
+  {
+    "path": "mods/particle_core-0.2.6+1.20.1+forge.jar",
+    "status": 200,
+    "length": "97943",
+    "expected": 97943
+  },
+  {
+    "path": "mods/Patchouli-1.20.1-84.1-FORGE.jar",
+    "status": 200,
+    "length": "642711",
+    "expected": 642711
+  },
+  {
+    "path": "mods/projectbattle-compass-1.0.7.jar",
+    "status": 200,
+    "length": "6364",
+    "expected": 6364
+  },
+  {
+    "path": "mods/projectbattle-hotbar-1.0.4.jar",
+    "status": 200,
+    "length": "6454",
+    "expected": 6454
+  },
+  {
+    "path": "mods/shadedwar-2.0.0-BETA.52.1.jar",
+    "status": 200,
+    "length": "967872",
+    "expected": 967872
+  },
+  {
+    "path": "mods/simplefog-1.4.0.jar",
+    "status": 200,
+    "length": "34254",
+    "expected": 34254
+  },
+  {
+    "path": "mods/simpleradio-forge-1.20.1-3.4.6.jar",
+    "status": 200,
+    "length": "1076746",
+    "expected": 1076746
+  },
+  {
+    "path": "mods/superbwarfare-1.20.1-0.8.8-final-6a6b54795.1.jar",
+    "status": 200,
+    "length": "25670356",
+    "expected": 25670356
+  },
+  {
+    "path": "mods/suppressionmod-1.1.1.1.jar",
+    "status": 200,
+    "length": "60792",
+    "expected": 60792
+  },
+  {
+    "path": "mods/tacz_turrets-1.1.2-all.jar",
+    "status": 200,
+    "length": "2104899",
+    "expected": 2104899
+  },
+  {
+    "path": "mods/tacz-1.20.1-1.1.8-hotfix.jar",
+    "status": 200,
+    "length": "57465167",
+    "expected": 57465167
+  },
+  {
+    "path": "mods/voicechat-forge-1.20.1-2.6.6.2.1.jar",
+    "status": 200,
+    "length": "4889296",
+    "expected": 4889296
+  },
+  {
+    "path": "mods/vvp-beta-1.20.1-0.2.0.1.jar",
+    "status": 200,
+    "length": "26055359",
+    "expected": 26055359
+  },
+  {
+    "path": "mods/warbornexplosives-0.1.1.jar",
+    "status": 200,
+    "length": "2430477",
+    "expected": 2430477
+  },
+  {
+    "path": "mods/WaT.0.2.3.1.jar",
+    "status": 200,
+    "length": "9366759",
+    "expected": 9366759
+  },
+  {
+    "path": "mods/worldedit-mod-7.2.15.2.jar",
+    "status": 200,
+    "length": "5825402",
+    "expected": 5825402
+  },
+  {
+    "path": "mods/WRB-Armor-Forge-1.20.1-0.6.1.1.jar",
+    "status": 200,
+    "length": "972879",
+    "expected": 972879
+  },
+  {
+    "path": "mods/wrbcapturepoint-0.0.2.1.jar",
+    "status": 200,
+    "length": "74994",
+    "expected": 74994
+  },
+  {
+    "path": "mods/wrbdrones-0.2.1.jar",
+    "status": 200,
+    "length": "377387",
+    "expected": 377387
+  },
+  {
+    "path": "mods/YetCrawl-1.0.0.jar",
+    "status": 200,
+    "length": "110836",
+    "expected": 110836
+  },
+  {
+    "path": "mods/projectbattle-mining-slowdown-1.0.1.jar",
+    "status": 200,
+    "length": "4001",
+    "expected": 4001
+  },
+  {
+    "path": "mods/projectbattle-vehicle-repair-fix-1.0.3.jar",
+    "status": 200,
+    "length": "7025",
+    "expected": 7025
+  },
+  {
+    "path": "mods/modernfix-forge-5.27.63+mc1.20.1.jar",
+    "status": 200,
+    "length": "1001494",
+    "expected": 1001494
+  },
+  {
+    "path": "mods/ferritecore-6.0.1-forge-1.20.1.jar",
+    "status": 200,
+    "length": "123034",
+    "expected": 123034
+  },
+  {
+    "path": "mods/tacticalfootsteps-1.0.0-forge-1.20.1.jar",
+    "status": 200,
+    "length": "10401815",
+    "expected": 10401815
+  },
+  {
+    "path": "mods/chatanimation-forge-1.3.0+mc1.20.1.jar",
+    "status": 200,
+    "length": "1031906",
+    "expected": 1031906
+  },
+  {
+    "path": "mods/projectbattle-stamina-1.0.15.jar",
+    "status": 200,
+    "length": "164471",
+    "expected": 164471
+  },
+  {
+    "path": "mods/projectbattle-hide-vehicle-info-1.0.0.jar",
+    "status": 200,
+    "length": "3166",
+    "expected": 3166
+  },
+  {
+    "path": "mods/projectbattle-menu-2.0.10.jar",
+    "status": 200,
+    "length": "80091856",
+    "expected": 80091856
+  },
+  {
+    "path": "mods/projectbattle-encumbrance-0.3.4.jar",
+    "status": 200,
+    "length": "30663",
+    "expected": 30663
+  },
+  {
+    "path": "resourcepacks/ProjectBattle-Server-Resources.zip",
+    "status": 200,
+    "length": "11660",
+    "expected": 11660
+  },
+  {
+    "path": "mods/libercraft_hitbox_guard-1.0.1.jar",
+    "status": 200,
+    "length": "5782",
+    "expected": 5782
+  },
+  {
+    "path": "mods/randomtree-1.0.0.jar",
+    "status": 200,
+    "length": "18656",
+    "expected": 18656
+  },
+  {
+    "path": "mods/projectbattle-lean-0.1.0-beta.1.jar",
+    "status": 200,
+    "length": "37130",
+    "expected": 37130
+  },
+  {
+    "path": "mods/projectbattle-inertia-0.1.0-beta.1.jar",
+    "status": 200,
+    "length": "18119",
+    "expected": 18119
+  },
+  {
+    "path": "mods/projectbattle-stances-0.1.0-beta.11.jar",
+    "status": 200,
+    "length": "78115",
+    "expected": 78115
+  },
+  {
+    "path": "mods/projectbattle-ranks-1.1.0.jar",
+    "status": 200,
+    "length": "816782",
+    "expected": 816782
+  }
+]

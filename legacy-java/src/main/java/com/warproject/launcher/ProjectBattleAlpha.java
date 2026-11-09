@@ -149,12 +149,12 @@ public final class ProjectBattleAlpha extends JFrame {
    private static final String PROJECT_NAME = "PROJECT BATTLE";
    private static final String CONFIG_DIR = "ProjectBattleAlpha";
    private static final String INSTANCE_DIR = ".projectbattle";
-   private static final String STANDARD_MANIFEST_URL = "https://github.com/vok1si/project-battle-pack-NOW/releases/download/v0.2.26/launcher-manifest.project-battle.generated.json";
+   private static final String STANDARD_MANIFEST_URL = "https://github.com/vok1si/project-battle-pack-NOW/releases/download/v0.1.0/launcher-manifest.project-battle.generated.json";
    private static final String MANIFEST_OVERRIDE_URL = System.getProperty("projectbattle.manifest.url", "").trim();
    private static final String DEFAULT_MANIFEST_URL = MANIFEST_OVERRIDE_URL.isEmpty()
-      ? "https://github.com/vok1si/project-battle-pack-NOW/releases/download/v0.2.26/launcher-manifest.project-battle.generated.json"
+      ? "https://github.com/vok1si/project-battle-pack-NOW/releases/download/v0.1.0/launcher-manifest.project-battle.generated.json"
       : MANIFEST_OVERRIDE_URL;
-   private static final String MANIFEST_RELEASE_API_URL = "https://api.github.com/repos/vok1si/project-battle-pack-NOW/releases/tags/v0.2.26";
+   private static final String MANIFEST_RELEASE_API_URL = "https://api.github.com/repos/vok1si/project-battle-pack-NOW/releases/tags/v0.1.0";
    private static final String MANIFEST_ASSET_PREFIX = "launcher-manifest.project-battle.generated";
    private static final String FORGE_INSTALLER_URL = "https://maven.minecraftforge.net/net/minecraftforge/forge/1.20.1-47.4.28/forge-1.20.1-47.4.28-installer.jar";
    private static final String FORGE_INSTALLER_FILE = "forge-1.20.1-47.4.28-installer.jar";
@@ -4109,7 +4109,7 @@ public final class ProjectBattleAlpha extends JFrame {
                if ((var3 = var2.readLine()) == null) {
                   int exitCode = var1.waitFor();
                   this.log("Minecraft exited with code " + exitCode + ".");
-                  if (exitCode != 0) this.showLaunchFailure(new IOException("Minecraft exited with code " + exitCode));
+                  if (exitCode != 0) this.showLaunchFailure(new IOException(PackMaintenance.processFailure(this.config.instanceDir, var1.pid(), exitCode)));
                   break;
                }
 
@@ -5276,7 +5276,7 @@ public final class ProjectBattleAlpha extends JFrame {
 
    private static String resolveReleaseManifestUrl() throws IOException {
       if (!(
-         ProjectBattleAlpha.Json.parse(stripBom(readText(new URL("https://api.github.com/repos/vok1si/project-battle-pack-NOW/releases/tags/v0.2.26")))) instanceof Map var0
+         ProjectBattleAlpha.Json.parse(stripBom(readText(new URL("https://api.github.com/repos/vok1si/project-battle-pack-NOW/releases/tags/v0.1.0")))) instanceof Map var0
       )) {
          throw new IOException("Bad GitHub release response.");
       } else {

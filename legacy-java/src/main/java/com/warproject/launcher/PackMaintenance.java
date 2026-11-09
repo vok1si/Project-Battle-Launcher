@@ -25,6 +25,19 @@ final class PackMaintenance {
 
     private PackMaintenance() {}
 
+    static String processFailure(Path instance, long pid, int exitCode) {
+        Path crash = instance.resolve("hs_err_pid" + pid + ".log");
+        try (var reader = Files.newBufferedReader(crash, java.nio.charset.StandardCharsets.UTF_8)) {
+            for (int i = 0; i < 24; i++) {
+                String line = reader.readLine();
+                if (line == null) break;
+                if (line.contains("insufficient memory") || line.contains("Native memory allocation"))
+                    return "Недостаточно системной памяти для Minecraft. Уменьшите RAM в настройках игры, закройте лишние приложения и проверьте свободное место на диске с файлом подкачки.";
+            }
+        } catch (IOException ignored) { }
+        return "Minecraft exited with code " + exitCode;
+    }
+
     static Path inside(Path root, String relative) throws IOException {
         if (relative == null || relative.isBlank() || Path.of(relative).isAbsolute())
             throw new IOException("Invalid manifest path: " + relative);

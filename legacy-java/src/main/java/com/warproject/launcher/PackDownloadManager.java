@@ -110,8 +110,15 @@ final class PackDownloadManager {
                 connection.setRequestProperty("User-Agent", "Project Battle Alpha/0.1.78.13");
                 if (existing > 0) connection.setRequestProperty("Range", "bytes=" + existing + "-");
                 int response = connection.getResponseCode();
-                if (response == 416) { Files.deleteIfExists(part); attempt--; continue; }
+                if (response == 416) { Files.deleteIfExists(part); throw new IOException("HTTP 416: invalid download range for " + name); }
                 if (response != 200 && response != 206) throw new IOException("HTTP " + response + " downloading " + name);
+                if (response == 206) {
+                    String range = connection.getHeaderField("Content-Range");
+                    if (range == null || !range.startsWith("bytes " + existing + "-")) {
+                        Files.deleteIfExists(part);
+                        throw new IOException("Invalid Content-Range downloading " + name);
+                    }
+                }
                 boolean append = existing > 0 && response == 206;
                 if (!append) existing = 0;
                 received = existing;
@@ -125,6 +132,9 @@ final class PackDownloadManager {
                     int read;
                     while ((read = input.read(buffer)) >= 0) {
                         if (read == 0) continue;
+                        if (expectedSize >= 0 && received + read > expectedSize) {
+                            throw new IOException("Download exceeds manifest size: " + name);
+                        }
                         output.write(buffer, 0, read);
                         received += read;
                         windowBytes += read;
