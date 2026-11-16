@@ -141,7 +141,7 @@ import javax.swing.plaf.basic.BasicScrollBarUI;
 
 public final class ProjectBattleAlpha extends JFrame {
    private static final String APP_NAME = "Project Battle Alpha";
-   private static final String APP_VERSION = "0.1.78.37";
+   private static final String APP_VERSION = "0.1.78.38";
    private static final Font AUTH_FONT = loadSiteFont("/assets/fonts/PressStart2P-Regular.ttf");
    private static final String PROJECT_PATCH_VERSION = "0.1";
    private static final Cursor LAUNCHER_CURSOR = null;
@@ -149,12 +149,12 @@ public final class ProjectBattleAlpha extends JFrame {
    private static final String PROJECT_NAME = "PROJECT BATTLE";
    private static final String CONFIG_DIR = "ProjectBattleAlpha";
    private static final String INSTANCE_DIR = ".projectbattle";
-   private static final String STANDARD_MANIFEST_URL = "https://github.com/vok1si/project-battle-pack-NOW/releases/download/v0.2.26/launcher-manifest.project-battle.generated.json";
+   private static final String MANIFEST_RELEASE_API_URL = "https://api.github.com/repos/vok1si/project-battle-pack-NOW/releases/latest";
+   private static final String LATEST_MANIFEST_URL = "https://github.com/vok1si/project-battle-pack-NOW/releases/latest/download/launcher-manifest.project-battle.generated.json";
    private static final String MANIFEST_OVERRIDE_URL = System.getProperty("projectbattle.manifest.url", "").trim();
    private static final String DEFAULT_MANIFEST_URL = MANIFEST_OVERRIDE_URL.isEmpty()
-      ? "https://github.com/vok1si/project-battle-pack-NOW/releases/download/v0.2.26/launcher-manifest.project-battle.generated.json"
+      ? LATEST_MANIFEST_URL
       : MANIFEST_OVERRIDE_URL;
-   private static final String MANIFEST_RELEASE_API_URL = "https://api.github.com/repos/vok1si/project-battle-pack-NOW/releases/tags/v0.2.26";
    private static final String MANIFEST_ASSET_PREFIX = "launcher-manifest.project-battle.generated";
    private static final String FORGE_INSTALLER_URL = "https://maven.minecraftforge.net/net/minecraftforge/forge/1.20.1-47.4.28/forge-1.20.1-47.4.28-installer.jar";
    private static final String FORGE_INSTALLER_FILE = "forge-1.20.1-47.4.28-installer.jar";
@@ -5308,6 +5308,13 @@ public final class ProjectBattleAlpha extends JFrame {
          return DEFAULT_MANIFEST_URL;
       }
 
+      // Older installations saved a release asset URL in launcher.properties.
+      // Migrate only our own generated manifest; leave custom sources untouched.
+      if (MANIFEST_OVERRIDE_URL.isEmpty()
+         && var1.matches("https://github\\.com/vok1si/project-battle-pack-NOW/releases/download/[^/]+/launcher-manifest\\.project-battle\\.generated(?:[^/]*)\\.json")) {
+         return LATEST_MANIFEST_URL;
+      }
+
       if (isRemoteUrl(var1)) {
          return var1;
       }
@@ -5335,7 +5342,7 @@ public final class ProjectBattleAlpha extends JFrame {
 
    private static String resolveReleaseManifestUrl() throws IOException {
       if (!(
-         ProjectBattleAlpha.Json.parse(stripBom(readText(new URL("https://api.github.com/repos/vok1si/project-battle-pack-NOW/releases/tags/v0.2.26")))) instanceof Map var0
+         ProjectBattleAlpha.Json.parse(stripBom(readText(new URL(MANIFEST_RELEASE_API_URL)))) instanceof Map var0
       )) {
          throw new IOException("Bad GitHub release response.");
       } else {
