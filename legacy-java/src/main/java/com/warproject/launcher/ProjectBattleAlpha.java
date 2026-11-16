@@ -2523,9 +2523,7 @@ public final class ProjectBattleAlpha extends JFrame {
 
    private JPanel buildStage() {
       JPanel var1 = this.arenaMode ? new ProjectBattleAlpha.BackgroundPanel(null, this.activeStageBackground())
-            : this.parallaxBackgroundImage != null && this.parallaxForegroundImage != null
-                  ? new ProjectBattleAlpha.ParallaxHeroPanel(this.parallaxBackgroundImage, this.parallaxForegroundImage)
-                  : new ProjectBattleAlpha.HeroPanel(null, null);
+            : new ProjectBattleAlpha.HeroPanel(null, null);
       JPanel var2 = this.buildConfigStrip();
       var1.add(var2);
       final JComponent battleLogo = !this.arenaMode && this.menuBattleLogo != null
