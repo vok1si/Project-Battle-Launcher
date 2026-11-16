@@ -20,7 +20,7 @@ import java.util.stream.Stream;
 
 public final class DiscordPresenceService implements AutoCloseable {
    private static final String APPLICATION_ID = "1525242294096367768";
-   private static final String LARGE_IMAGE_KEY = "pb_halloween_large_20261019";
+   private static final String LARGE_IMAGE_KEY = "pb_classic_large_20261116_1";
    private static final String LARGE_IMAGE_TEXT = "Project Battle";
    private static final String SMALL_IMAGE_KEY = "pb_classic_small_20261019";
    private static final String SMALL_IMAGE_TEXT = "Project Battle";
@@ -175,7 +175,7 @@ public final class DiscordPresenceService implements AutoCloseable {
             + jsonEscape(var2)
             + "\",\"timestamps\":{\"start\":"
             + this.startTimestamp
-            + "},\"assets\":{\"large_image\":\"pb_halloween_large_20261019\",\"large_text\":\"Project Battle\",\"small_image\":\"pb_classic_small_20261019\",\"small_text\":\"Project Battle\"},\"buttons\":[{\"label\":\"Открыть сайт\",\"url\":\"https://project-battle-portal.vokisu9.workers.dev/\"},{\"label\":\"Новости\",\"url\":\"https://project-battle-portal.vokisu9.workers.dev/news\"}]}},\"nonce\":\""
+            + "},\"assets\":{\"large_image\":\"pb_classic_large_20261116_1\",\"large_text\":\"Project Battle\",\"small_image\":\"pb_classic_small_20261019\",\"small_text\":\"Project Battle\"},\"buttons\":[{\"label\":\"Открыть сайт\",\"url\":\"https://project-battle-portal.vokisu9.workers.dev/\"},{\"label\":\"Новости\",\"url\":\"https://project-battle-portal.vokisu9.workers.dev/news\"}]}},\"nonce\":\""
             + var9
             + "\"}";
          this.connection.write(1, var4);

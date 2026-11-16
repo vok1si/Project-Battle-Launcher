@@ -141,7 +141,7 @@ import javax.swing.plaf.basic.BasicScrollBarUI;
 
 public final class ProjectBattleAlpha extends JFrame {
    private static final String APP_NAME = "Project Battle Alpha";
-   private static final String APP_VERSION = "0.1.78.35";
+   private static final String APP_VERSION = "0.1.78.37";
    private static final Font AUTH_FONT = loadSiteFont("/assets/fonts/PressStart2P-Regular.ttf");
    private static final String PROJECT_PATCH_VERSION = "0.1";
    private static final Cursor LAUNCHER_CURSOR = null;
@@ -179,6 +179,7 @@ public final class ProjectBattleAlpha extends JFrame {
    private static final String SETTINGS_MOD_FILE = "projectbattle-settings-test-0.3.5-test.jar";
    private static final DateTimeFormatter TIME = DateTimeFormatter.ofPattern("HH:mm:ss");
    private final ExecutorService worker = Executors.newSingleThreadExecutor();
+   private final ExecutorService authWorker = Executors.newSingleThreadExecutor();
    private final ExecutorService profileWorker = Executors.newFixedThreadPool(2);
    private final Set<String> extensionInstalls = Collections.synchronizedSet(new HashSet<>());
    private final AtomicBoolean maintenanceRunning = new AtomicBoolean(false);
@@ -1040,8 +1041,11 @@ public final class ProjectBattleAlpha extends JFrame {
       var2.add(Box.createVerticalStrut(20));
       JButton var5 = this.authPrimaryButton(this.tr("ВОЙТИ", "SIGN IN"));
       JButton var6 = this.authLinkButton(this.tr("Зарегистрироваться", "Create account"));
-      JButton var7 = this.authLinkButton(this.tr("Забыли пароль?", "Forgot password?"));
+      JButton var7 = this.authLinkButton(this.tr("Восстановить пароль", "Reset password"));
       var2.add(var5);
+      JLabel loginStatus = this.authRequestStatus();
+      var2.add(Box.createVerticalStrut(8));
+      var2.add(loginStatus);
       var2.add(Box.createVerticalStrut(16));
       JPanel var8 = new JPanel(new FlowLayout(FlowLayout.LEFT, 5, 0));
       var8.setOpaque(false);
@@ -1058,7 +1062,8 @@ public final class ProjectBattleAlpha extends JFrame {
          String var7x = new String(var4.getPassword());
          if (!var6x.isBlank() && !var7x.isBlank()) {
             var5.setEnabled(false);
-            this.worker.submit(() -> {
+            loginStatus.setText(this.tr("Отправляем код входа…", "Sending sign-in code…"));
+            this.authWorker.submit(() -> {
                try {
                   this.authPost("/auth/login", this.json("login", var6x, "password", var7x), null);
                   SwingUtilities.invokeLater(() -> {
@@ -1066,7 +1071,10 @@ public final class ProjectBattleAlpha extends JFrame {
                   });
                } catch (Exception var6xx) {
                   this.authError(var1, this.tr("Ошибка входа", "Login error"), var6xx);
-                  SwingUtilities.invokeLater(() -> var5.setEnabled(true));
+                  SwingUtilities.invokeLater(() -> {
+                     loginStatus.setText(this.tr("Не удалось отправить код.", "Could not send the code."));
+                     var5.setEnabled(true);
+                  });
                }
             });
          } else {
@@ -1098,7 +1106,7 @@ public final class ProjectBattleAlpha extends JFrame {
       var3.add(var6);
       var6.addActionListener(var5x -> {
          var6.setEnabled(false);
-         this.worker.submit(() -> {
+         this.authWorker.submit(() -> {
             try {
                Map var5xx = this.authPost("/auth/verify-login", this.json("login", var1, "code", var5.getText().trim()), null);
                this.saveAuthFromResponse(var5xx);
@@ -1179,7 +1187,7 @@ public final class ProjectBattleAlpha extends JFrame {
                      "Please accept the license and privacy policy."), false);
             } else {
                var8.setEnabled(false);
-               this.worker.submit(() -> {
+               this.authWorker.submit(() -> {
                   try {
                      this.authPost("/auth/start-register", this.json("email", var9x), null);
                      SwingUtilities.invokeLater(() -> {
@@ -1213,7 +1221,7 @@ public final class ProjectBattleAlpha extends JFrame {
       var5.add(var7);
       var7.addActionListener(var7x -> {
          var7.setEnabled(false);
-         this.worker.submit(() -> {
+         this.authWorker.submit(() -> {
             try {
                this.authPost("/auth/verify-email", this.json("email", var1, "code", var6.getText().trim()), null);
                Map var7xx = this.authPost("/auth/finish-register", this.json("email", var1, "nickname", var2, "password", var3), null);
@@ -1284,7 +1292,7 @@ public final class ProjectBattleAlpha extends JFrame {
          String var3x = this.config.authToken;
          this.clearAuth();
          var1.dispose();
-         this.worker.submit(() -> {
+         this.authWorker.submit(() -> {
             try {
                if (var3x != null && !var3x.isBlank()) {
                   this.authPost("/auth/logout", "{}", var3x);
@@ -1311,13 +1319,14 @@ public final class ProjectBattleAlpha extends JFrame {
       JTextField var4 = this.input();
       var2.add(this.authField("Email", var4));
       var2.add(Box.createVerticalStrut(16));
-      JPanel var5 = new JPanel(new FlowLayout(0, 8, 0));
-      var5.setOpaque(false);
       JButton var6 = this.authPrimaryButton(this.tr("ОТПРАВИТЬ КОД", "SEND CODE"));
-      JButton var7 = this.smallButton(this.tr("Отмена", "Cancel"));
-      var5.add(var6);
-      var5.add(var7);
-      var2.add(var5);
+      JButton var7 = this.authLinkButton(this.tr("Вернуться ко входу", "Back to sign in"));
+      var2.add(var6);
+      JLabel resetStatus = this.authRequestStatus();
+      var2.add(Box.createVerticalStrut(8));
+      var2.add(resetStatus);
+      var2.add(Box.createVerticalStrut(16));
+      var2.add(var7);
       var7.addActionListener(var1x -> this.authTransition(var1, this::openLoginDialog));
       var6.addActionListener(var4x -> {
          String var5x = var4.getText().trim();
@@ -1325,7 +1334,8 @@ public final class ProjectBattleAlpha extends JFrame {
             this.authMessage(var1, this.tr("Введите email.", "Enter email."), false);
          } else {
             var6.setEnabled(false);
-            this.worker.submit(() -> {
+            resetStatus.setText(this.tr("Отправляем код…", "Sending code…"));
+            this.authWorker.submit(() -> {
                try {
                   this.authPost("/auth/forgot-password", this.json("email", var5x), null);
                   SwingUtilities.invokeLater(() -> {
@@ -1333,7 +1343,10 @@ public final class ProjectBattleAlpha extends JFrame {
                   });
                } catch (Exception var5xx) {
                   this.authError(var1, this.tr("Ошибка пароля", "Password error"), var5xx);
-                  SwingUtilities.invokeLater(() -> var6.setEnabled(true));
+                  SwingUtilities.invokeLater(() -> {
+                     resetStatus.setText(this.tr("Не удалось запросить код.", "Could not request the code."));
+                     var6.setEnabled(true);
+                  });
                }
             });
          }
@@ -1347,6 +1360,14 @@ public final class ProjectBattleAlpha extends JFrame {
       JDialog var2 = this.authDialog(this.tr("Код и новый пароль", "Code and new password"), this.accountLoginImage, 860, 530);
       JPanel var3 = this.authContent();
       var3.add(this.authTitle(this.tr("Новый пароль", "New password")));
+      var3.add(Box.createVerticalStrut(10));
+      JLabel deliveryHint = new JLabel(this.tr(
+            "<html>Если этот email привязан к аккаунту,<br>код придёт на почту. Проверьте «Спам».</html>",
+            "<html>If this email belongs to an account,<br>a code will arrive. Check spam too.</html>"));
+      deliveryHint.setForeground(ProjectBattleAlpha.Colors.MUTED);
+      deliveryHint.setFont(AUTH_FONT.deriveFont(9F));
+      deliveryHint.setAlignmentX(0F);
+      var3.add(deliveryHint);
       var3.add(Box.createVerticalStrut(16));
       JTextField var4 = this.input();
       JPasswordField var5 = this.passwordInput();
@@ -1366,7 +1387,7 @@ public final class ProjectBattleAlpha extends JFrame {
                this.authMessage(var2, this.tr("Пароли не совпадают.", "Passwords do not match."), false);
             } else {
                var7.setEnabled(false);
-               this.worker.submit(() -> {
+               this.authWorker.submit(() -> {
                   try {
                      this.authPost("/auth/reset-password", this.json("email", var1, "code", var4.getText().trim(), "password", var8), null);
                      SwingUtilities.invokeLater(() -> {
@@ -1392,14 +1413,21 @@ public final class ProjectBattleAlpha extends JFrame {
       JButton button = new JButton(text) {
          @Override protected void paintComponent(Graphics graphics) {
             Graphics2D g = (Graphics2D) graphics.create();
+            g.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
             boolean pressed = getModel().isPressed();
             boolean hovered = getModel().isRollover();
-            g.setColor(!isEnabled() ? new Color(120, 100, 60)
-                  : pressed ? new Color(204, 136, 22)
-                  : hovered ? new Color(255, 199, 78) : new Color(255, 176, 35));
-            g.fillRect(0, pressed ? 2 : 0, getWidth(), getHeight() - 3);
-            g.setColor(new Color(116, 72, 18));
-            g.fillRect(0, getHeight() - 3, getWidth(), 3);
+            Color top = !isEnabled() ? new Color(128, 113, 79)
+                  : pressed ? new Color(220, 150, 31)
+                  : hovered ? new Color(255, 209, 107) : new Color(255, 187, 64);
+            Color bottom = !isEnabled() ? new Color(96, 84, 59)
+                  : pressed ? new Color(185, 115, 15)
+                  : hovered ? new Color(236, 158, 37) : new Color(222, 138, 24);
+            g.setColor(new Color(6, 10, 15, 115));
+            g.fillRoundRect(1, 4, getWidth() - 2, getHeight() - 5, 9, 9);
+            g.setPaint(new GradientPaint(0, 0, top, 0, getHeight() - 5, bottom));
+            g.fillRoundRect(1, pressed ? 3 : 1, getWidth() - 2, getHeight() - 6, 9, 9);
+            g.setColor(new Color(255, 224, 143, 140));
+            g.drawRoundRect(1, pressed ? 3 : 1, getWidth() - 3, getHeight() - 7, 9, 9);
             g.setFont(getFont());
             FontMetrics metrics = g.getFontMetrics();
             g.setColor(new Color(20, 19, 18));
@@ -1415,9 +1443,17 @@ public final class ProjectBattleAlpha extends JFrame {
       button.setCursor(launcherCursor(12));
       button.setFont(AUTH_FONT.deriveFont(12F));
       button.setAlignmentX(0F);
-      button.setMaximumSize(new Dimension(Integer.MAX_VALUE, 42));
-      button.setPreferredSize(new Dimension(330, 42));
+      button.setMaximumSize(new Dimension(Integer.MAX_VALUE, 48));
+      button.setPreferredSize(new Dimension(330, 48));
       return button;
+   }
+
+   private JLabel authRequestStatus() {
+      JLabel status = new JLabel(" ");
+      status.setAlignmentX(0F);
+      status.setForeground(ProjectBattleAlpha.Colors.MUTED);
+      status.setFont(AUTH_FONT.deriveFont(9F));
+      return status;
    }
 
    private JButton authLinkButton(String text) {
@@ -1530,8 +1566,30 @@ public final class ProjectBattleAlpha extends JFrame {
    }
 
    private void authError(JDialog owner, String title, Exception error) {
-      SwingUtilities.invokeLater(() -> this.authMessage(owner,
-            title + ": " + (error.getMessage() == null ? error.getClass().getSimpleName() : error.getMessage()), false));
+      String detail = this.authErrorDetail(error);
+      this.log("Account request failed: " + error.getClass().getSimpleName());
+      SwingUtilities.invokeLater(() -> this.authMessage(owner, title + ": " + detail, false));
+   }
+
+   private String authErrorDetail(Exception error) {
+      String message = error.getMessage();
+      if (message != null && message.equalsIgnoreCase("Invalid login or password")) {
+         return this.tr("Неверный логин или пароль. Проверьте данные и попробуйте снова.",
+               "Invalid login or password. Check your details and try again.");
+      }
+      if (message != null && message.equalsIgnoreCase("Email is not verified")) {
+         return this.tr("Email ещё не подтверждён. Проверьте почту и папку «Спам».",
+               "Email is not verified. Check your inbox and spam folder.");
+      }
+      if (error instanceof java.net.SocketTimeoutException) {
+         return this.tr("Сервер долго не отвечает. Повторите попытку через минуту.",
+               "The server took too long to respond. Try again in a minute.");
+      }
+      if (error instanceof java.net.UnknownHostException || error instanceof java.net.ConnectException) {
+         return this.tr("Нет соединения с сервером аккаунтов. Проверьте интернет и попробуйте снова.",
+               "Could not reach the account server. Check your connection and try again.");
+      }
+      return message == null || message.isBlank() ? error.getClass().getSimpleName() : message;
    }
 
    private void authMessage(Component owner, String message, boolean success) {
@@ -1806,12 +1864,13 @@ public final class ProjectBattleAlpha extends JFrame {
          var4 = var4.substring(0, var4.length() - 1);
       }
 
+      this.log("Account request " + var1 + " started");
       HttpURLConnection var5 = (HttpURLConnection)URI.create(var4 + var1).toURL().openConnection();
       var5.setRequestMethod("POST");
-      var5.setConnectTimeout(30000);
-      var5.setReadTimeout(120000);
+      var5.setConnectTimeout(15000);
+      var5.setReadTimeout(60000);
       var5.setDoOutput(true);
-      var5.setRequestProperty("User-Agent", "Project Battle Alpha/0.1.78.35");
+      var5.setRequestProperty("User-Agent", "Project Battle Alpha/" + APP_VERSION);
       var5.setRequestProperty("Accept", "application/json");
       var5.setRequestProperty("Content-Type", "application/json; charset=utf-8");
       if (var3 != null && !var3.isBlank()) {
@@ -1823,6 +1882,7 @@ public final class ProjectBattleAlpha extends JFrame {
       }
 
       int var14 = var5.getResponseCode();
+      this.log("Account request " + var1 + " returned HTTP " + var14);
       InputStream var7 = var14 >= 200 && var14 < 300 ? var5.getInputStream() : var5.getErrorStream();
       String var8 = var7 == null ? "{}" : new String(var7.readAllBytes(), StandardCharsets.UTF_8);
       if ((var8.isBlank() ? Map.of() : ProjectBattleAlpha.Json.parse(stripBom(var8))) instanceof Map var9) {
@@ -1866,7 +1926,7 @@ public final class ProjectBattleAlpha extends JFrame {
       var4.setRequestMethod("GET");
       var4.setConnectTimeout(30000);
       var4.setReadTimeout(120000);
-      var4.setRequestProperty("User-Agent", "Project Battle Alpha/0.1.78.35");
+      var4.setRequestProperty("User-Agent", "Project Battle Alpha/" + APP_VERSION);
       var4.setRequestProperty("Accept", "application/json");
       if (var2 != null && !var2.isBlank()) {
          var4.setRequestProperty("Authorization", "Bearer " + var2);
@@ -4461,6 +4521,7 @@ public final class ProjectBattleAlpha extends JFrame {
 
       this.discordPresence.shutdown();
       this.worker.shutdownNow();
+      this.authWorker.shutdownNow();
       this.profileWorker.shutdownNow();
       this.dispose();
       System.exit(0);
