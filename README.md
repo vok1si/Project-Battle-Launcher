@@ -14,7 +14,7 @@ The full player distribution includes a Java launcher, Java runtime, Minecraft f
 
 The update channel uses the public key in `public-key.xml`. The matching RSA private key is protected with Windows DPAPI for the current Windows user at `%LOCALAPPDATA%\ProjectBattleRelease\launcher-channel-key.dpapi`. `Sign-Channel.ps1` uses it to sign a channel manifest locally. Keep a recovery copy in a secure password manager or encrypted backup before reinstalling Windows; never add the key or its decrypted XML to this repository, an issue, or a build artifact.
 
-Replacing `public-key.xml` rotates trust. Users with an older bootstrap must replace `Project Battle.exe` once before channel updates can work again.
+The v2 update channel uses a new public key because the original channel's private key was unavailable. The old channel remains unchanged. Users with the older bootstrap must replace `Project Battle.exe` once; the v2 bootstrap then installs future signed updates automatically. Back up the new private key securely before reinstalling Windows, because its local DPAPI copy is tied to this Windows account.
 
 ## Code signing
 
