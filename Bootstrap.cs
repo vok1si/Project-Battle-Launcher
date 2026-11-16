@@ -21,7 +21,7 @@ public sealed class Release {
 public sealed class Envelope { public string payload, signature; }
 public sealed class Installed { public string version, directory, entry; }
 public static class Engine {
- public const string Channel = "https://github.com/vok1si/project-battle-pack-NOW/releases/download/launcher-auto-channel/launcher-channel.json";
+ public const string Channel = "https://github.com/vok1si/project-battle-pack-NOW/releases/download/launcher-auto-channel-v2/launcher-channel.json";
  public static string Root = SelectRoot(AppDomain.CurrentDomain.BaseDirectory,
   Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData),"Project Battle Auto"));
  public static string SelectRoot(string launcherDirectory,string userDirectory) {
